@@ -8,50 +8,39 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title @click="$router.push('/search/relevant')">CSFlow </v-toolbar-title>
+
       <v-spacer></v-spacer>
-        <v-btn link text to="/user">
-          My Profile
-        </v-btn>
-        <v-btn text>
-          Log Out
-        </v-btn>
-      <v-btn text>
-        Log Out All
-      </v-btn>
+      <v-menu
+          left
+          bottom
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item
+              @click="$router.push('/user')"
+          >
+            <v-list-item-title>My Profile</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Log out</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Log out from all devices</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
     </v-app-bar>
-    <v-navigation-drawer
-        v-model="drawer"
-        app
-        clipped
 
-    >
-      <v-list
-          nav
-          dense
-      >
-        <v-list-item-group
-            v-model="group"
-            active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-title>Foo</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Bar</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Fizz</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Buzz</v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
   </div>
 </template>
 
@@ -65,19 +54,9 @@ export default {
   },
 
   data: () => ({
-    links: [
-      'Dashboard',
-      'Messages',
-      'Profile',
-      'Updates',
-    ],
     drawer: false,
     group: null,
   }),
-
-  mounted() {
-    this.drawer = !this.$isMobile()
-  }
 }
 </script>
 
