@@ -74,6 +74,10 @@ export default {
     drawer: false,
     group: null,
   }),
+
+  mounted() {
+    this.drawer = !this.$isMobile()
+  }
 }
 </script>
 

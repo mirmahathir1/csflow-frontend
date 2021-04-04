@@ -6,6 +6,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
+import Mixins from '@/mixins/index';
+import Vuelidate from 'vuelidate';
+
+Vue.use(Vuelidate);
+Vue.mixin(Mixins);
 
 Vue.config.productionTip = false
 
