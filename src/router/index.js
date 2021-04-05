@@ -6,6 +6,8 @@ import User from "../views/user/User";
 import Auth from "../views/auth/Auth";
 import SIgnIn from "../views/auth/SIgnIn";
 
+import store from "../store"
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -15,7 +17,8 @@ const routes = [
         children: [
             {
                 path: 'relevant',
-                component: Relevant
+                component: Relevant,
+                name: 'Relevant'
             },
         ]
     },
@@ -29,7 +32,8 @@ const routes = [
         children: [
             {
                 path: 'signIn',
-                component: SIgnIn
+                component: SIgnIn,
+                name: 'SignIn'
             }
         ]
     },
@@ -44,4 +48,15 @@ const router = new VueRouter({
     routes
 })
 
+
+router.beforeEach((to, from, next) => {
+    if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn'){
+        next('/auth/signIn');
+    }
+    if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
+        next('/search/relevant');
+    }
+
+    next();
+})
 export default router

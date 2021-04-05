@@ -6,8 +6,15 @@
                 <v-sheet
                     min-height="70vh"
                     rounded="lg"
+                    class="pa-6"
                 >
-                    <!--  -->
+                    <v-alert
+                        dense
+                        text
+                        type="success"
+                    >
+                        Successfully signed in
+                    </v-alert>
                 </v-sheet>
             </v-col>
 </template>
