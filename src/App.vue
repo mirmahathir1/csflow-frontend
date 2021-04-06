@@ -36,9 +36,12 @@
 <script>
 
 import AppBar from "./components/AppBar";
+
 export default {
     name: 'App',
+    computed:{
 
+    },
     components: {
         AppBar
     },

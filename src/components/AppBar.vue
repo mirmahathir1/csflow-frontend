@@ -10,16 +10,19 @@
             <v-toolbar-title @click="$router.push('/search/relevant')">CSFlow</v-toolbar-title>
 
             <v-spacer></v-spacer>
+
+
             <v-menu
                 left
                 bottom
+                v-if="getIsSignedIn"
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn
                         icon
                         v-bind="attrs"
                         v-on="on"
-                        :loading="$store.getters['auth/getLogoutLoaderFlag']"
+                        :loading="getLogoutLoaderFlag"
                     >
                         <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
@@ -31,10 +34,10 @@
                     >
                         <v-list-item-title>My Profile</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="logout">
+                    <v-list-item @click="signOut">
                         <v-list-item-title >Log out</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="logoutAll">
+                    <v-list-item @click="signOutAll">
                         <v-list-item-title>Log out from all devices</v-list-item-title>
                     </v-list-item>
                 </v-list>
@@ -46,6 +49,7 @@
 </template>
 
 <script>
+import {mapGetters,mapActions} from 'vuex';
 export default {
     name: "AppBar",
     watch: {
@@ -53,18 +57,22 @@ export default {
             this.drawer = false
         },
     },
+    computed:{
+        ...mapGetters('auth',['getLogoutLoaderFlag','getIsSignedIn'])
+    },
 
     data: () => ({
         drawer: false,
         group: null,
     }),
     methods:{
-        async logout(){
-            await this.$store.dispatch('auth/logout');
+        ...mapActions('auth',['logoutAll','logout']),
+        async signOut(){
+            await this.logout();
             await this.$router.push('/auth/signIn');
         },
-        async logoutAll(){
-            await this.$store.dispatch('auth/logoutAll');
+        async signOutAll(){
+            await this.logoutAll();
             await this.$router.push('/auth/signIn');
         }
     }

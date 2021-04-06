@@ -4,7 +4,7 @@ import Relevant from '../views/search/Relevant.vue'
 import Search from "../views/search/Search";
 import User from "../views/user/User";
 import Auth from "../views/auth/Auth";
-import SIgnIn from "../views/auth/SIgnIn";
+import SignIn from "../views/auth/SignIn";
 
 import store from "../store"
 
@@ -35,7 +35,7 @@ const routes = [
         children: [
             {
                 path: 'signIn',
-                component: SIgnIn,
+                component: SignIn,
                 name: 'SignIn'
             }
         ]
