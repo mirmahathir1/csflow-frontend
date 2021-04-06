@@ -14,6 +14,7 @@ const routes = [
     {
         path: '/search',
         component: Search,
+        name: 'Search',
         children: [
             {
                 path: 'relevant',
@@ -23,12 +24,14 @@ const routes = [
         ]
     },
     {
-        path: '/user',
-        component: User
+        path: '/user/:id',
+        component: User,
+        name: 'User'
     },
     {
         path: '/auth',
         component: Auth,
+        name: 'Auth',
         children: [
             {
                 path: 'signIn',
@@ -57,6 +60,11 @@ router.beforeEach((to, from, next) => {
         next('/search/relevant');
     }
 
-    next();
+    if(to.name!=from.name){
+        next();
+    }
+
+
+
 })
 export default router

@@ -119,7 +119,6 @@ const actions = {
             commit('unsetIsSignedIn');
             return false;
         } else {
-            console.log(getters.getToken);
             commit('setIsSignedIn');
             return true;
         }

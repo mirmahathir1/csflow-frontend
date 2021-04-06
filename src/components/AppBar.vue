@@ -6,7 +6,7 @@
             flat
             clipped-left
         >
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon disabled @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title @click="$router.push('/search/relevant')">CSFlow</v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -27,7 +27,7 @@
 
                 <v-list>
                     <v-list-item
-                        @click="$router.push('/user')"
+                        @click="$router.push('/user/me')"
                     >
                         <v-list-item-title>My Profile</v-list-item-title>
                     </v-list-item>

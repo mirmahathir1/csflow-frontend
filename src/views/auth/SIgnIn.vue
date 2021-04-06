@@ -26,12 +26,13 @@
                     v-model="checkbox"
                     label="Remember me"
                     required
+                    disabled
                 ></v-checkbox>
 
                 <v-btn
                     color="success"
                     class="mr-4"
-
+                    disabled
                 >
                     Sign Up
                 </v-btn>
