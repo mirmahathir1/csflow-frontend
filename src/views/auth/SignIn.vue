@@ -96,10 +96,11 @@ export default {
 
     methods: {
         ...mapActions('auth',['login']),
-        reset() {
-            this.$refs.form.reset()
-        },
         async signIn() {
+            this.$v.$touch();
+            if(this.$v.$error){
+              return;
+            }
 
             if (await this.login({email: this.email, password: this.password})) {
                 await this.$router.push('/search/relevant');
