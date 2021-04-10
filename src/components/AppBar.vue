@@ -7,7 +7,7 @@
             clipped-left
         >
             <v-app-bar-nav-icon disabled @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title @click="$router.push('/search/relevant')">CSFlow</v-toolbar-title>
+            <v-toolbar-title @click="$router.push('/search/relevant')">CSFlowWeb</v-toolbar-title>
 
             <v-spacer></v-spacer>
 
