@@ -3,6 +3,7 @@ import {csflowAPI} from "../../api";
 const state = {
     batches: [],
     resources: null,
+    resourceLoaderFlag: true,
 };
 
 const getters = {
@@ -16,6 +17,9 @@ const getters = {
             return null;
         }
     },
+    getResourceLoaderFlag: state => {
+        return state.resourceLoaderFlag;
+    }
 };
 
 const mutations = {
@@ -24,6 +28,13 @@ const mutations = {
     },
     setBatches(state, payload) {
         state.batches = payload;
+    },
+    setResourceLoaderFlag(state) {
+        state.resourceLoaderFlag = true;
+    },
+    unsetResourceLoaderFlag(state) {
+        console.log('unsetting');
+        state.resourceLoaderFlag = false;
     }
 };
 
@@ -33,6 +44,7 @@ const actions = {
           return;
       }
 
+      commit('setResourceLoaderFlag');
       console.log('calling api');
       csflowAPI.get('/archive/resource')
           .then(response => {
@@ -47,6 +59,9 @@ const actions = {
           })
           .catch(e => {
               console.log(e);
+          })
+          .finally(() => {
+              commit('unsetResourceLoaderFlag');
           });
   }
 };

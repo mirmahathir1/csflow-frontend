@@ -5,7 +5,7 @@
   >
     <page-header>Resource Explorer</page-header>
 
-    <v-container class="my-5">
+    <v-container class="my-5" v-if="!getResourceLoaderFlag">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
@@ -19,24 +19,27 @@
         </v-col>
       </v-row>
     </v-container>
+    <folders-loader v-else></folders-loader>
   </v-col>
 </template>
 
 <script>
 import ResourceCard from "@/components/ResourceCard";
 import PageHeader from "@/components/PageHeader";
+import FoldersLoader from "@/components/FoldersLoader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 
 export default {
   name: "Resources",
   computed: {
-    ...mapGetters('archive', ['getBatches'])
+    ...mapGetters('archive', ['getBatches', 'getResourceLoaderFlag']),
   },
   methods: {
     ...mapActions('archive', ['loadResource']),
   },
   components: {
+    FoldersLoader,
     ResourceCard,
     PageHeader
   },

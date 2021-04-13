@@ -6,7 +6,7 @@
     <page-header>Resource Explorer</page-header>
     <page-subheader>Batch {{ batch }} resources</page-subheader>
 
-    <v-container class="my-5" v-if="resources">
+    <v-container class="my-5" v-if="!getResourceLoaderFlag">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
@@ -20,6 +20,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <folders-loader v-else></folders-loader>
 
   </v-col>
 </template>
@@ -28,6 +29,7 @@
 import ResourceCard from "@/components/ResourceCard";
 import PageSubheader from "@/components/PageSubheader";
 import PageHeader from "@/components/PageHeader";
+import FoldersLoader from "@/components/FoldersLoader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 
@@ -39,7 +41,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('archive', ['getResources']),
+    ...mapGetters('archive', ['getResources', 'getResourceLoaderFlag']),
     resources() {
       let ret = this.getResources(this.batch);
       if (ret) {
@@ -67,6 +69,7 @@ export default {
     }
   },
   components: {
+    FoldersLoader,
     ResourceCard,
     PageHeader,
     PageSubheader
