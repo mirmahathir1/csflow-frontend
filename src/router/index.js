@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-
 import store from "../store"
 
 Vue.use(VueRouter)
@@ -37,6 +36,16 @@ const routes = [
         path:'/box',
         name:'Box',
         component: () => import('../components/Box/postBox')
+    },
+    {
+        path: '/archive/resource',
+        name: 'Resources',
+        component: () => import('../views/archive/Resources')
+    },
+    {
+        path: '/archive/resource/:batch',
+        name: 'ResourcesBatch',
+        component: () => import('../views/archive/ResourcesBatch')
     }
 ]
 
@@ -53,7 +62,7 @@ router.beforeEach((to, from, next) => {
         next('/search/relevant');
     }
 
-    if(to.name!=from.name){
+    if(to.path != from.path){
         next();
     }
 
