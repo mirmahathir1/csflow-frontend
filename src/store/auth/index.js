@@ -9,7 +9,11 @@ const state = {
     signInMessage: null,
     isSignInError: false,
 
+    sideBarItems:[],
+
     logoutLoaderFlag: false,
+
+    drawerSidebar:false
 };
 
 const getters = {
@@ -30,6 +34,12 @@ const getters = {
     },
     getLogoutLoaderFlag: state=>{
         return state.logoutLoaderFlag;
+    },
+    getSideBarItems: state=>{
+        return state.sideBarItems;
+    },
+    getDrawerSideBar: state=>{
+        return state.drawerSidebar
     }
 
 };
@@ -62,6 +72,16 @@ const mutations = {
         state.isSignInError = false;
     },
 
+    setSideBarItems(state,type){
+        state.sideBarItems=[
+            {
+                title:'Unanswered',
+                link:'/auth/signUp',
+                icon:'login'
+            }
+        ]
+    },
+
     loadTokenFromLocalStorage(state) {
         state.token = localStorage.getItem('token');
     },
@@ -79,8 +99,10 @@ const mutations = {
     },
     unsetLogoutLoaderFlag(state){
         state.logoutLoaderFlag = false;
+    },
+    changeDrawerSideBar(state){
+        if(state.isSignedIn) state.drawerSidebar=!state.drawerSidebar;
     }
-
 };
 const actions = {
     async logout({ getters, commit }) {
@@ -120,6 +142,7 @@ const actions = {
             return false;
         } else {
             commit('setIsSignedIn');
+            commit('setSideBarItems');
             return true;
         }
     },
@@ -133,6 +156,7 @@ const actions = {
             let response = await csflowAPI.post('/auth/signIn', payload);
             commit('setToken',response.data.payload);
             commit('setIsSignedIn');
+            commit('setSideBarItems','user');
             commit('saveTokenToLocalStorage',response.data.payload);
             return true;
         }catch (e){
@@ -143,7 +167,11 @@ const actions = {
         }finally {
             commit('unsetSignInLoaderFlag');
         }
-    }
+    },
+
+    async setDrawerSideBar({getters,commit}){
+        commit('changeDrawerSideBar');
+    },
 };
 
 

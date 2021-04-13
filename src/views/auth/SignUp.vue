@@ -1,19 +1,6 @@
 <template>
-    <v-col
-        cols="12"
-        sm="8"
-    >
-        <v-card
-            height="100px"
-            class=""
-        >
-            <v-row class="pa-5 mt-2">
-                <v-card-text class="">
-                    <p class="text-center">Just One step to open the doorway</p>
-                </v-card-text>
-            </v-row>
-        </v-card>
-        <v-row class="pa-6">
+  <v-col cols="12" sm="8">
+    <v-row class="pa-6">
         <v-sheet
             min-width="60vh"
             rounded="lg"
@@ -22,6 +9,14 @@
             <v-form
                 ref="form"
             >
+                <v-text-field
+                    v-model="name"
+                    label="Name"
+                    required
+                    @blur="$v.name.$touch()"
+                    :error="$v.name.$error"
+                    :error-messages="$v.name.$error?'Please input your name':null"
+                ></v-text-field>
                 <v-text-field
                     v-model="email"
                     label="E-mail"
@@ -39,12 +34,16 @@
                     :error="$v.password.$error"
                     :error-messages="$v.password.$error?'Please input a password':null"
                 ></v-text-field>
-                <v-checkbox
-                    v-model="checkbox"
-                    label="Remember me"
+                <v-text-field
+                    v-model="password"
+                    label="Confirm Password"
+                    type="password"
                     required
-                    disabled
-                ></v-checkbox>
+                    @blur="$v.confirmPassword.$touch()"
+                    :error="$v.confirmPassword.$error"
+                    :error-messages="$v.confirmPassword.$error?'Password does not match':null"
+                ></v-text-field>
+                
 
 <!--                <v-btn-->
 <!--                    color="success"-->
@@ -56,12 +55,12 @@
                     <v-btn
                         color="primary"
                         class="mx-auto"
-                        @click="signIn"
+                        @click="signUp"
                         :disabled="getSignInLoaderFlag || $v.$anyError"
                         :loading="getSignInLoaderFlag"
                         rounded
                     >
-                        Sign In
+                        Sign Up
                     </v-btn>
                 </v-row>
 
@@ -76,32 +75,20 @@
                 </v-alert>
             </v-form>
         </v-sheet>
-        </v-row>
-        <v-card
-            height="60px"
-            class="mb-4"
-        >
-            <v-row class="">
-                <v-card-text class="my-auto">
-                    <p class="text-center">Forget Password?Click <router-link to="/auth/signUp">here</router-link></p>
-                </v-card-text>
-            </v-row>
-        </v-card>
-    </v-col>
+    </v-row>
+  </v-col>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
-import { required,email } from 'vuelidate/lib/validators'
-
+import { required,email,sameAs } from 'vuelidate/lib/validators'
 export default {
     data: () => ({
         valid: true,
         email: '',
         password: '',
-
-
-        checkbox: false,
+        name: '',
+        confirmPassword: ''
     }),
     validations:{
         email: {
@@ -111,6 +98,13 @@ export default {
         password: {
             required,
         },
+        confirmPassword:{
+            sameAsPassword:sameAs('password')
+        },
+        name:{
+            required
+        }
+
     },
     computed: {
         ...mapGetters('auth',['getSignInLoaderFlag','getIsSignInError','getSignInMessage'])
@@ -119,7 +113,7 @@ export default {
 
     methods: {
         ...mapActions('auth',['login']),
-        async signIn() {
+        async signUp() {
             this.$v.$touch();
             if(this.$v.$error){
               return;
@@ -133,6 +127,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>

@@ -22,19 +22,125 @@
         ></v-skeleton-loader>
 
         <v-card
-            class="mx-auto"
+            class="mx-auto mt-3"
             flat
+            elevation="3"
             v-else-if="getLoadedUser!==null"
         >
-            <v-card-text>
-                <div>{{getLoadedUser.id}}</div>
-                <p class="display-1 text--primary">
-                    {{getLoadedUser.name}}
-                </p>
-                <p>{{getLoadedUser.email}}</p>
-            </v-card-text>
-        </v-card>
+            <v-row align="center">
+                <v-avatar
+                  size="150px"
+                  class="mx-auto mt-2"
+                >
+                    <img
+                        alt="Avatar"
+                        src="./mahathir.png"
+                    >
+                </v-avatar>
+            </v-row>
+            <v-row align="center">
+                <v-card-title class="mx-auto">{{user.name}}</v-card-title>
+            </v-row>
+                <v-container>
+                    <v-card color="rgb(217, 224, 224);" dark class="mx-3">
+                        <v-list flat nav
+                            class="transparent"
+                        >
+                            <v-list-item-group>
+                                <v-list-item dense>
+                                    <v-col md="4">
+                                        <v-list-item-icon>
+                                            Student ID
+                                        </v-list-item-icon>
+                                    </v-col>
+                                    <v-col md="3">
+                                        <v-list-item-content>
+                                            {{user.id}}
+                                        </v-list-item-content>
+                                    </v-col>
+                                </v-list-item>
 
+                                <v-list-item class="mt-n7" dense>   
+                                    <v-col md="4">
+                                        <v-list-item-icon>
+                                            Total Discussion
+                                        </v-list-item-icon>
+                                    </v-col>
+                                    <v-col md="3">
+                                        <v-list-item-content>
+                                            {{user.discussion}}
+                                        </v-list-item-content>
+                                    </v-col>
+                                </v-list-item>
+
+                                <v-list-item class="mt-n7" dense>   
+                                    <v-col md="4">
+                                        <v-list-item-icon>
+                                            Total Question
+                                        </v-list-item-icon>
+                                    </v-col>
+                                    <v-col md="3">
+                                        <v-list-item-content>
+                                            {{user.question}}
+                                        </v-list-item-content>
+                                    </v-col>
+                                </v-list-item>
+
+                                <v-list-item class="mt-n7" dense>   
+                                    <v-col md="4">
+                                        <v-list-item-icon>
+                                            Total Answers
+                                        </v-list-item-icon>
+                                    </v-col>
+                                    <v-col md="3">
+                                        <v-list-item-content>
+                                            {{user.answers}}
+                                        </v-list-item-content>
+                                    </v-col>
+                                </v-list-item>
+
+                                <v-list-item class="mt-n7" dense>   
+                                    <v-col md="4">
+                                        <v-list-item-icon>
+                                            Upvotes
+                                        </v-list-item-icon>
+                                    </v-col>
+                                    <v-col md="3">
+                                        <v-list-item-content class="text-success">
+                                            {{user.upvotes}}
+                                        </v-list-item-content>
+                                    </v-col>
+                                </v-list-item>
+
+                                <v-list-item class="mt-n7" dense>   
+                                    <v-col md="4">
+                                        <v-list-item-icon>
+                                            Downvotes
+                                        </v-list-item-icon>
+                                    </v-col>
+                                    <v-col md="3">
+                                        <v-list-item-content class="text-danger">
+                                            {{user.downvotes}}
+                                        </v-list-item-content>
+                                    </v-col>
+                                </v-list-item>
+                            </v-list-item-group>
+                        </v-list>
+                    </v-card>
+                </v-container>
+            <!-- </v-card-text> -->
+        </v-card>
+        
+        <v-card
+            height="60px"
+            class="mt-8"
+        >
+            <v-row class="">
+                <v-card-text class="my-auto">
+                    <p class="ml-3">{{user.name}}'s post</p>
+                </v-card-text>
+            </v-row>
+        </v-card>
     </v-col>
 
 </template>
@@ -51,10 +157,25 @@ export default {
     },
     mounted() {
         this.getProfile(this.$route.params.id);
+    },
+    data(){
+        return{
+            user:{'E-mail':'mirmahathir@gmail.com',
+                  'discussion': 278,
+                  'question': 15,
+                  'answers' : 20,
+                  'upvotes': 78,
+                  'downvotes': 45,
+                  'id':1605011,
+                  'name':'Mir Mahathir Mohammad'
+            }
+        }
     }
 }
 </script>
 
 <style scoped>
-
+.k{
+    background-color: rgb(217, 224, 224);
+}
 </style>

@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Relevant from '../views/search/Relevant.vue'
-import User from "../views/user/User";
-import SignIn from "../views/auth/SignIn";
+
 
 import store from "../store"
 
@@ -11,24 +9,34 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/search/relevant',
-        component: Relevant,
         name: 'Relevant',
+        component: () => import('../views/search/Relevant.vue')
     },
 
     {
         path: '/user/:id',
-        component: User,
-        name: 'User'
+        name: 'User',
+        component: () => import('../views/user/User')
     },
     {
         path: '/auth/signIn',
-        component: SignIn,
         name: 'SignIn',
+        component: () => import('../views/auth/SignIn')
+    },
+    {
+        path: '/auth/signUp',
+        name: 'SignUp',
+        component: () => import('../views/auth/SignUp')
     },
     {
         path: '/about',
         name: 'About',
         component: () => import('../views/About.vue')
+    },
+    {
+        path:'/box',
+        name:'Box',
+        component: () => import('../components/Box/postBox')
     }
 ]
 
@@ -38,7 +46,7 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-    if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn'){
+    if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
         next('/auth/signIn');
     }
     if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
