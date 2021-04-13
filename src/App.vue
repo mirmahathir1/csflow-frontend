@@ -8,7 +8,7 @@
             <v-row>
               <v-col
                   cols="12"
-                  sm="2"
+                  md="2"
               >
 <!--                <v-sheet-->
 <!--                    rounded="lg"-->
@@ -19,7 +19,7 @@
               <router-view></router-view>
               <v-col
                   cols="12"
-                  sm="2"
+                  md="2"
               >
 <!--                <v-sheet-->
 <!--                    rounded="lg"-->
