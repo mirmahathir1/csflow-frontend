@@ -3,11 +3,7 @@
     cols="12"
     md="8"
   >
-    <v-card flat class="rounded-lg pa-2 my-2" min-height="60">
-      <v-card-text class="font-weight-normal text-h6 black--text my-1">
-        Resource Explorer
-      </v-card-text>
-    </v-card>
+    <page-header>Resource Explorer</page-header>
 
     <v-container class="my-5">
       <v-row>
@@ -28,6 +24,7 @@
 
 <script>
 import ResourceCard from "@/components/ResourceCard";
+import PageHeader from "@/components/PageHeader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 
@@ -39,7 +36,10 @@ export default {
   methods: {
     ...mapActions('archive', ['loadResource']),
   },
-  components: {ResourceCard},
+  components: {
+    ResourceCard,
+    PageHeader
+  },
   mixins: [mixins],
   mounted() {
     this.loadResource();

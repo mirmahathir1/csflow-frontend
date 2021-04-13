@@ -3,9 +3,9 @@
       cols="12"
       sm="8"
   >
-    Resource Explorer
-    <br>
-    Batch {{ batch }} resources
+    <page-header>Resource Explorer</page-header>
+    <page-subheader>Batch {{ batch }} resources</page-subheader>
+
     <v-container class="my-5" v-if="resources">
       <v-row>
         <v-col
@@ -26,6 +26,8 @@
 
 <script>
 import ResourceCard from "@/components/ResourceCard";
+import PageSubheader from "@/components/PageSubheader";
+import PageHeader from "@/components/PageHeader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 
@@ -64,7 +66,11 @@ export default {
       this.batch = to.params.batch;
     }
   },
-  components: {ResourceCard},
+  components: {
+    ResourceCard,
+    PageHeader,
+    PageSubheader
+  },
   mixins: [mixins],
   mounted() {
     this.loadResource();
