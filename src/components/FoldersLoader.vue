@@ -5,7 +5,7 @@
           :cols="$isMobile() ? '12' : '6'"
           :md="$isMobile() ? '12' : '4'"
           class="justify-content-center"
-          v-for="loader in 3"
+          v-for="loader in count"
           :key="loader"
       >
         <v-skeleton-loader
@@ -21,7 +21,13 @@
 
 <script>
 export default {
-  name: "FoldersLoader"
+  name: "FoldersLoader",
+  props: {
+    count: {
+      type: Number,
+      default: 3
+    }
+  },
 }
 </script>
 

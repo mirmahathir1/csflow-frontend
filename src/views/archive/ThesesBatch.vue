@@ -3,24 +3,32 @@
       cols="12"
       sm="8"
   >
-    <page-header>Resource Explorer</page-header>
-    <page-subheader>Batch {{ batch }} Resources</page-subheader>
+    <page-header>Theses Explorer</page-header>
+    <page-subheader>Batch {{ batch }} Theses</page-subheader>
 
-    <v-container class="my-5" v-if="!getResourceLoaderFlag">
+    <v-container class="my-5" v-if="!getThesesLoaderFlag">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
             :md="$isMobile() ? '12' : '4'"
             class="justify-content-center"
-            v-for="(resource, index) in resources"
+            v-for="(thesis, index) in theses"
             :key="index"
         >
-          <resource-card
-              type="folder"
-              @click.native="navigateTo(resource['Link'])"
-          >
-            Level {{ resource["Level"]}} Term {{ resource["Term"]}}
-          </resource-card>
+          <v-tooltip bottom :disabled="thesis['Title'].length <= 40">
+            <template v-slot:activator="{ on, attrs }">
+              <div v-bind="attrs" v-on="on">
+                <resource-card
+                    type="school"
+                    @click.native=""
+                >
+                  {{ thesis['Title'] | shorten }}
+                </resource-card>
+              </div>
+            </template>
+
+            <span class="caption">{{ thesis['Title'] }}</span>
+          </v-tooltip>
         </v-col>
       </v-row>
     </v-container>
@@ -38,31 +46,24 @@ import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 
 export default {
-  name: "ResourcesBatch",
+  name: "ThesesBatch",
   data() {
     return {
       batch: this.$route.params.batch
     }
   },
   computed: {
-    ...mapGetters('archive', ['getResources', 'getResourceLoaderFlag']),
-    resources() {
-      let ret = this.getResources(this.batch);
-      if (ret) {
-        return ret.sort((a, b) => {
-          if (a["Level"] === b["Level"]) {
-            return a["Term"] <= b["Term"] ? -1 : 1;
-          } else {
-            return a["Level"] < b["Level"] ? -1 : 1;
-          }
-        })
+    ...mapGetters('archive', ['getTheses', 'getThesesLoaderFlag']),
+    theses() {
+      if (this.getTheses) {
+        return this.getTheses.payload;
       } else {
-        return null;
+        return {};
       }
     }
   },
   methods: {
-    ...mapActions('archive', ['loadResource']),
+    ...mapActions('archive', ['loadTheses']),
     navigateTo(link) {
       window.open(link);
     }
@@ -70,6 +71,7 @@ export default {
   watch: {
     '$route'(to, from) {
       this.batch = to.params.batch;
+      this.loadTheses(this.batch);
     }
   },
   components: {
@@ -80,7 +82,7 @@ export default {
   },
   mixins: [mixins],
   mounted() {
-    this.loadResource();
+    this.loadTheses(this.batch);
   },
 }
 </script>
