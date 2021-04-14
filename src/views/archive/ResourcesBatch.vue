@@ -6,7 +6,7 @@
     <page-header>Resource Explorer</page-header>
     <page-subheader>Batch {{ batch }} Resources</page-subheader>
 
-    <v-container class="my-5" v-if="!getResourceLoaderFlag">
+    <v-container class="my-5" v-if="!getLoaderFlag('resource')">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('archive', ['getResources', 'getResourceLoaderFlag']),
+    ...mapGetters('archive', ['getResources', 'getLoaderFlag']),
     resources() {
       let ret = this.getResources(this.batch);
       if (ret) {

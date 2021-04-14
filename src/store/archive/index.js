@@ -4,8 +4,12 @@ const state = {
     batches: [],
     resources: null,
     theses: null,
-    resourceLoaderFlag: true,
-    thesesLoaderFlag: true,
+    thesisDetails: null,
+    loaderFlags: {
+        'resource': true,
+        'theses': true,
+        'thesisDetails': true,
+    }
 };
 
 const getters = {
@@ -19,14 +23,14 @@ const getters = {
             return null;
         }
     },
-    getResourceLoaderFlag: state => {
-        return state.resourceLoaderFlag;
-    },
-    getThesesLoaderFlag: state => {
-        return state.thesesLoaderFlag;
-    },
     getTheses: state => {
         return state.theses;
+    },
+    getThesisDetails: state => {
+        return state.thesisDetails;
+    },
+    getLoaderFlag: state => flag => {
+        return state.loaderFlags[flag];
     }
 };
 
@@ -37,20 +41,17 @@ const mutations = {
     setBatches(state, payload) {
         state.batches = payload;
     },
-    setResourceLoaderFlag(state) {
-        state.resourceLoaderFlag = true;
-    },
-    unsetResourceLoaderFlag(state) {
-        state.resourceLoaderFlag = false;
-    },
     setTheses(state, payload) {
         state.theses = payload;
     },
-    setThesesLoaderFlag(state) {
-        state.thesesLoaderFlag = true;
+    setThesisDetails(state, payload) {
+        state.thesisDetails = payload;
     },
-    unsetThesesLoaderFlag(state) {
-        state.thesesLoaderFlag = false;
+    setLoaderFlag(state, flag) {
+        state.loaderFlags[flag] = true;
+    },
+    unsetLoaderFlag(state, flag) {
+        state.loaderFlags[flag] = false;
     }
 };
 
@@ -60,7 +61,7 @@ const actions = {
             return;
         }
 
-        commit('setResourceLoaderFlag');
+        commit('setLoaderFlag', 'resource');
         console.log('calling api');
         csflowAPI.get('/archive/resource')
             .then(response => {
@@ -77,7 +78,7 @@ const actions = {
                 console.log(e);
             })
             .finally(() => {
-                commit('unsetResourceLoaderFlag');
+                commit('unsetLoaderFlag', 'resource');
             });
     },
     loadTheses({commit, state}, batch) {
@@ -85,7 +86,7 @@ const actions = {
             return;
         }
 
-        commit('setThesesLoaderFlag');
+        commit('setLoaderFlag', 'theses');
         console.log('calling api');
         csflowAPI.get('/archive/thesis/batch/' + batch)
             .then(response => {
@@ -100,8 +101,11 @@ const actions = {
                 commit('setTheses', null);
             })
             .finally(() => {
-                commit('unsetThesesLoaderFlag');
+                commit('unsetLoaderFlag', 'theses');
             })
+    },
+    loadThesisDetails({commit}) {
+
     }
 };
 

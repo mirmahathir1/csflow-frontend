@@ -6,7 +6,7 @@
     <page-header>Theses Explorer</page-header>
     <page-subheader>Batch {{ batch }} Theses</page-subheader>
 
-    <v-container class="my-5" v-if="!getThesesLoaderFlag">
+    <v-container class="my-5" v-if="!getLoaderFlag('theses')">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
@@ -53,7 +53,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('archive', ['getTheses', 'getThesesLoaderFlag']),
+    ...mapGetters('archive', ['getTheses', 'getLoaderFlag']),
     theses() {
       if (this.getTheses) {
         return this.getTheses.payload;

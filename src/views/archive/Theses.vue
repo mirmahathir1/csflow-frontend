@@ -5,7 +5,7 @@
   >
     <page-header>Theses Explorer</page-header>
 
-    <v-container class="my-5" v-if="!getResourceLoaderFlag">
+    <v-container class="my-5" v-if="!getLoaderFlag('resource')">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
@@ -37,7 +37,7 @@ import {mapGetters,mapActions} from 'vuex';
 export default {
   name: "Theses",
   computed: {
-    ...mapGetters('archive', ['getBatches', 'getResourceLoaderFlag']),
+    ...mapGetters('archive', ['getBatches', 'getLoaderFlag']),
   },
   methods: {
     ...mapActions('archive', ['loadResource']),
