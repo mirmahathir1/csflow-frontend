@@ -6,5 +6,5 @@ git commit -am "$message"
 git fetch
 git merge
 git push origin master
-npm run build
-firebase deploy
+# npm run build
+# firebase deploy

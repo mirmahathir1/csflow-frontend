@@ -28,6 +28,16 @@ const routes = [
         component: () => import('../views/auth/SignUp')
     },
     {
+        path: '/auth/password/forgot',
+        name: 'Forgot',
+        component: () => import('../views/auth/ForgotPassword')
+    },
+    {
+        path: '/auth/password/recover',
+        name: 'Recover',
+        component: () => import('../views/auth/RecoverPassword')
+    },
+    {
         path: '/about',
         name: 'About',
         component: () => import('../views/About.vue')
@@ -54,19 +64,19 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-    if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
-        next('/auth/signIn');
-    }
-    if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
-        next('/search/relevant');
-    }
+// router.beforeEach((to, from, next) => {
+//     if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
+//         next('/auth/signIn');
+//     }
+//     if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
+//         next('/search/relevant');
+//     }
 
-    if(to.path != from.path){
-        next();
-    }
+//     if(to.path != from.path){
+//         next();
+//     }
 
 
 
-})
+// })
 export default router
