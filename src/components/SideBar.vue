@@ -35,7 +35,17 @@ export default {
                 title:'Unanswered',
                 icon:'mdi-magnify',
                 link:'/about'
-            }
+            },
+          {
+            title: 'Resources',
+            icon: 'mdi-folder',
+            link: '/archive/resource'
+          },
+          {
+            title: 'Theses',
+            icon: 'mdi-school',
+            link: '/archive/thesis'
+          }
         ]
 
     }),

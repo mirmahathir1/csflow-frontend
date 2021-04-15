@@ -1,9 +1,9 @@
 <template>
   <v-hover v-slot:default="{ hover }">
     <v-card
-        class="text-center my-3 mx-auto pa-1 pa-md-2 rounded-lg"
+        class="text-center my-3 mx-auto pa-3 rounded-lg"
         max-width="220"
-        height="200"
+        :height="$isMobile() ? '180' : '200'"
         :elevation="hover ? 6 : 2"
         :class="{ 'my-hover': hover }"
     >
