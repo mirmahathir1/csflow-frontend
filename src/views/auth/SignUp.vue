@@ -35,7 +35,7 @@
                     :error-messages="$v.password.$error?'Please input a password':null"
                 ></v-text-field>
                 <v-text-field
-                    v-model="password"
+                    v-model="confirmPassword"
                     label="Confirm Password"
                     type="password"
                     required
