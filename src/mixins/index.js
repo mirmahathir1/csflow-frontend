@@ -7,5 +7,12 @@ export default {
             })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         },
+    },
+    filters: {
+        shorten: value => {
+            const maxLength = 40;
+
+            return value.length > maxLength ? value.substring(0, maxLength) + "..." : value;
+        }
     }
 }
