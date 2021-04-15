@@ -1,8 +1,5 @@
 <template>
-  <v-col
-      cols="12"
-      md="8"
-  >
+  <padded-container>
     <page-header :back-button="true" back-route="/archive/resource/">Resource Explorer</page-header>
     <page-subheader>Batch {{ batch }} Resources</page-subheader>
 
@@ -25,8 +22,7 @@
       </v-row>
     </v-container>
     <folders-loader v-else></folders-loader>
-
-  </v-col>
+  </padded-container>
 </template>
 
 <script>
@@ -36,6 +32,7 @@ import PageHeader from "@/components/PageHeader";
 import FoldersLoader from "@/components/FoldersLoader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
+import PaddedContainer from "@/components/PaddedContainer";
 
 export default {
   name: "ResourcesBatch",
@@ -73,6 +70,7 @@ export default {
     }
   },
   components: {
+    PaddedContainer,
     FoldersLoader,
     ResourceCard,
     PageHeader,

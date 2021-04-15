@@ -1,8 +1,5 @@
 <template>
-  <v-col
-      cols="12"
-      md="8"
-  >
+  <padded-container>
     <page-header :back-button="true" back-route="/archive/thesis/">Thesis Details</page-header>
 
     <v-card
@@ -43,17 +40,18 @@
       </v-container>
     </v-card>
     <details-loader v-else></details-loader>
-  </v-col>
+  </padded-container>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import PageHeader from "@/components/PageHeader";
 import DetailsLoader from "@/components/DetailsLoader";
+import PaddedContainer from "@/components/PaddedContainer";
 
 export default {
   name: "ThesisDetails",
-  components: {DetailsLoader, PageHeader},
+  components: {PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {
       id: this.$route.params.id
