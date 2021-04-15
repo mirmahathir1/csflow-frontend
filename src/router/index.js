@@ -56,6 +56,11 @@ const routes = [
         path: '/archive/thesis/batch/:batch',
         name: 'ThesesBatch',
         component: () => import('../views/archive/ThesesBatch')
+    },
+    {
+        path: '/archive/thesis/:id',
+        name: 'ThesisDetails',
+        component: () => import('../views/archive/ThesisDetails')
     }
 ]
 

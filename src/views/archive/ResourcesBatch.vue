@@ -1,12 +1,12 @@
 <template>
   <v-col
       cols="12"
-      sm="8"
+      md="8"
   >
     <page-header>Resource Explorer</page-header>
     <page-subheader>Batch {{ batch }} Resources</page-subheader>
 
-    <v-container class="my-5" v-if="!getLoaderFlag('resource')">
+    <v-container class="my-5" v-if="!getLoaderFlag('resources')">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
@@ -62,7 +62,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadResource']),
+    ...mapActions('archive', ['loadResources']),
     navigateTo(link) {
       window.open(link);
     }
@@ -80,7 +80,7 @@ export default {
   },
   mixins: [mixins],
   mounted() {
-    this.loadResource();
+    this.loadResources();
   },
 }
 </script>

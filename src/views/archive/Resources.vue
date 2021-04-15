@@ -5,20 +5,20 @@
   >
     <page-header>Resource Explorer</page-header>
 
-    <v-container class="my-5" v-if="!getLoaderFlag('resource')">
+    <v-container class="my-5" v-if="!getLoaderFlag('batches')">
       <v-row>
         <v-col
             :cols="$isMobile() ? '12' : '6'"
             :md="$isMobile() ? '12' : '4'"
             class="justify-content-center"
             v-for="batch in getBatches"
-            :key="batch"
+            :key="batch['ID']"
         >
           <resource-card
               type="folder"
-              @click.native="$router.push('/archive/resource/' + batch)"
+              @click.native="$router.push('/archive/resource/' + batch['ID'])"
           >
-            Batch {{ batch }} Resources
+            Batch {{ batch['ID'] }} Resources
           </resource-card>
         </v-col>
       </v-row>
@@ -40,7 +40,7 @@ export default {
     ...mapGetters('archive', ['getBatches', 'getLoaderFlag']),
   },
   methods: {
-    ...mapActions('archive', ['loadResource']),
+    ...mapActions('archive', ['loadBatches']),
   },
   components: {
     FoldersLoader,
@@ -49,7 +49,7 @@ export default {
   },
   mixins: [mixins],
   mounted() {
-    this.loadResource();
+    this.loadBatches();
   }
 }
 </script>

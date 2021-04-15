@@ -1,7 +1,7 @@
 <template>
   <v-col
       cols="12"
-      sm="8"
+      md="8"
   >
     <page-header>Theses Explorer</page-header>
     <page-subheader>Batch {{ batch }} Theses</page-subheader>
@@ -20,7 +20,7 @@
               <div v-bind="attrs" v-on="on">
                 <resource-card
                     type="school"
-                    @click.native=""
+                    @click.native="$router.push('/archive/thesis/' + thesis['ID'])"
                 >
                   {{ thesis['Title'] | shorten }}
                 </resource-card>
@@ -63,7 +63,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadTheses']),
+    ...mapActions('archive', ['loadThesesBatch']),
     navigateTo(link) {
       window.open(link);
     }
@@ -71,7 +71,7 @@ export default {
   watch: {
     '$route'(to, from) {
       this.batch = to.params.batch;
-      this.loadTheses(this.batch);
+      this.loadThesesBatch(this.batch);
     }
   },
   components: {
@@ -82,7 +82,7 @@ export default {
   },
   mixins: [mixins],
   mounted() {
-    this.loadTheses(this.batch);
+    this.loadThesesBatch(this.batch);
   },
 }
 </script>

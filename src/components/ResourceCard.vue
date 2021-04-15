@@ -2,9 +2,8 @@
   <v-hover v-slot:default="{ hover }">
     <v-card
         class="text-center my-3 mx-auto pa-1 pa-md-2 rounded-lg"
-        width="auto"
         max-width="220"
-        max-height="200"
+        height="200"
         :elevation="hover ? 6 : 2"
         :class="{ 'my-hover': hover }"
     >
