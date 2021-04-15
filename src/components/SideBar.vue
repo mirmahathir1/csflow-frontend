@@ -38,7 +38,7 @@ export default {
             },
           {
             title: 'Resources',
-            icon: 'mdi-folder',
+            icon: 'mdi-folder-multiple',
             link: '/archive/resource'
           },
           {

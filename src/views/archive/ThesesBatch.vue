@@ -1,9 +1,6 @@
 <template>
-  <v-col
-      cols="12"
-      md="8"
-  >
-    <page-header>Theses Explorer</page-header>
+  <padded-container>
+    <page-header :back-button="true" back-route="/archive/thesis/">Theses Explorer</page-header>
     <page-subheader>Batch {{ batch }} Theses</page-subheader>
 
     <v-container class="my-5" v-if="!getLoaderFlag('theses')">
@@ -15,7 +12,7 @@
             v-for="(thesis, index) in theses"
             :key="index"
         >
-          <v-tooltip bottom :disabled="thesis['Title'].length <= 40">
+          <v-tooltip top :disabled="thesis['Title'].length <= 40">
             <template v-slot:activator="{ on, attrs }">
               <div v-bind="attrs" v-on="on">
                 <resource-card
@@ -27,14 +24,15 @@
               </div>
             </template>
 
-            <span class="caption">{{ thesis['Title'] }}</span>
+            <v-container>
+              <span class="caption">{{ thesis['Title'] }}</span>
+            </v-container>
           </v-tooltip>
         </v-col>
       </v-row>
     </v-container>
     <folders-loader v-else></folders-loader>
-
-  </v-col>
+  </padded-container>
 </template>
 
 <script>
@@ -44,6 +42,7 @@ import PageHeader from "@/components/PageHeader";
 import FoldersLoader from "@/components/FoldersLoader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
+import PaddedContainer from "@/components/PaddedContainer";
 
 export default {
   name: "ThesesBatch",
@@ -63,10 +62,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesesBatch']),
-    navigateTo(link) {
-      window.open(link);
-    }
+    ...mapActions('archive', ['loadThesesBatch'])
   },
   watch: {
     '$route'(to, from) {
@@ -75,6 +71,7 @@ export default {
     }
   },
   components: {
+    PaddedContainer,
     FoldersLoader,
     ResourceCard,
     PageHeader,
