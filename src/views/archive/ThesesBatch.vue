@@ -32,6 +32,12 @@
       </v-row>
     </v-container>
     <folders-loader v-else></folders-loader>
+
+    <template v-slot:right>
+      <v-card class="mt-8">
+        <v-card-text class="text-center text-body-1">Create New Thesis</v-card-text>
+      </v-card>
+    </template>
   </padded-container>
 </template>
 
