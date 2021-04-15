@@ -65,10 +65,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesesBatch']),
-    navigateTo(link) {
-      window.open(link);
-    }
+    ...mapActions('archive', ['loadThesesBatch'])
   },
   watch: {
     '$route'(to, from) {

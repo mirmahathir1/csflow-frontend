@@ -28,7 +28,8 @@
         <v-card-text class="black--text text-body-1">Owners:</v-card-text>
         <v-row class="px-3">
           <v-col
-              :cols="$isMobile() ? 8 : 4"
+              :cols="$isMobile() ? 8 : 6"
+              :md="$isMobile() ? 8 : 4"
               v-for="owner in details['owners']"
               :key="owner['ID']"
           >
