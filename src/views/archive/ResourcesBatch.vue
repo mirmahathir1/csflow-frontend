@@ -3,7 +3,7 @@
       cols="12"
       md="8"
   >
-    <page-header>Resource Explorer</page-header>
+    <page-header :back-button="true" back-route="/archive/resource/">Resource Explorer</page-header>
     <page-subheader>Batch {{ batch }} Resources</page-subheader>
 
     <v-container class="my-5" v-if="!getLoaderFlag('resources')">

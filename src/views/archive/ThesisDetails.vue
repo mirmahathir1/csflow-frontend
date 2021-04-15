@@ -3,7 +3,7 @@
       cols="12"
       md="8"
   >
-    <page-header>Thesis Details</page-header>
+    <page-header :back-button="true" back-route="/archive/thesis/">Thesis Details</page-header>
 
     <v-card
         color="white"
@@ -11,12 +11,12 @@
         class="rounded-lg px-5 pt-8 pb-4 mt-6"
         v-if="!getLoaderFlag('thesisDetails')"
     >
-      <v-card-title class="justify-center text-h5">
+      <v-card-text class="text-center text-h5 black--text">
         {{ details['title'] }}
-      </v-card-title>
-      <v-card-subtitle class="text-center mt-3 text-subtitle-1">
+      </v-card-text>
+      <v-card-text class="text-center mt-3 text-subtitle-1">
         {{ writers }}
-      </v-card-subtitle>
+      </v-card-text>
       <v-divider light></v-divider>
       <v-card-text class="mt-4 black--text text-body-1">
         {{ details['description'] }}
@@ -26,10 +26,9 @@
       </v-card-text>
       <v-container class="px-0">
         <v-card-text class="black--text text-body-1">Owners:</v-card-text>
-        <v-row class="px-2">
+        <v-row class="px-3">
           <v-col
-              :cols="$isMobile() ? '8' : '4'"
-              class="mx-1"
+              :cols="$isMobile() ? 8 : 4"
               v-for="owner in details['owners']"
               :key="owner['ID']"
           >
@@ -42,19 +41,18 @@
         </v-row>
       </v-container>
     </v-card>
-    <folders-loader v-else></folders-loader>
+    <details-loader v-else></details-loader>
   </v-col>
 </template>
 
 <script>
-import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 import PageHeader from "@/components/PageHeader";
-import FoldersLoader from "@/components/FoldersLoader";
+import DetailsLoader from "@/components/DetailsLoader";
 
 export default {
   name: "ThesisDetails",
-  components: {FoldersLoader, PageHeader},
+  components: {DetailsLoader, PageHeader},
   data() {
     return {
       id: this.$route.params.id
@@ -67,9 +65,9 @@ export default {
     },
     writers() {
       let ret = "";
-      for (let i in this.details['writers']) {
-        ret += this.details['writers'][i] + ', ';
-      }
+      this.details['writers'].forEach(writer => {
+        ret += writer + ", ";
+      })
 
       return ret.substring(0, ret.length-2);
     }

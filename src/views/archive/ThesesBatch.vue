@@ -3,7 +3,7 @@
       cols="12"
       md="8"
   >
-    <page-header>Theses Explorer</page-header>
+    <page-header :back-button="true" back-route="/archive/thesis/">Theses Explorer</page-header>
     <page-subheader>Batch {{ batch }} Theses</page-subheader>
 
     <v-container class="my-5" v-if="!getLoaderFlag('theses')">
@@ -15,7 +15,7 @@
             v-for="(thesis, index) in theses"
             :key="index"
         >
-          <v-tooltip bottom :disabled="thesis['Title'].length <= 40">
+          <v-tooltip top :disabled="thesis['Title'].length <= 40">
             <template v-slot:activator="{ on, attrs }">
               <div v-bind="attrs" v-on="on">
                 <resource-card
@@ -27,7 +27,9 @@
               </div>
             </template>
 
-            <span class="caption">{{ thesis['Title'] }}</span>
+            <v-container>
+              <span class="caption">{{ thesis['Title'] }}</span>
+            </v-container>
           </v-tooltip>
         </v-col>
       </v-row>
