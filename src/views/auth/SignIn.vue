@@ -83,7 +83,7 @@
         >
             <v-row class="">
                 <v-card-text class="my-auto">
-                    <p class="text-center">Forget Password?Click <router-link to="/auth/signUp">here</router-link></p>
+                    <p class="text-center">Forget Password?Click <router-link to="/auth/password/forgot">here</router-link></p>
                 </v-card-text>
             </v-row>
         </v-card>
