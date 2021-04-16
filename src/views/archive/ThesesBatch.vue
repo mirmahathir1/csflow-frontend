@@ -3,6 +3,20 @@
     <page-header :back-button="true" back-route="/archive/thesis/">Theses Explorer</page-header>
     <page-subheader>Batch {{ batch }} Theses</page-subheader>
 
+    <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isMyBatch">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="300">
+        <v-card-text class="text-center text-body-2">Create New Thesis</v-card-text>
+        <div class="mx-6">
+          <hr class="my-divider">
+        </div>
+        <v-card-actions class="mx-2">
+          <v-btn block color="primary" small @click="logMe">
+            Create
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+
     <v-container class="my-5" v-if="!getLoaderFlag('theses')">
       <v-row>
         <v-col
@@ -32,12 +46,6 @@
       </v-row>
     </v-container>
     <folders-loader v-else></folders-loader>
-
-    <template v-slot:right>
-      <v-card class="mt-8">
-        <v-card-text class="text-center text-body-1">Create New Thesis</v-card-text>
-      </v-card>
-    </template>
   </padded-container>
 </template>
 
@@ -59,16 +67,31 @@ export default {
   },
   computed: {
     ...mapGetters('archive', ['getTheses', 'getLoaderFlag']),
+    ...mapGetters('user', ['getLoadedUser']),
     theses() {
       if (this.getTheses) {
         return this.getTheses.payload;
       } else {
         return {};
       }
+    },
+    isMyBatch() {
+      if (this.getLoadedUser) {
+        if (this.getLoadedUser['batchID'] === parseInt(this.batch)) {
+          return true;
+        }
+      }
+
+      return false;
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesesBatch'])
+    ...mapActions('archive', ['loadThesesBatch']),
+    ...mapActions('user', ['getProfile']),
+    logMe() {
+      console.log('clicked');
+      this.$router.push('/archive/thesis/new');
+    }
   },
   watch: {
     '$route'(to, from) {
@@ -86,6 +109,7 @@ export default {
   mixins: [mixins],
   mounted() {
     this.loadThesesBatch(this.batch);
+    this.getProfile('me');
   },
 }
 </script>

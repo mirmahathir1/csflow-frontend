@@ -1,5 +1,6 @@
 <template>
-  <div :class="{ 'mx-15 my-5': !$isMobile(), 'mx-3 my-3': $isMobile() }">
+  <v-container>
+<!--    :class="{ 'mx-15 my-5': !$isMobile(), 'mx-3 my-3': $isMobile() }"-->
     <v-row>
       <v-col cols="12" md="2">
         <slot name="left"></slot>
@@ -11,7 +12,7 @@
         <slot name="right"></slot>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>

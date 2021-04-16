@@ -10,6 +10,9 @@ import vuetify from './plugins/vuetify';
 import Mixins from '@/mixins/index';
 import Vuelidate from 'vuelidate';
 
+// global styling
+import "./assets/css/main.css";
+
 Vue.use(Vuelidate);
 Vue.mixin(Mixins);
 
