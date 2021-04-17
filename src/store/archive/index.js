@@ -10,7 +10,11 @@ const state = {
         'resources': true,
         'theses': true,
         'thesisDetails': true,
-    }
+        'thesisCreation': false,
+    },
+
+    isThesisCreationError: false,
+    thesisCreationMessage: null,
 };
 
 const getters = {
@@ -32,6 +36,12 @@ const getters = {
     },
     getLoaderFlag: state => flag => {
         return state.loaderFlags[flag];
+    },
+    getThesisCreationError: state => {
+        return state.isThesisCreationError;
+    },
+    getThesisCreationMessage: state => {
+        return state.thesisCreationMessage;
     }
 };
 
@@ -53,6 +63,14 @@ const mutations = {
     },
     unsetLoaderFlag(state, flag) {
         state.loaderFlags[flag] = false;
+    },
+    setThesisCreationMessage(state, payload) {
+        state.isThesisCreationError = true;
+        state.thesisCreationMessage = payload;
+    },
+    unsetThesisCreationMessage(state) {
+        state.isThesisCreationError = false;
+        state.thesisCreationMessage = null;
     }
 };
 
@@ -137,6 +155,25 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'thesisDetails');
             });
+    },
+    createThesis({commit}, payload) {
+        commit('setLoaderFlag', 'thesisCreation');
+        commit('unsetThesisCreationMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/archive/thesis', payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    console.log(e.response);
+                    commit('setThesisCreationMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisCreation');
+                });
+        });
     }
 };
 

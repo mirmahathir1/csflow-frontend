@@ -14,7 +14,7 @@
         <hr class="my-divider">
       </div>
       <v-container>
-        <form>
+        <v-form ref="form">
           <v-row>
             <v-col cols="12" md="2"></v-col>
             <v-col cols="12" md="3">
@@ -146,7 +146,31 @@
             </v-col>
             <v-col cols="4"></v-col>
           </v-row>
-        </form>
+          <v-row>
+            <v-col cols="7"></v-col>
+            <v-col cols="5" align="center">
+              <v-btn
+                  color="primary"
+                  :block="$isMobile()"
+                  :disabled="$v.$invalid || getLoaderFlag('thesisCreation')"
+                  :loading="getLoaderFlag('thesisCreation')"
+                  @click="submit"
+              >Submit</v-btn>
+            </v-col>
+          </v-row>
+          <v-row><p>{{$v.$invalid}}</p></v-row>
+          <v-row class="justify-center">
+            <v-alert
+                type="error"
+                outlined
+                dense
+                v-if="getThesisCreationError"
+            >
+              {{ getThesisCreationMessage }}
+              error message
+            </v-alert>
+          </v-row>
+        </v-form>
       </v-container>
     </v-card>
   </padded-container>
@@ -156,6 +180,7 @@
 import { required, minLength, url, maxLength } from 'vuelidate/lib/validators'
 import PaddedContainer from "@/components/PaddedContainer";
 import PageHeader from "@/components/PageHeader";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: "ThesisForm",
@@ -174,11 +199,11 @@ export default {
     },
     prevAuthors: {
       type: Array,
-      default: () => ['Navid', 'Ikram', 'Goyez'],
+      default: () => [],
     },
     prevOwners: {
       type: Array,
-      default: () => ['1605005', '1605011', '1605088'],
+      default: () => [],
     }
   },
   data() {
@@ -210,7 +235,6 @@ export default {
       $each: {
         name: {
           required,
-          minLength: minLength(5),
         }
       }
     },
@@ -231,6 +255,15 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('archive', ['getLoaderFlag', 'getThesisCreationError', 'getThesisCreationMessage']),
+    ...mapGetters('user', ['getLoadedUser']),
+    batchID() {
+      if (this.getLoadedUser) {
+        return this.getLoadedUser['batchID'];
+      }
+
+      return 0;
+    },
     titleErrors() {
       const errors = [];
       if (!this.$v.title.$dirty) {
@@ -285,6 +318,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions('archive', ['createThesis']),
+    ...mapActions('user', ['getProfile']),
     removeAuthor(index) {
       this.authors.splice(index, 1);
     },
@@ -299,9 +334,36 @@ export default {
       this.owners.push({id: this.newOwner});
       this.newOwner = '';
     },
+    submit() {
+      if (this.$v.$invalid) {
+        return;
+      }
+
+      const payload = {};
+      payload.title = this.title;
+      payload.description = this.description;
+      payload.link = this.link;
+
+      payload.writers = [];
+      this.authors.forEach(element => {
+        payload.writers.push(element.name);
+      });
+
+      payload.owners = [];
+      this.owners.forEach(element => {
+        payload.owners.push(parseInt(element.id));
+      });
+
+      this.createThesis(payload)
+        .then(response => {
+          this.$router.push('/archive/thesis/batch/' + this.batchID);
+        });
+    }
   },
   components: {PageHeader, PaddedContainer},
   mounted() {
+    this.getProfile('me');
+
     this.authors = [];
     this.prevAuthors.forEach(element => {
       this.authors.push({name: element});
