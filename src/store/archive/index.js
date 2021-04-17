@@ -95,10 +95,6 @@ const actions = {
             });
     },
     loadResources({commit, state}) {
-        if (state.resources) {
-            return;
-        }
-
         commit('setLoaderFlag', 'resources');
         csflowAPI.get('/archive/resource')
             .then(response => {
@@ -117,10 +113,6 @@ const actions = {
             });
     },
     loadThesesBatch({commit, state}, batch) {
-        if (state.theses && state.theses.batch === batch) {
-            return;
-        }
-
         commit('setLoaderFlag', 'theses');
         csflowAPI.get('/archive/thesis/batch/' + batch)
             .then(response => {

@@ -125,7 +125,7 @@
                   @blur="$v.owners.$each[index].id.$touch()"
                   :error-messages="ownerErrors[index]"
               >
-                <template v-slot:append-outer v-if="owners.length > 1">
+                <template v-slot:append-outer>
                   <v-icon color="red lighten-1" @click="removeOwner(index)">
                     mdi-minus-circle
                   </v-icon>
@@ -158,7 +158,6 @@
               >Submit</v-btn>
             </v-col>
           </v-row>
-          <v-row><p>{{$v.$invalid}}</p></v-row>
           <v-row class="justify-center">
             <v-alert
                 type="error"
@@ -167,7 +166,6 @@
                 v-if="getThesisCreationError"
             >
               {{ getThesisCreationMessage }}
-              error message
             </v-alert>
           </v-row>
         </v-form>
@@ -177,7 +175,7 @@
 </template>
 
 <script>
-import { required, minLength, url, maxLength } from 'vuelidate/lib/validators'
+import { required, minLength, url } from 'vuelidate/lib/validators'
 import PaddedContainer from "@/components/PaddedContainer";
 import PageHeader from "@/components/PageHeader";
 import { mapGetters, mapActions } from 'vuex';
@@ -361,14 +359,17 @@ export default {
     }
   },
   components: {PageHeader, PaddedContainer},
-  mounted() {
-    this.getProfile('me');
+  async mounted() {
+    await this.getProfile('me');
 
     this.authors = [];
+    // this.authors.push({name: this.getLoadedUser['name']});
     this.prevAuthors.forEach(element => {
       this.authors.push({name: element});
     });
 
+    this.owners = [];
+    this.owners.push({id: this.getLoadedUser['id'].toString()});
     this.prevOwners.forEach(element => {
       this.owners.push({id: element});
     });
