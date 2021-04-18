@@ -49,15 +49,17 @@
             <!-- </v-toolbar> -->
             <!-- <v-toolbar-title link @click="$router.push('/auth/signIn')" v-if="!getIsSignedIn">Login</v-toolbar-title>
             <v-toolbar-title link @click="$router.push('/auth/signUp')" v-if="!getIsSignedIn" class="ml-4">SignUp</v-toolbar-title> -->
+            
             <v-autocomplete
                 clearable
                 rounded
-                background-color="grey"
+                background-color="white"
+                light
                 solo
                 label="Search here...."
                 append-icon="mdi-magnify"
                 v-if="getIsSignedIn"
-                class="ma-auto mt-1"
+                class="ma-auto mt-2"
                 dense
 
             >
@@ -157,7 +159,7 @@
                     <v-list-item
                         :to="item.link"
                         :key="index"
-                        link
+                        style="text-decoration:none"
                     >
                         <v-list-item-icon>
                             <v-icon>{{ item.icon }}</v-icon>

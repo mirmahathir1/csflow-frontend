@@ -1,14 +1,14 @@
 <template>
-  <v-row class="pa-6 my-auto">
-      <v-col class="my-auto">
+  <PaddedContainer>
+  <!-- <v-row class="pa-6 my-auto"> -->
+      <!-- <v-col class="justify-content-center"> -->
         <v-card
-            height="100px"
+            :height="$isMobile() ?'60px':'100px'"
             class=""
         >
         </v-card>
         <v-sheet
-            min-width="60vh"
-            max-width="80vh"
+            :min-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
         >
@@ -45,13 +45,15 @@
 
             </v-form>
         </v-sheet>
-      </v-col>
-  </v-row>
+      <!-- </v-col> -->
+  <!-- </v-row> -->
+  </PaddedContainer>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
+import PaddedContainer from "../../components/PaddedContainer"
 export default {
     data:()=>({
         email:'',
@@ -73,6 +75,9 @@ export default {
             this.$router.push('/auth/password/recover')
             
         }
+    },
+    components:{
+        PaddedContainer
     }
 }
 </script>

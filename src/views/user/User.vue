@@ -1,9 +1,9 @@
 <template>
-    <v-col
+    <!-- <v-col
         cols="12"
 
         sm="8"
-    >
+    > -->
 <!--        <v-card-->
 <!--            class="mx-auto text-center"-->
 <!--            flat-->
@@ -15,6 +15,7 @@
 <!--                class="ma-5"-->
 <!--            ></v-progress-circular>-->
 <!--        </v-card>-->
+    <PaddedContainer>
         <v-skeleton-loader
             class="mx-auto text-center"
             v-if="getUserLoaderFlag"
@@ -141,12 +142,14 @@
                 </v-card-text>
             </v-row>
         </v-card>
-    </v-col>
+    <!-- </v-col> -->
+    </PaddedContainer>
 
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
+import PaddedContainer from "../../components/PaddedContainer"
 export default {
     name: "User.vue",
     computed:{
@@ -170,6 +173,9 @@ export default {
                   'name':'Mir Mahathir Mohammad'
             }
         }
+    },
+    components:{
+        PaddedContainer
     }
 }
 </script>

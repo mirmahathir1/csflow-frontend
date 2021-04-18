@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer app clipped v-if="getIsSignedIn && getDrawerSideBar">
+    <v-navigation-drawer app clipped v-model="drawer">
         <v-list
             dense
             nav
@@ -28,7 +28,15 @@ import {mapGetters, mapActions} from "vuex";
 
 export default {
     computed: {
-        ...mapGetters('auth', ['getIsSignedIn', 'getSideBarItems', 'getDrawerSideBar'])
+        ...mapGetters('auth', ['getIsSignedIn', 'getSideBarItems', 'getDrawerSideBar']),
+        drawer:{
+            get:function(){
+                return this.getIsSignedIn && this.getDrawerSideBar
+            },
+            set:function(){
+                
+            }
+        }
     },
     data: () => ({
         items: [
@@ -47,7 +55,8 @@ export default {
                 icon: 'mdi-school',
                 link: '/archive/thesis'
             }
-        ]
+        ],
+        draw:false
 
     }),
     methods: {

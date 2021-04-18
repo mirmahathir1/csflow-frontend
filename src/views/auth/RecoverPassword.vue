@@ -1,21 +1,21 @@
 <template>
-  <v-row class="pa-6 my-auto">
-      <v-col class="my-auto">
+  <PaddedContainer>
+  <!-- <v-row class="pa-6 my-auto">
+      <v-col class="my-auto"> -->
         <v-card
             height="100px"
             class=""
         >
-            <v-row class="pa-5 mt-2">
+            <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
                 <v-card-text class="">
-                    <p class="text-center">Welcome {{username}}.You have been redirecting to
+                    <p class="text-center">Welcome.You have been redirecting to
                       this page for resetting your password
                     </p>
                 </v-card-text>
             </v-row>
         </v-card>
         <v-sheet
-            min-width="60vh"
-            max-width="80vh"
+            :min-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
         >
@@ -61,12 +61,14 @@
 
             </v-form>
         </v-sheet>
-      </v-col>
-  </v-row>
+      <!-- </v-col>
+  </v-row> -->
+  </PaddedContainer>
 </template>
 
 <script>
 import { required,sameAs } from 'vuelidate/lib/validators'
+import PaddedContainer from "../../components/PaddedContainer"
 export default {
   data: ()=>({
     username:'Mahathir Mohammad',
@@ -91,6 +93,9 @@ export default {
         }
         this.$router.push('/auth/password/reset')
     }
+  },
+  components:{
+      PaddedContainer
   }
 }
 </script>
