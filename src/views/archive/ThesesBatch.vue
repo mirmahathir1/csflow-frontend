@@ -43,6 +43,17 @@
             </v-container>
           </v-tooltip>
         </v-col>
+        <v-col
+            cols="12"
+            class="justify-content-center"
+            v-if="Object.keys(theses).length === 0"
+        >
+          <v-card class="text-center pt-7 mx-auto" height="120" max-width="600" elevation="1">
+            <v-card-text large class="rounded-lg black--text font-weight-normal text-h6">
+              No theses found
+            </v-card-text>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
     <folders-loader v-else></folders-loader>
