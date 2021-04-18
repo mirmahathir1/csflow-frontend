@@ -1,8 +1,9 @@
 <template>
-    <v-col
+    <!-- <v-col
         cols="12"
         sm="8"
-    >
+    > -->
+    <PaddedContainer>
         <v-card
             height="100px"
             class=""
@@ -15,7 +16,7 @@
         </v-card>
         <v-row class="pa-6">
         <v-sheet
-            min-width="60vh"
+            :min-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mx-auto"
         >
@@ -87,13 +88,14 @@
                 </v-card-text>
             </v-row>
         </v-card>
-    </v-col>
+    <!-- </v-col> -->
+    </PaddedContainer>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
-
+import PaddedContainer from "../../components/PaddedContainer"
 export default {
     data: () => ({
         valid: true,
@@ -130,6 +132,9 @@ export default {
             }
         }
     },
+    components:{
+        PaddedContainer
+    }
 }
 </script>
 

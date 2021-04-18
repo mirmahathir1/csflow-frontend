@@ -3,7 +3,7 @@
 
         <!-- <AppBar></AppBar> -->
         <Header></Header>
-        <SideBar></SideBar>
+<!--        <SideBar></SideBar>-->
         <v-main class="grey lighten-3">
           <router-view></router-view>
         </v-main>

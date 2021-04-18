@@ -64,6 +64,23 @@ export default {
     data: () => ({
         drawer: false,
         group: null,
+        items: [
+            {
+                title: 'Unanswered',
+                icon: 'mdi-magnify',
+                link: '/about'
+            },
+            {
+                title: 'Resources',
+                icon: 'mdi-folder-multiple',
+                link: '/archive/resource'
+            },
+            {
+                title: 'Theses',
+                icon: 'mdi-school',
+                link: '/archive/thesis'
+            }
+        ]
     }),
     methods:{
         ...mapActions('auth',['logoutAll','logout']),
@@ -74,7 +91,10 @@ export default {
         async signOutAll(){
             await this.logoutAll();
             await this.$router.push('/auth/signIn');
-        }
+        },
+        changeRoute(link) {
+            this.$router.push(link)
+        },
     }
 }
 </script>

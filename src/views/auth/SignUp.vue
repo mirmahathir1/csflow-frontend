@@ -1,8 +1,9 @@
 <template>
-  <v-col cols="12" sm="8">
+  <!-- <v-col cols="12" sm="8"> -->
+    <PaddedContainer>
     <v-row class="pa-6">
         <v-sheet
-            min-width="60vh"
+            :min-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mx-auto"
         >
@@ -54,7 +55,7 @@
                 <v-row>
                     <v-btn
                         color="primary"
-                        class="mx-auto"
+                        class="mx-auto mt-4"
                         @click="signUp"
                         :disabled="getSignInLoaderFlag || $v.$anyError"
                         :loading="getSignInLoaderFlag"
@@ -76,12 +77,14 @@
             </v-form>
         </v-sheet>
     </v-row>
-  </v-col>
+  <!-- </v-col> -->
+    </PaddedContainer>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,email,sameAs } from 'vuelidate/lib/validators'
+import PaddedContainer from "../../components/PaddedContainer"
 export default {
     data: () => ({
         valid: true,
@@ -124,6 +127,9 @@ export default {
             }
         }
     },
+    components:{
+        PaddedContainer
+    }
 }
 </script>
 
