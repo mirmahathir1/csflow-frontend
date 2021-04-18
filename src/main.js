@@ -8,6 +8,7 @@ import router from './router'
 
 import vuetify from './plugins/vuetify';
 import Mixins from '@/mixins/index';
+import titleSetter from '@/mixins/titleSetter'
 import Vuelidate from 'vuelidate';
 
 // global styling
@@ -15,6 +16,7 @@ import "./assets/css/main.css";
 
 Vue.use(Vuelidate);
 Vue.mixin(Mixins);
+Vue.mixin(titleSetter)
 
 Vue.config.productionTip = false
 

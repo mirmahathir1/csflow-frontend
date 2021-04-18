@@ -18,6 +18,11 @@ const routes = [
         component: () => import('../views/user/User')
     },
     {
+        path: '/user/profile/edit',
+        name: 'EditProfile',
+        component: () => import('../views/user/EditProfile')
+    },
+    {
         path: '/auth/signIn',
         name: 'SignIn',
         component: () => import('../views/auth/SignIn')

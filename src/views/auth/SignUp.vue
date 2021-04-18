@@ -7,6 +7,9 @@
             rounded="lg"
             class="pa-6 mx-auto"
         >
+            <v-toolbar-title class="mx-auto text-center">
+                SignUp
+            </v-toolbar-title>
             <v-form
                 ref="form"
             >
@@ -86,6 +89,10 @@ import {mapGetters,mapActions} from 'vuex';
 import { required,email,sameAs } from 'vuelidate/lib/validators'
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
+    name:"SignUp",
+    title(){
+        return "Sign Up"
+    },
     data: () => ({
         valid: true,
         email: '',

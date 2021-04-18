@@ -41,20 +41,29 @@
             </v-row>
             <v-row align="center">
                 <v-card-title class="mx-auto">{{user.name}}</v-card-title>
+                <v-btn
+                    :class="$isMobile()?'mr-3':'mr-7'"
+                    text
+                    icon
+                    color="blue lighten-2"
+                    @click="$router.push('/user/profile/edit')"
+                >
+                    <v-icon>mdi-square-edit-outline</v-icon>
+                </v-btn>
             </v-row>
                 <v-container>
-                    <v-card color="rgb(217, 224, 224);" dark class="mx-3">
+                    <v-card color="rgb(210,210,240)" light class="mx-3">
                         <v-list flat nav
                             class="transparent"
                         >
                             <v-list-item-group>
                                 <v-list-item dense>
-                                    <v-col md="4">
+                                    <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Student ID
                                         </v-list-item-icon>
                                     </v-col>
-                                    <v-col md="3">
+                                    <v-col  md="3">
                                         <v-list-item-content>
                                             {{user.id}}
                                         </v-list-item-content>
@@ -62,7 +71,7 @@
                                 </v-list-item>
 
                                 <v-list-item class="mt-n7" dense>   
-                                    <v-col md="4">
+                                    <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Total Discussion
                                         </v-list-item-icon>
@@ -75,7 +84,7 @@
                                 </v-list-item>
 
                                 <v-list-item class="mt-n7" dense>   
-                                    <v-col md="4">
+                                    <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Total Question
                                         </v-list-item-icon>
@@ -88,7 +97,7 @@
                                 </v-list-item>
 
                                 <v-list-item class="mt-n7" dense>   
-                                    <v-col md="4">
+                                    <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Total Answers
                                         </v-list-item-icon>
@@ -101,7 +110,7 @@
                                 </v-list-item>
 
                                 <v-list-item class="mt-n7" dense>   
-                                    <v-col md="4">
+                                    <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Upvotes
                                         </v-list-item-icon>
@@ -114,7 +123,7 @@
                                 </v-list-item>
 
                                 <v-list-item class="mt-n7" dense>   
-                                    <v-col md="4">
+                                    <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Downvotes
                                         </v-list-item-icon>
@@ -151,7 +160,10 @@
 import {mapGetters,mapActions} from 'vuex';
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
-    name: "User.vue",
+    name: "User",
+    title(){
+        return "My Profile"
+    },
     computed:{
         ...mapGetters('user',['getLoadedUser','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage'])
     },

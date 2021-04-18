@@ -70,6 +70,10 @@
 import { required,sameAs } from 'vuelidate/lib/validators'
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
+    name:"",
+    title(){
+        return "Recover Password"
+    },
   data: ()=>({
     username:'Mahathir Mohammad',
     newPassword:'',

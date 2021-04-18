@@ -55,6 +55,10 @@ import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
+    name:"",
+    title(){
+        return "Forget Password"
+    },
     data:()=>({
         email:'',
         loading:false

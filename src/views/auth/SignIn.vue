@@ -10,7 +10,7 @@
         >
             <v-row class="pa-5 mt-2">
                 <v-card-text class="">
-                    <p class="text-center">Just One step to open the doorway</p>
+                    <p class="text-center">Just one step to open the doorway</p>
                 </v-card-text>
             </v-row>
         </v-card>
@@ -53,16 +53,24 @@
 <!--                >-->
 <!--                    Sign Up-->
 <!--                </v-btn>-->
-                <v-row>
+                <v-row class="justify-content-center">
                     <v-btn
                         color="primary"
-                        class="mx-auto"
+                        class="ma-2"
                         @click="signIn"
                         :disabled="getSignInLoaderFlag || $v.$anyError"
                         :loading="getSignInLoaderFlag"
                         rounded
                     >
                         Sign In
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        class="ma-2"
+                        @click="$router.push('/auth/signUp')"
+                        rounded
+                    >
+                        Sign Up
                     </v-btn>
                 </v-row>
 
@@ -84,7 +92,7 @@
         >
             <v-row class="">
                 <v-card-text class="my-auto">
-                    <p class="text-center">Forget Password?Click <router-link to="/auth/password/forgot">here</router-link></p>
+                    <p class="text-center">Forget password?click <router-link to="/auth/password/forgot">here</router-link></p>
                 </v-card-text>
             </v-row>
         </v-card>
@@ -97,6 +105,10 @@ import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
+    name:"SignIn",
+    title(){
+        return "Sign In"
+    },
     data: () => ({
         valid: true,
         email: '',
