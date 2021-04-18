@@ -68,10 +68,15 @@ const routes = [
         component: () => import('../views/archive/ThesesBatch')
     },
     {
+        path: '/archive/thesis/new',
+        name: 'ThesisForm',
+        component: () => import('../views/archive/ThesisForm')
+    },
+    {
         path: '/archive/thesis/:id',
         name: 'ThesisDetails',
         component: () => import('../views/archive/ThesisDetails')
-    }
+    },
 ]
 
 const router = new VueRouter({

@@ -10,7 +10,11 @@ const state = {
         'resources': true,
         'theses': true,
         'thesisDetails': true,
-    }
+        'thesisCreation': false,
+    },
+
+    isThesisCreationError: false,
+    thesisCreationMessage: null,
 };
 
 const getters = {
@@ -32,6 +36,12 @@ const getters = {
     },
     getLoaderFlag: state => flag => {
         return state.loaderFlags[flag];
+    },
+    getThesisCreationError: state => {
+        return state.isThesisCreationError;
+    },
+    getThesisCreationMessage: state => {
+        return state.thesisCreationMessage;
     }
 };
 
@@ -53,6 +63,14 @@ const mutations = {
     },
     unsetLoaderFlag(state, flag) {
         state.loaderFlags[flag] = false;
+    },
+    setThesisCreationMessage(state, payload) {
+        state.isThesisCreationError = true;
+        state.thesisCreationMessage = payload;
+    },
+    unsetThesisCreationMessage(state) {
+        state.isThesisCreationError = false;
+        state.thesisCreationMessage = null;
     }
 };
 
@@ -77,10 +95,6 @@ const actions = {
             });
     },
     loadResources({commit, state}) {
-        if (state.resources) {
-            return;
-        }
-
         commit('setLoaderFlag', 'resources');
         csflowAPI.get('/archive/resource')
             .then(response => {
@@ -99,10 +113,6 @@ const actions = {
             });
     },
     loadThesesBatch({commit, state}, batch) {
-        if (state.theses && state.theses.batch === batch) {
-            return;
-        }
-
         commit('setLoaderFlag', 'theses');
         csflowAPI.get('/archive/thesis/batch/' + batch)
             .then(response => {
@@ -137,6 +147,25 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'thesisDetails');
             });
+    },
+    createThesis({commit}, payload) {
+        commit('setLoaderFlag', 'thesisCreation');
+        commit('unsetThesisCreationMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/archive/thesis', payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    console.log(e.response);
+                    commit('setThesisCreationMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisCreation');
+                });
+        });
     }
 };
 
