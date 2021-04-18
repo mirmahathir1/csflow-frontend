@@ -199,6 +199,13 @@ export default {
     components: {
         Button
     },
+    watch: {
+      'drawer'(to, from) {
+        if (to !== from) {
+          this.setDrawerSideBar();
+        }
+      }
+    },
     data() {
         return {
             drawer: false,
