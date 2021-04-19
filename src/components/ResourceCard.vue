@@ -2,12 +2,12 @@
   <v-hover v-slot:default="{ hover }">
     <v-card
         class="text-center my-3 mx-auto pa-3 rounded-lg"
-        max-width="220"
-        :height="$isMobile() ? '180' : '200'"
+        max-width="250"
+        :height="$isMobile() ? '180' : '210'"
         :elevation="hover ? 6 : 2"
         :class="{ 'my-hover': hover }"
     >
-      <v-icon color="grey darken-3" :size="$vuetify.breakpoint.lgAndUp ? '100' : '75'">
+      <v-icon color="grey darken-3" :size="$vuetify.breakpoint.lgAndUp ? '100' : '90'">
         mdi-{{ type }}
       </v-icon>
       <v-card-text large class="my-3 black--text font-weight-medium">
