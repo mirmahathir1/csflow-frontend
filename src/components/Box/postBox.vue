@@ -1,23 +1,24 @@
 <template>
   <v-card class="mt-2 ml-2" dense>
     <v-row>
-        <v-col cols="1" class="my-auto">
+        <v-col cols="2" md="1" class="my-auto">
           <v-list-item>
             <p>
             <v-icon class="" medium color="green darken-2">
               mdi-arrow-up-bold-outline
             </v-icon><br>
             {{post.votes}}
+            <br>
             <v-icon class="" medium color="red darken-2">
               mdi-arrow-down-bold-outline
             </v-icon>
             </p>
           </v-list-item>
         </v-col>
-        <v-col class="text-justify my-auto">
+        <v-col cols="5" md="8" class="text-justify my-auto">
             {{post.text}}
         </v-col>
-        <v-col md="3">
+        <v-col cols="5" md="3" class="">
             <v-card>
               <v-list-item three-line>
                 <v-list-item-content>

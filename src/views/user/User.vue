@@ -64,7 +64,8 @@
                                         </v-list-item-icon>
                                     </v-col>
                                     <v-col  md="3">
-                                        <v-list-item-content>
+                                        <v-list-item-content
+                                          >
                                             {{user.id}}
                                         </v-list-item-content>
                                     </v-col>
@@ -144,6 +145,7 @@
         <v-card
             height="60px"
             class="mt-8"
+            v-if="getLoadedUser!==null"
         >
             <v-row class="">
                 <v-card-text class="my-auto">
