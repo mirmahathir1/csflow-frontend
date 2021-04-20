@@ -53,6 +53,11 @@ const routes = [
         component: () => import('../components/Box/postBox')
     },
     {
+        path:'/post/create',
+        name:'Create Post',
+        component: () => import('../views/post/CreatePost')
+    },
+    {
         path: '/archive/resource',
         name: 'Resources',
         component: () => import('../views/archive/Resources')
@@ -90,6 +95,9 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
+    if(to.name=="create post"){
+        next();
+    }
     if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
         next('/auth/signIn');
     }
