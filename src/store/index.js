@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import auth from '../store/auth'
 import user from '../store/user'
 import archive from '../store/archive'
+import others from "./others/drawerControl";
 
 Vue.use(Vuex)
 
@@ -16,7 +17,8 @@ let store = new Vuex.Store({
   modules: {
     auth,
     user,
-    archive
+    archive,
+    others
   }
 })
 
