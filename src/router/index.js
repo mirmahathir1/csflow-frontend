@@ -75,7 +75,7 @@ const routes = [
     {
         path: '/archive/thesis/new',
         name: 'ThesisForm',
-        component: () => import('../views/archive/ThesisForm')
+        component: () => import('../views/archive/ThesisCreation')
     },
     {
         path: '/archive/thesis/:id',
