@@ -58,7 +58,8 @@ export default {
         },
     },
     computed:{
-        ...mapGetters('auth',['getLogoutLoaderFlag','getIsSignedIn'])
+        ...mapGetters('auth',['getLogoutLoaderFlag','getIsSignedIn']),
+
     },
 
     data: () => ({
@@ -84,6 +85,7 @@ export default {
     }),
     methods:{
         ...mapActions('auth',['logoutAll','logout']),
+
         async signOut(){
             await this.logout();
             await this.$router.push('/auth/signIn');
@@ -95,7 +97,8 @@ export default {
         changeRoute(link) {
             this.$router.push(link)
         },
-    }
+    },
+
 }
 </script>
 

@@ -7,7 +7,7 @@
             app
             clipped-left
         >
-            <v-app-bar-nav-icon v-if="getIsSignedIn" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon v-if="getIsSignedIn" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
 
             <v-toolbar-title>CSFLOW</v-toolbar-title>
 
@@ -182,10 +182,20 @@ import Button from '../components/Button'
 export default {
     name: "Header",
     computed: {
-        ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn"])
+        ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn"]),
+        ...mapGetters('others',['getDrawer']),
+        drawer:{
+            get: function () {
+                return this.getDrawer
+            },
+            set: function (newValue) {
+                this.defineDrawerFlag(newValue)
+            }
+        }
     },
     methods: {
         ...mapActions("auth", ["logoutAll", "logout", "setDrawerSideBar"]),
+        ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer']),
         async signOut() {
             await this.logout();
             await this.$router.push("/auth/signIn");
@@ -194,23 +204,17 @@ export default {
             await this.logoutAll();
             await this.$router.push("/auth/signIn");
         },
-        // async drawer() {
-        //     await this.setDrawerSideBar();
-        // }
+
     },
     components: {
         Button
     },
     watch: {
-      'drawer'(to, from) {
-        if (to !== from) {
-          this.setDrawerSideBar();
-        }
-      }
+
     },
     data() {
         return {
-            drawer: false,
+
             dialog: false,
             items: [
                 {
@@ -230,6 +234,9 @@ export default {
                 }
             ]
         }
+    },
+    mounted() {
+
     }
 };
 </script>

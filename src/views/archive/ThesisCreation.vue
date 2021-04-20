@@ -1,6 +1,6 @@
 <template>
   <padded-container>
-    <page-header>Create New Thesis</page-header>
+    <page-header :back-button="batchID > 0" :back-route="'/archive/thesis/batch/' + batchID">Create New Thesis</page-header>
 
     <v-card
         color="white"
@@ -16,11 +16,12 @@
       <v-container>
         <v-form ref="form">
           <v-row>
-            <v-col cols="12" md="2"></v-col>
-            <v-col cols="12" md="3">
+            <v-spacer></v-spacer>
+            <v-col cols="12" md="3" v-if="!$isMobile()">
               <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Title:</v-card-text>
             </v-col>
             <v-col cols="12" md="5">
+              <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Title:</v-card-text>
               <v-text-field
                   outlined
                   class="rounded-lg"
@@ -30,14 +31,15 @@
                   @blur="$v.title.$touch()"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" md="2"></v-col>
+            <v-spacer></v-spacer>
           </v-row>
           <v-row>
-            <v-col cols="12" md="2"></v-col>
-            <v-col cols="12" md="3">
+            <v-spacer></v-spacer>
+            <v-col cols="12" md="3" v-if="!$isMobile()">
               <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Description:</v-card-text>
             </v-col>
             <v-col cols="12" md="5">
+              <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Description:</v-card-text>
               <v-textarea
                   outlined
                   class="rounded-lg"
@@ -47,14 +49,15 @@
                   @blur="$v.description.$touch()"
               ></v-textarea>
             </v-col>
-            <v-col cols="12" md="2"></v-col>
+            <v-spacer></v-spacer>
           </v-row>
           <v-row>
-            <v-col cols="12" md="2"></v-col>
-            <v-col cols="12" md="3">
+            <v-spacer></v-spacer>
+            <v-col cols="12" md="3" v-if="!$isMobile()">
               <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">DOI Link:</v-card-text>
             </v-col>
             <v-col cols="12" md="5">
+              <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">DOI Link:</v-card-text>
               <v-text-field
                   outlined
                   class="rounded-lg"
@@ -64,18 +67,22 @@
                   @blur="$v.link.$touch()"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" md="2"></v-col>
+            <v-spacer></v-spacer>
           </v-row>
 
 <!--          Authors-->
           <v-row class="mt-0">
-            <v-col cols="12" md="2"></v-col>
-            <v-col cols="12" md="3">
-              <v-card-text class="text-left text--black text-body-1 pb-0 pl-7">Authors:</v-card-text>
+            <v-spacer></v-spacer>
+            <v-col cols="12" md="5" class="py-0">
+              <v-card-text class="text-left text--black text-body-1 pl-7">
+                Authors:
+                <p v-if="authors.length === 0" class="mb-0 red--text lighten-1 text-subheading">At least one author required</p>
+              </v-card-text>
             </v-col>
-            <v-col cols="12" md="7"></v-col>
-            <v-col cols="3"></v-col>
-            <v-col cols="5">
+            <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
+
+            <v-col cols="1" md="3"></v-col>
+            <v-col cols="10" md="5">
                 <v-text-field
                     v-for="(author, index) in authors" :key="index"
                     outlined
@@ -85,10 +92,17 @@
                     @blur="$v.authors.$each[index].name.$touch()"
                     :error-messages="!$v.authors.$each[index].name.required ? 'Please enter a name' : null"
                 >
-                  <template v-slot:append-outer v-if="authors.length > 1">
-                    <v-icon color="red lighten-1" @click="removeAuthor(index)">
-                      mdi-minus-circle
-                    </v-icon>
+                  <template v-slot:append-outer>
+                    <v-btn
+                      icon
+                      color="red lighten-1"
+                      @click="removeAuthor(index)"
+                      small
+                    >
+                      <v-icon>
+                        mdi-minus-circle
+                      </v-icon>
+                    </v-btn>
                   </template>
                 </v-text-field>
                 <v-text-field
@@ -98,24 +112,32 @@
                     v-model="newAuthor"
                 >
                   <template v-slot:append-outer>
-                    <v-icon color="primary" @click="addAuthor()">
-                      mdi-plus-circle
-                    </v-icon>
+                    <v-btn
+                        icon
+                        color="primary"
+                        @click="addAuthor()"
+                        small
+                    >
+                      <v-icon>
+                        mdi-plus-circle
+                      </v-icon>
+                    </v-btn>
                   </template>
                 </v-text-field>
             </v-col>
-            <v-col cols="4"></v-col>
+            <v-col cols="1" md="4"></v-col>
           </v-row>
 
 <!--          Owners-->
           <v-row class="mt-0">
-            <v-col cols="12" md="2"></v-col>
-            <v-col cols="12" md="3">
-              <v-card-text class="text-left text--black text-body-1 pb-0 pl-7">Owners:</v-card-text>
+            <v-spacer></v-spacer>
+            <v-col cols="12" md="3" class="py-0">
+              <v-card-text class="text-left text--black text-body-1 pl-7">Owners:</v-card-text>
             </v-col>
-            <v-col cols="12" md="7"></v-col>
-            <v-col cols="3"></v-col>
-            <v-col cols="5">
+            <v-col cols="12" md="7" v-if="!$isMobile()"></v-col>
+
+            <v-col cols="1" md="3"></v-col>
+            <v-col cols="10" md="5">
               <v-text-field
                   v-for="(owner, index) in owners" :key="index"
                   outlined
@@ -124,11 +146,20 @@
                   v-model="owners[index].id"
                   @blur="$v.owners.$each[index].id.$touch()"
                   :error-messages="ownerErrors[index]"
+                  :disabled="index === userIndex"
               >
                 <template v-slot:append-outer>
-                  <v-icon color="red lighten-1" @click="removeOwner(index)">
-                    mdi-minus-circle
-                  </v-icon>
+                  <v-btn
+                      icon
+                      color="red lighten-1"
+                      @click="removeOwner(index)"
+                      small
+                      :disabled="index === userIndex"
+                  >
+                    <v-icon>
+                      mdi-minus-circle
+                    </v-icon>
+                  </v-btn>
                 </template>
               </v-text-field>
               <v-text-field
@@ -138,13 +169,20 @@
                   v-model="newOwner"
               >
                 <template v-slot:append-outer>
-                  <v-icon color="primary" @click="addOwner()">
-                    mdi-plus-circle
-                  </v-icon>
+                  <v-btn
+                      icon
+                      color="primary"
+                      @click="addOwner()"
+                      small
+                  >
+                    <v-icon>
+                      mdi-plus-circle
+                    </v-icon>
+                  </v-btn>
                 </template>
               </v-text-field>
             </v-col>
-            <v-col cols="4"></v-col>
+            <v-col cols="1" md="4"></v-col>
           </v-row>
           <v-row>
             <v-col cols="7"></v-col>
@@ -175,7 +213,7 @@
 </template>
 
 <script>
-import { required, minLength, url } from 'vuelidate/lib/validators'
+import { required, minLength, url, integer } from 'vuelidate/lib/validators'
 import PaddedContainer from "@/components/PaddedContainer";
 import PageHeader from "@/components/PageHeader";
 import { mapGetters, mapActions } from 'vuex';
@@ -202,6 +240,10 @@ export default {
     prevOwners: {
       type: Array,
       default: () => [],
+    },
+    prevUserIndex: {
+      type: Number,
+      default: -1,
     }
   },
   data() {
@@ -213,6 +255,7 @@ export default {
       newAuthor: '',
       owners: [],
       newOwner: '',
+      userIndex: this.prevUserIndex,
     };
   },
   validations: {
@@ -247,6 +290,10 @@ export default {
           },
           len(val) {
             return val.length === 7;
+          },
+          integer,
+          positive(val) {
+            return val[0] !== '-';
           }
         }
       }
@@ -268,7 +315,7 @@ export default {
         return errors;
       }
 
-      !this.$v.title.required && errors.push('Title is required.');
+      !this.$v.title.required && errors.push('Title is required');
       return errors
     },
     descriptionErrors() {
@@ -277,8 +324,8 @@ export default {
         return errors;
       }
 
-      !this.$v.description.required && errors.push('Description is required.');
-      !this.$v.description.minLength && errors.push('Must be at least 100 characters.');
+      !this.$v.description.required && errors.push('Description is required');
+      !this.$v.description.minLength && errors.push('Must be at least 100 characters');
 
       return errors;
     },
@@ -288,8 +335,8 @@ export default {
         return errors;
       }
 
-      !this.$v.link.required && errors.push('DOI link is required.');
-      !this.$v.link.url && errors.push('Must be a valid url.');
+      !this.$v.link.required && errors.push('DOI link is required');
+      !this.$v.link.url && errors.push('Must be a valid url');
 
       return errors;
     },
@@ -300,14 +347,11 @@ export default {
         const element = this.$v.owners.$each[index.toString()];
         const temp = [];
 
-        // if (!element.id.$dirty) {
-        //   errors.push(temp);
-        //   continue;
-        // }
-
-        !element.id.required && temp.push('Please enter a student id.');
-        !element.id.len && temp.push('Student id must be of 7 digits.');
-        !element.id.unique && temp.push('Same id cannot be used more than once.');
+        !element.id.required && temp.push('Please enter a student id');
+        !element.id.integer && temp.push('Student id must be a number');
+        !element.id.positive && temp.push('Student id cannot be negative');
+        !element.id.len && temp.push('Student id must be of 7 digits');
+        !element.id.unique && temp.push('Same id cannot be used more than once');
 
         errors.push(temp);
       }
@@ -368,6 +412,7 @@ export default {
       this.authors.push({name: element});
     });
 
+    this.userIndex = 0;
     this.owners = [];
     this.owners.push({id: this.getLoadedUser['id'].toString()});
     this.prevOwners.forEach(element => {
