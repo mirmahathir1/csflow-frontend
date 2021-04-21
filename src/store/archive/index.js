@@ -10,11 +10,11 @@ const state = {
         'resources': true,
         'theses': true,
         'thesisDetails': true,
-        'thesisCreation': false,
+        'thesisSubmission': false,
     },
 
-    isThesisCreationError: false,
-    thesisCreationMessage: null,
+    isThesisSubmitError: false,
+    thesisSubmitMessage: null,
 };
 
 const getters = {
@@ -37,11 +37,11 @@ const getters = {
     getLoaderFlag: state => flag => {
         return state.loaderFlags[flag];
     },
-    getThesisCreationError: state => {
-        return state.isThesisCreationError;
+    getThesisSubmitError: state => {
+        return state.isThesisSubmitError;
     },
-    getThesisCreationMessage: state => {
-        return state.thesisCreationMessage;
+    getThesisSubmitMessage: state => {
+        return state.thesisSubmitMessage;
     }
 };
 
@@ -64,13 +64,13 @@ const mutations = {
     unsetLoaderFlag(state, flag) {
         state.loaderFlags[flag] = false;
     },
-    setThesisCreationMessage(state, payload) {
-        state.isThesisCreationError = true;
-        state.thesisCreationMessage = payload;
+    setThesisSubmitMessage(state, payload) {
+        state.isThesisSubmitError = true;
+        state.thesisSubmitMessage = payload;
     },
-    unsetThesisCreationMessage(state) {
-        state.isThesisCreationError = false;
-        state.thesisCreationMessage = null;
+    unsetThesisSubmitMessage(state) {
+        state.isThesisSubmitError = false;
+        state.thesisSubmitMessage = null;
     }
 };
 
@@ -130,30 +130,35 @@ const actions = {
                 commit('unsetLoaderFlag', 'theses');
             });
     },
-    loadThesisDetails({commit, state}, id, force) {
-        if (!force && state.thesisDetails && state.thesisDetails['id'] === id)
-            return;
+    loadThesisDetails({commit, state}, {id, force}) {
+        return new Promise((resolve, reject) => {
+            if (!force && state.thesisDetails && state.thesisDetails['id'] === id)
+                resolve('already loaded');
 
-        commit('setLoaderFlag', 'thesisDetails');
-        csflowAPI.get('/archive/thesis/' + id)
-            .then(response => {
-                let details = {};
-                details.id = id;
-                details.payload = response.data.payload;
+            commit('setLoaderFlag', 'thesisDetails');
+            csflowAPI.get('/archive/thesis/' + id)
+                .then(response => {
+                    let details = {};
+                    details.id = id;
+                    details.payload = response.data.payload;
+                    commit('setThesisDetails', details);
 
-                commit('setThesisDetails', details);
-            })
-            .catch(e => {
-                console.log(e);
-                commit('setThesisDetails', null);
-            })
-            .finally(() => {
-                commit('unsetLoaderFlag', 'thesisDetails');
-            });
+                    resolve('loaded');
+                })
+                .catch(e => {
+                    console.log(e.response);
+                    commit('setThesisDetails', null);
+
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisDetails');
+                });
+        });
     },
     createThesis({commit}, payload) {
-        commit('setLoaderFlag', 'thesisCreation');
-        commit('unsetThesisCreationMessage');
+        commit('setLoaderFlag', 'thesisSubmission');
+        commit('unsetThesisSubmitMessage');
 
         return new Promise((resolve, reject) => {
             csflowAPI.post('/archive/thesis', payload)
@@ -162,11 +167,30 @@ const actions = {
                 })
                 .catch(e => {
                     console.log(e.response);
-                    commit('setThesisCreationMessage', e.response.data.message);
+                    commit('setThesisSubmitMessage', e.response.data.message);
                     reject(e);
                 })
                 .finally(() => {
-                    commit('unsetLoaderFlag', 'thesisCreation');
+                    commit('unsetLoaderFlag', 'thesisSubmission');
+                });
+        });
+    },
+    updateThesis({commit}, {payload, thesisID}) {
+        commit('setLoaderFlag', 'thesisSubmission');
+        commit('unsetThesisSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/archive/thesis/' + thesisID, payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    console.log(e.response);
+                    commit('setThesisSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisSubmission');
                 });
         });
     }

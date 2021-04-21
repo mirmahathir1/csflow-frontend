@@ -99,18 +99,18 @@ export default {
     ...mapActions('archive', ['loadThesisDetails']),
     ...mapActions('user', ['getProfile']),
     onEditClicked() {
-      console.log('edit clicked');
+      this.$router.push('/archive/thesis/' + this.getThesisDetails.id + '/edit');
     }
   },
   watch: {
     '$route'(to, from) {
       this.id = to.params.id;
-      this.loadThesisDetails(this.id, false);
+      this.loadThesisDetails({id: this.id, force: false});
     }
   },
   mounted() {
     this.getProfile('me');
-    this.loadThesisDetails(this.id, false);
+    this.loadThesisDetails({id: this.id, force: true});
   }
 }
 </script>
