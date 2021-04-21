@@ -237,7 +237,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    userIndex: {
+    prevUserIndex: {
       type: Number,
       default: -1,
     },
@@ -263,6 +263,7 @@ export default {
       newAuthor: '',
       owners: this.prevOwners,
       newOwner: '',
+      userIndex: this.prevUserIndex,
     };
   },
   validations: {
@@ -371,6 +372,10 @@ export default {
     },
     removeOwner(index) {
       this.owners.splice(index, 1);
+
+      if (index < this.userIndex) {
+        this.userIndex--;
+      }
     },
     addOwner() {
       this.owners.push({id: this.newOwner});

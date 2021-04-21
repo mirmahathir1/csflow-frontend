@@ -10,7 +10,7 @@
         :prevLink="link"
         :prevAuthors="authors"
         :prevOwners="owners"
-        :userIndex="userIndex"
+        :prevUserIndex="userIndex"
         :batchID="batchID"
     ></thesis-form>
     <details-loader v-else></details-loader>
