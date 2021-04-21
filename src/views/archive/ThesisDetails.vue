@@ -42,9 +42,46 @@
         <icon-button @click.native="onEditClicked">
           mdi-square-edit-outline
         </icon-button>
-        <icon-button>
-          mdi-delete-outline
-        </icon-button>
+
+        <v-dialog
+            v-model="dialog"
+            max-width="290"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <icon-button
+                v-bind="attrs"
+                v-on="on"
+                @click.native="dialog = !dialog"
+            >
+              mdi-delete-outline
+            </icon-button>
+          </template>
+          <v-card>
+            <v-card-title class="headline">
+              Delete this thesis?
+            </v-card-title>
+            <v-card-text>Are you sure you want to delete this thesis? Deleted theses cannot be recovered.</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="green darken-1"
+                  text
+                  @click="dialog = false"
+              >
+                No
+              </v-btn>
+              <v-btn
+                  color="red darken-1"
+                  text
+                  @click="onDeleteClicked"
+                  :loading="getLoaderFlag('thesisDeletion')"
+                  :disabled="getLoaderFlag('thesisDeletion')"
+              >
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-row>
     </v-card>
     <details-loader v-else></details-loader>
@@ -63,7 +100,8 @@ export default {
   components: {IconButton, PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      dialog: false,
     }
   },
   computed: {
@@ -96,10 +134,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesisDetails']),
+    ...mapActions('archive', ['loadThesisDetails', 'deleteThesis']),
     ...mapActions('user', ['getProfile']),
     onEditClicked() {
       this.$router.push('/archive/thesis/' + this.getThesisDetails.id + '/edit');
+    },
+    onDeleteClicked() {
+      this.deleteThesis(this.id)
+        .then(response => {
+          this.$router.push('/archive/thesis/batch/' + this.details['batch']);
+        })
+        .catch(e => {
+
+        })
+        .finally(() => {
+          this.dialog = false;
+        });
+
     }
   },
   watch: {

@@ -11,10 +11,13 @@ const state = {
         'theses': true,
         'thesisDetails': true,
         'thesisSubmission': false,
+        'thesisDeletion': false,
     },
 
     isThesisSubmitError: false,
     thesisSubmitMessage: null,
+    isThesisDeleteError: false,
+    thesisDeleteMessage: null,
 };
 
 const getters = {
@@ -42,6 +45,12 @@ const getters = {
     },
     getThesisSubmitMessage: state => {
         return state.thesisSubmitMessage;
+    },
+    getThesisDeleteError: state => {
+        return state.isThesisDeleteError;
+    },
+    getThesisDeleteMessage: state => {
+        return state.thesisDeleteMessage;
     }
 };
 
@@ -71,6 +80,14 @@ const mutations = {
     unsetThesisSubmitMessage(state) {
         state.isThesisSubmitError = false;
         state.thesisSubmitMessage = null;
+    },
+    setThesisDeleteMessage(state, payload) {
+        state.isThesisDeleteError = true;
+        state.thesisDeleteMessage = payload;
+    },
+    unsetThesisDeleteMessage(state) {
+        state.isThesisDeleteError = false;
+        state.thesisDeleteMessage = null;
     }
 };
 
@@ -191,6 +208,24 @@ const actions = {
                 })
                 .finally(() => {
                     commit('unsetLoaderFlag', 'thesisSubmission');
+                });
+        });
+    },
+    deleteThesis({commit}, thesisID) {
+        commit('setLoaderFlag', 'thesisDeletion');
+        commit('unsetThesisDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/thesis/' + thesisID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setThesisDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisDeletion');
                 });
         });
     }
