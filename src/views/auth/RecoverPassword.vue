@@ -8,7 +8,7 @@
         >
             <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
                 <v-card-text class="">
-                    <p class="text-center">Welcome.You have been redirecting to
+                    <p class="text-center">Welcome.You have been redirected to
                       this page for resetting your password
                     </p>
                 </v-card-text>

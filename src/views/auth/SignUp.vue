@@ -8,7 +8,7 @@
             class="pa-6 mx-auto"
         >
             <v-toolbar-title class="mx-auto text-center">
-                SignUp
+                Sign Up
             </v-toolbar-title>
             <v-form
                 ref="form"

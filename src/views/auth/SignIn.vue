@@ -57,6 +57,15 @@
                     <v-btn
                         color="primary"
                         class="ma-2"
+                        @click="$router.push('/auth/signUp')"
+                        rounded
+                    >
+                        Sign Up
+                    </v-btn>
+                    
+                    <v-btn
+                        color="primary"
+                        class="ma-2"
                         @click="signIn"
                         :disabled="getSignInLoaderFlag || $v.$anyError"
                         :loading="getSignInLoaderFlag"
@@ -64,14 +73,7 @@
                     >
                         Sign In
                     </v-btn>
-                    <v-btn
-                        color="primary"
-                        class="ma-2"
-                        @click="$router.push('/auth/signUp')"
-                        rounded
-                    >
-                        Sign Up
-                    </v-btn>
+                    
                 </v-row>
 
                 <v-alert
