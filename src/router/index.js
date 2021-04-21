@@ -74,7 +74,7 @@ const routes = [
     },
     {
         path: '/archive/thesis/new',
-        name: 'ThesisForm',
+        name: 'ThesisCreation',
         component: () => import('../views/archive/ThesisCreation')
     },
     {
@@ -82,6 +82,11 @@ const routes = [
         name: 'ThesisDetails',
         component: () => import('../views/archive/ThesisDetails')
     },
+    {
+        path: '/archive/thesis/edit?id=:id',
+        name: 'ThesisUpdate',
+        component: () => import('../views/archive/ThesisCreation')
+    }
 ]
 
 const router = new VueRouter({

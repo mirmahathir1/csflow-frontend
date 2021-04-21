@@ -130,7 +130,10 @@ const actions = {
                 commit('unsetLoaderFlag', 'theses');
             });
     },
-    loadThesisDetails({commit}, id) {
+    loadThesisDetails({commit, state}, id, force) {
+        if (!force && state.thesisDetails && state.thesisDetails['id'] === id)
+            return;
+
         commit('setLoaderFlag', 'thesisDetails');
         csflowAPI.get('/archive/thesis/' + id)
             .then(response => {

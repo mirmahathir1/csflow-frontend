@@ -3,3 +3,7 @@
     border: none;
     background: black;
 }
+
+.my-hover {
+    cursor: pointer;
+}

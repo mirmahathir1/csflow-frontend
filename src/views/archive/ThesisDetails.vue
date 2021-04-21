@@ -1,12 +1,12 @@
 <template>
   <padded-container>
-    <page-header :back-button="true" back-route="/archive/thesis/">Thesis Details</page-header>
+    <page-header :back-button="!getLoaderFlag('thesisDetails')" :back-route="'/archive/thesis/batch/' + details['batch']">Thesis Details</page-header>
 
     <v-card
         color="white"
         elevation="2"
         class="rounded-lg px-5 pt-8 pb-4 mt-6"
-        v-if="!getLoaderFlag('thesisDetails')"
+        v-if="!getUserLoaderFlag && !getLoaderFlag('thesisDetails')"
     >
       <v-card-text class="text-center text-h5 black--text">
         {{ details['title'] }}
@@ -38,6 +38,14 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-row v-if="isOwner" class="justify-end my-2">
+        <icon-button @click.native="onEditClicked">
+          mdi-square-edit-outline
+        </icon-button>
+        <icon-button>
+          mdi-delete-outline
+        </icon-button>
+      </v-row>
     </v-card>
     <details-loader v-else></details-loader>
   </padded-container>
@@ -48,10 +56,11 @@ import {mapGetters,mapActions} from 'vuex';
 import PageHeader from "@/components/PageHeader";
 import DetailsLoader from "@/components/DetailsLoader";
 import PaddedContainer from "@/components/PaddedContainer";
+import IconButton from "@/components/IconButton";
 
 export default {
   name: "ThesisDetails",
-  components: {PaddedContainer, DetailsLoader, PageHeader},
+  components: {IconButton, PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {
       id: this.$route.params.id
@@ -59,29 +68,49 @@ export default {
   },
   computed: {
     ...mapGetters('archive', ['getThesisDetails', 'getLoaderFlag']),
+    ...mapGetters('user', ['getUserLoaderFlag', 'getLoadedUser']),
     details() {
-      return this.getThesisDetails.payload;
+      if (this.getThesisDetails) {
+        return this.getThesisDetails.payload;
+      }
+
+      return {};
     },
     writers() {
+      if (!this.getThesisDetails)
+        return '';
+
       let ret = "";
       this.details['writers'].forEach(writer => {
         ret += writer + ", ";
       })
 
       return ret.substring(0, ret.length-2);
+    },
+    isOwner() {
+      if (this.getLoadedUser && this.getThesisDetails) {
+        return this.details['owners'].filter(owner => owner['ID'] === this.getLoadedUser['id']).length > 0;
+      }
+
+      return false;
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesisDetails'])
+    ...mapActions('archive', ['loadThesisDetails']),
+    ...mapActions('user', ['getProfile']),
+    onEditClicked() {
+      console.log('edit clicked');
+    }
   },
   watch: {
     '$route'(to, from) {
       this.id = to.params.id;
-      this.loadThesisDetails(this.id);
+      this.loadThesisDetails(this.id, false);
     }
   },
   mounted() {
-    this.loadThesisDetails(this.id);
+    this.getProfile('me');
+    this.loadThesisDetails(this.id, false);
   }
 }
 </script>

@@ -219,7 +219,7 @@ import PageHeader from "@/components/PageHeader";
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: "ThesisForm",
+  name: "ThesisCreation",
   props: {
     prevTitle: {
       type: String,
@@ -242,6 +242,14 @@ export default {
       default: () => [],
     },
     prevUserIndex: {
+      type: Number,
+      default: -1,
+    },
+    type: {
+      type: String,
+      default: 'create',
+    },
+    thesisID: {
       type: Number,
       default: -1,
     }
@@ -405,6 +413,12 @@ export default {
   components: {PageHeader, PaddedContainer},
   async mounted() {
     await this.getProfile('me');
+
+    if (this.$route.params.id) {
+      console.log('edit');
+    } else {
+      console.log('create');
+    }
 
     this.authors = [];
     // this.authors.push({name: this.getLoadedUser['name']});
