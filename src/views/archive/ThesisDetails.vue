@@ -39,7 +39,10 @@
         </v-row>
       </v-container>
       <v-row v-if="isOwner" class="justify-end my-2">
-        <icon-button @click.native="onEditClicked">
+        <icon-button
+            @click.native="onEditClicked"
+            class="mx-1"
+        >
           mdi-square-edit-outline
         </icon-button>
 
@@ -52,6 +55,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @click.native="dialog = !dialog"
+                class="mx-1"
             >
               mdi-delete-outline
             </icon-button>
