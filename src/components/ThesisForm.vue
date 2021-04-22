@@ -406,13 +406,19 @@ export default {
 
       if (this.type === 'create') {
         this.createThesis(payload)
-            .then(response => {
-              this.$router.push('/archive/thesis/batch/' + this.batchID);
-            });
+          .then(response => {
+            this.$router.push('/archive/thesis/batch/' + this.batchID);
+          })
+          .catch(e => {
+            console.log(e.response);
+          });
       } else {
         this.updateThesis({payload, thesisID: this.thesisID})
           .then(response => {
             this.$router.push('/archive/thesis/' + this.thesisID);
+          })
+          .catch(e => {
+            console.log(e.response);
           });
       }
     }

@@ -149,7 +149,7 @@ export default {
           this.$router.push('/archive/thesis/batch/' + this.details['batch']);
         })
         .catch(e => {
-
+          console.log(e.response);
         })
         .finally(() => {
           this.dialog = false;

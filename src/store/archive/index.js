@@ -97,6 +97,7 @@ const actions = {
             return;
         }
 
+        commit('setBatches', []);
         commit('setLoaderFlag', 'batches');
         csflowAPI.get('/archive/batch')
             .then(response => {
@@ -106,13 +107,13 @@ const actions = {
             })
             .catch(e => {
                 console.log(e.response);
-                commit('setBatches', []);
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'batches');
             });
     },
     loadResources({commit, state}) {
+        commit('setResources', null);
         commit('setLoaderFlag', 'resources');
         csflowAPI.get('/archive/resource')
             .then(response => {
@@ -125,13 +126,13 @@ const actions = {
             })
             .catch(e => {
                 console.log(e.response);
-                commit('setResources', null);
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'resources');
             });
     },
     loadThesesBatch({commit, state}, batch) {
+        commit('setTheses', null);
         commit('setLoaderFlag', 'theses');
         csflowAPI.get('/archive/thesis/batch/' + batch)
             .then(response => {
@@ -143,7 +144,6 @@ const actions = {
             })
             .catch(e => {
                 console.log(e.response);
-                commit('setTheses', null);
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'theses');
@@ -154,6 +154,7 @@ const actions = {
             if (!force && state.thesisDetails && state.thesisDetails['id'] === id)
                 resolve('already loaded');
 
+            commit('setThesisDetails', null);
             commit('setLoaderFlag', 'thesisDetails');
             csflowAPI.get('/archive/thesis/' + id)
                 .then(response => {
@@ -166,7 +167,6 @@ const actions = {
                 })
                 .catch(e => {
                     console.log(e.response);
-                    commit('setThesisDetails', null);
 
                     reject(e);
                 })
@@ -185,7 +185,6 @@ const actions = {
                     resolve(response);
                 })
                 .catch(e => {
-                    console.log(e.response);
                     commit('setThesisSubmitMessage', e.response.data.message);
                     reject(e);
                 })
@@ -204,7 +203,6 @@ const actions = {
                     resolve(response);
                 })
                 .catch(e => {
-                    console.log(e.response);
                     commit('setThesisSubmitMessage', e.response.data.message);
                     reject(e);
                 })
@@ -223,7 +221,6 @@ const actions = {
                     resolve(response);
                 })
                 .catch(e => {
-                    console.log(e.response);
                     commit('setThesisDeleteMessage', e.response.data.message);
                     reject(e);
                 })
