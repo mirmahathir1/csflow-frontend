@@ -25,11 +25,11 @@ const getters = {
         return state.batches;
     },
     getResources: state => batch => {
-        if (state.resources) {
+        if (state.resources && batch in state.resources) {
             return state.resources[batch];
-        } else {
-            return null;
         }
+
+        return null;
     },
     getTheses: state => {
         return state.theses;
@@ -105,7 +105,8 @@ const actions = {
                 }
             })
             .catch(e => {
-                console.log(e);
+                console.log(e.response);
+                commit('setBatches', []);
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'batches');
@@ -123,7 +124,8 @@ const actions = {
                 commit('setResources', resources);
             })
             .catch(e => {
-                console.log(e);
+                console.log(e.response);
+                commit('setResources', null);
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'resources');
@@ -140,7 +142,7 @@ const actions = {
                 commit('setTheses', theses);
             })
             .catch(e => {
-                console.log(e);
+                console.log(e.response);
                 commit('setTheses', null);
             })
             .finally(() => {
@@ -221,6 +223,7 @@ const actions = {
                     resolve(response);
                 })
                 .catch(e => {
+                    console.log(e.response);
                     commit('setThesisDeleteMessage', e.response.data.message);
                     reject(e);
                 })

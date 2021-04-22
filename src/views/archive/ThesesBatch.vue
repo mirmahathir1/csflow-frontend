@@ -1,7 +1,7 @@
 <template>
   <padded-container>
     <page-header :back-button="true" back-route="/archive/thesis/">Theses Explorer</page-header>
-    <page-subheader>Batch {{ batch }} Theses</page-subheader>
+    <page-subheader v-if="theses">Batch {{ batch }} Theses</page-subheader>
 
     <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isMyBatch">
       <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="300">
@@ -20,6 +20,7 @@
     <v-container class="my-5" v-if="!getLoaderFlag('theses')">
       <v-row>
         <v-col
+            v-if="theses"
             :cols="$isMobile() ? '12' : '6'"
             :md="$isMobile() ? '12' : '4'"
             class="justify-content-center"
@@ -46,13 +47,10 @@
         <v-col
             cols="12"
             class="justify-content-center"
-            v-if="Object.keys(theses).length === 0"
+            v-if="!theses || Object.keys(theses).length === 0"
         >
-          <v-card class="text-center pt-7 mx-auto" height="120" max-width="600" elevation="1">
-            <v-card-text large class="rounded-lg black--text font-weight-normal text-h6">
-              No theses found
-            </v-card-text>
-          </v-card>
+          <error-card v-if="!theses">No such batch exists</error-card>
+          <error-card v-else>No theses found</error-card>
         </v-col>
       </v-row>
     </v-container>
@@ -68,6 +66,7 @@ import FoldersLoader from "@/components/FoldersLoader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 import PaddedContainer from "@/components/PaddedContainer";
+import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ThesesBatch",
@@ -81,14 +80,15 @@ export default {
     ...mapGetters('user', ['getLoadedUser']),
     theses() {
       if (this.getTheses) {
+        console.log('paisi');
         return this.getTheses.payload;
-      } else {
-        return {};
       }
+      console.log('painai');
+      return null;
     },
     isMyBatch() {
       if (this.getLoadedUser) {
-        if (this.getLoadedUser['batchID'] === parseInt(this.batch)) {
+        if (this.getLoadedUser['batchID'] === Number(this.batch)) {
           return true;
         }
       }
@@ -111,6 +111,7 @@ export default {
     }
   },
   components: {
+    ErrorCard,
     PaddedContainer,
     FoldersLoader,
     ResourceCard,
