@@ -80,10 +80,9 @@ export default {
     ...mapGetters('user', ['getLoadedUser']),
     theses() {
       if (this.getTheses) {
-        console.log('paisi');
         return this.getTheses.payload;
       }
-      console.log('painai');
+
       return null;
     },
     isMyBatch() {

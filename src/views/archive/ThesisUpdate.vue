@@ -65,28 +65,39 @@ export default {
       this.userIndex = -1;
 
       await this.getProfile('me');
-      await this.loadThesisDetails({id: this.thesisID, force: false});
-      const details = this.getThesisDetails.payload;
+      this.loadThesisDetails({id: this.thesisID, force: false})
+        .then(response => {
+          const details = this.getThesisDetails.payload;
 
-      this.title = details['title'];
-      this.description = details['description'];
-      this.link = details['link'];
-      details['writers'].forEach(writer => {
-        this.authors.push({name: writer});
-      });
-      details['owners'].forEach(owner => {
-        this.owners.push({id: owner['ID'].toString()});
+          this.title = details['title'];
+          this.description = details['description'];
+          this.link = details['link'];
 
-        if (owner['ID'] === this.userID) {
-          this.userIndex = details['owners'].indexOf(owner);
-        }
-      });
+          this.authors = [];
+          details['writers'].forEach(writer => {
+            this.authors.push({name: writer});
+          });
 
-      if (this.userIndex === -1) {
-        await this.$router.push('/archive/thesis');
-      }
+          this.owners = [];
+          details['owners'].forEach(owner => {
+            this.owners.push({id: owner['ID'].toString()});
 
-      this.loadForm = true;
+            if (owner['ID'] === this.userID) {
+              this.userIndex = details['owners'].indexOf(owner);
+            }
+          });
+
+          if (this.userIndex === -1) {
+            this.$router.push('/archive/thesis');
+          }
+        })
+        .catch(e => {
+          console.log(e.response);
+          this.$router.push('/archive/thesis');
+        })
+        .finally(() => {
+          this.loadForm = true;
+        });
     }
   },
   watch: {

@@ -1,12 +1,12 @@
 <template>
   <padded-container>
-    <page-header :back-button="!getLoaderFlag('thesisDetails')" :back-route="'/archive/thesis/batch/' + details['batch']">Thesis Details</page-header>
+    <page-header :back-button="!getLoaderFlag('thesisDetails')" :back-route="backRoute">Thesis Details</page-header>
 
     <v-card
         color="white"
         elevation="2"
         class="rounded-lg px-5 pt-8 pb-4 mt-6"
-        v-if="!getUserLoaderFlag && !getLoaderFlag('thesisDetails')"
+        v-if="!getUserLoaderFlag && !getLoaderFlag('thesisDetails') && details"
     >
       <v-card-text class="text-center text-h5 black--text">
         {{ details['title'] }}
@@ -88,7 +88,12 @@
         </v-dialog>
       </v-row>
     </v-card>
-    <details-loader v-else></details-loader>
+    <details-loader v-else-if="getUserLoaderFlag || getLoaderFlag('thesisDetails')"></details-loader>
+
+    <error-card
+        v-if="!getUserLoaderFlag && !getLoaderFlag('thesisDetails') && !details"
+        class="my-5"
+    >Thesis not found</error-card>
   </padded-container>
 </template>
 
@@ -98,10 +103,11 @@ import PageHeader from "@/components/PageHeader";
 import DetailsLoader from "@/components/DetailsLoader";
 import PaddedContainer from "@/components/PaddedContainer";
 import IconButton from "@/components/IconButton";
+import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ThesisDetails",
-  components: {IconButton, PaddedContainer, DetailsLoader, PageHeader},
+  components: {ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {
       id: this.$route.params.id,
@@ -116,7 +122,7 @@ export default {
         return this.getThesisDetails.payload;
       }
 
-      return {};
+      return null;
     },
     writers() {
       if (!this.getThesisDetails)
@@ -135,6 +141,13 @@ export default {
       }
 
       return false;
+    },
+    backRoute() {
+      if (this.getThesisDetails) {
+        return '/archive/thesis/batch/' + this.details['batch'];
+      }
+
+      return '/archive/thesis';
     }
   },
   methods: {
@@ -160,12 +173,14 @@ export default {
   watch: {
     '$route'(to, from) {
       this.id = to.params.id;
-      this.loadThesisDetails({id: this.id, force: false});
+      this.loadThesisDetails({id: this.id, force: false})
+        .catch(e => console.log(e.response));
     }
   },
   mounted() {
     this.getProfile('me');
-    this.loadThesisDetails({id: this.id, force: true});
+    this.loadThesisDetails({id: this.id, force: true})
+      .catch(e => console.log(e.response));
   }
 }
 </script>

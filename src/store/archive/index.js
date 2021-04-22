@@ -151,8 +151,10 @@ const actions = {
     },
     loadThesisDetails({commit, state}, {id, force}) {
         return new Promise((resolve, reject) => {
-            if (!force && state.thesisDetails && state.thesisDetails['id'] === id)
+            if (!force && state.thesisDetails && state.thesisDetails['id'] === id) {
                 resolve('already loaded');
+                return;
+            }
 
             commit('setThesisDetails', null);
             commit('setLoaderFlag', 'thesisDetails');
@@ -166,8 +168,6 @@ const actions = {
                     resolve('loaded');
                 })
                 .catch(e => {
-                    console.log(e.response);
-
                     reject(e);
                 })
                 .finally(() => {
