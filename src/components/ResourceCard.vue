@@ -30,7 +30,5 @@ export default {
 </script>
 
 <style scoped>
-.my-hover {
-  cursor: pointer;
-}
+
 </style>

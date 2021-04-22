@@ -1,11 +1,12 @@
 <template>
   <padded-container>
     <page-header :back-button="true" back-route="/archive/resource/">Resource Explorer</page-header>
-    <page-subheader>Batch {{ batch }} Resources</page-subheader>
+    <page-subheader v-if="resources">Batch {{ batch }} Resources</page-subheader>
 
     <v-container class="my-5" v-if="!getLoaderFlag('resources')">
       <v-row>
         <v-col
+            v-if="resources"
             :cols="$isMobile() ? '12' : '6'"
             :md="$isMobile() ? '12' : '4'"
             class="justify-content-center"
@@ -18,6 +19,13 @@
           >
             Level {{ resource["Level"]}} Term {{ resource["Term"]}}
           </resource-card>
+        </v-col>
+        <v-col
+            cols="12"
+            class="justify-content-center"
+            v-if="!resources"
+        >
+          <error-card>No such batch exists</error-card>
         </v-col>
       </v-row>
     </v-container>
@@ -33,6 +41,7 @@ import FoldersLoader from "@/components/FoldersLoader";
 import mixins from '@/mixins/index'
 import {mapGetters,mapActions} from 'vuex';
 import PaddedContainer from "@/components/PaddedContainer";
+import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ResourcesBatch",
@@ -53,9 +62,9 @@ export default {
             return a["Level"] < b["Level"] ? -1 : 1;
           }
         })
-      } else {
-        return null;
       }
+
+      return null;
     }
   },
   methods: {
@@ -70,6 +79,7 @@ export default {
     }
   },
   components: {
+    ErrorCard,
     PaddedContainer,
     FoldersLoader,
     ResourceCard,

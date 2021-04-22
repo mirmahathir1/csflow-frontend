@@ -84,14 +84,34 @@ const routes = [
     },
     {
         path: '/archive/thesis/new',
-        name: 'ThesisForm',
+        name: 'ThesisCreation',
         component: () => import('../views/archive/ThesisCreation')
+    },
+    {
+        path: '/archive/thesis/:id/edit',
+        name: 'ThesisUpdate',
+        component: () => import('../views/archive/ThesisUpdate')
     },
     {
         path: '/archive/thesis/:id',
         name: 'ThesisDetails',
         component: () => import('../views/archive/ThesisDetails')
     },
+    {
+        path: '/archive/project',
+        name: 'Projects',
+        component: () => import('../views/archive/Projects')
+    },
+    {
+        path: '/archive/project/batch/:batch',
+        name: 'ProjectsBatch',
+        component: () => import('../views/archive/ProjectsBatch')
+    },
+    {
+        path: '/archive/project/batch/:batch/:course',
+        name: 'ProjectsCourse',
+        component: () => import('../views/archive/ProjectsCourse')
+    }
 ]
 
 const router = new VueRouter({
