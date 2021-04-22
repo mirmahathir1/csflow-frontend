@@ -43,6 +43,15 @@
                     </v-btn>
                 </v-row>
 
+                <v-alert
+                    class="mt-5"
+                    dense
+                    outlined
+                    type="error"
+                    v-if="error"
+                >
+                    {{ message }}
+                </v-alert>
             </v-form>
         </v-sheet>
       <!-- </v-col> -->
@@ -55,13 +64,15 @@ import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
-    name:"",
+    name:"Forgot",
     title(){
         return "Forget Password"
     },
     data:()=>({
         email:'',
-        loading:false
+        loading:false,
+        error:false,
+        message:null
     }),
     validations:{
         email:{
@@ -70,13 +81,25 @@ export default {
         }
     },
     methods:{
+        ...mapActions('auth',['forgetPassword']),
         recover(){
             this.loading=true;
             this.$v.$touch();
             if(this.$v.$error){
               return;
             }
-            this.$router.push('/auth/password/recover')
+
+            this.forgetPassword({email: this.email})
+            .then(response=>{
+                this.$router.push('/auth/password/recover')
+            }).catch(e=>{
+                this.error=true;
+                this.message=e.response.data.message;
+            }).finally(()=>{
+                this.loading=false;
+            })
+
+            
             
         }
     },

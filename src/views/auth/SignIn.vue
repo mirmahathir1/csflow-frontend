@@ -5,7 +5,7 @@
     > -->
     <PaddedContainer>
         <v-card
-            height="100px"
+            :height="$isMobile()?'60px':'100px'"
             class=""
         >
             <v-row class="pa-5 mt-2">
@@ -89,7 +89,7 @@
         </v-sheet>
         </v-row>
         <v-card
-            height="60px"
+            :height="$isMobile()?'60px':'100px'"
             class="mb-4"
         >
             <v-row class="">

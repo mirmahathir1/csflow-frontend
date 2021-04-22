@@ -12,6 +12,9 @@ const state = {
     sideBarItems:[],
 
     logoutLoaderFlag: false,
+    signUpLoaderFlag: false,
+    signUpMessage:null,
+    isSignUpError: false,
 
     drawerSidebar:false
 };
@@ -34,6 +37,15 @@ const getters = {
     },
     getLogoutLoaderFlag: state=>{
         return state.logoutLoaderFlag;
+    },
+    getSignUpLoaderFlag: state=>{
+        return state.signUpLoaderFlag
+    },
+    getSignUpMessage: state=>{
+        return state.signUpMessage;
+    },
+    getIsSignUpError: state=>{
+        return state.isSignUpError
     },
     getSideBarItems: state=>{
         return state.sideBarItems;
@@ -80,6 +92,22 @@ const mutations = {
                 icon:'login'
             }
         ]
+    },
+
+    setSignUpLoaderFlag(state){
+        state.signUpLoaderFlag=true
+    },
+    unsetSignUpLoaderFlag(state){
+        state.signUpLoaderFlag=false
+    },
+
+    setSignUpMessage(state,payload){
+        state.signUpMessage = payload;
+        state.isSignUpError=true;
+    },
+    unsetSignUpMessage(state){
+        state.signUpMessage = null;
+        state.isSignUpError=false;
     },
 
     loadTokenFromLocalStorage(state) {
@@ -169,9 +197,40 @@ const actions = {
         }
     },
 
+    async signUp({ getters, commit }, payload){
+        commit('unsetSignInMessage');
+        commit('unsetIsSignedIn');
+        commit('setSignUpLoaderFlag');
+
+        try {
+            let response = await csflowAPI.post('/auth/signUp', payload);
+            commit('unsetSignUpMessage')
+            return true;
+        }catch (e){
+            console.log(e.response);
+            commit('setSignUpMessage',e.response.data.message);
+            return false;
+        }finally {
+            commit('unsetSignUpLoaderFlag');
+        }
+    },
     async setDrawerSideBar({getters,commit}){
         commit('changeDrawerSideBar');
     },
+
+    async forgetPassword({getters,commit},payload){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/auth/password/forgot', payload)
+            .then(response=>{
+                resolve(response)
+            }).catch (e=>{
+                console.log(e.response);
+                reject(e)
+            })
+        })         
+    },
+
+    
 };
 
 
