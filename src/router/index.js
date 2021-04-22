@@ -92,6 +92,21 @@ const routes = [
         name: 'ThesisDetails',
         component: () => import('../views/archive/ThesisDetails')
     },
+    {
+        path: '/archive/project',
+        name: 'Projects',
+        component: () => import('../views/archive/Projects')
+    },
+    {
+        path: '/archive/project/batch/:batch',
+        name: 'ProjectsBatch',
+        component: () => import('../views/archive/ProjectsBatch')
+    },
+    {
+        path: '/archive/project/batch/:batch/:course',
+        name: 'ProjectsCourse',
+        component: () => import('../views/archive/ProjectsCourse')
+    }
 ]
 
 const router = new VueRouter({

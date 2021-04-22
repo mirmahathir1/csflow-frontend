@@ -2,9 +2,19 @@ import {csflowAPI} from "../../api";
 
 const state = {
     batches: [],
+
     resources: null,
+
     theses: null,
     thesisDetails: null,
+    isThesisSubmitError: false,
+    thesisSubmitMessage: null,
+    isThesisDeleteError: false,
+    thesisDeleteMessage: null,
+
+    projectCourses: null,
+    projects: null,
+
     loaderFlags: {
         'batches': true,
         'resources': true,
@@ -12,12 +22,9 @@ const state = {
         'thesisDetails': true,
         'thesisSubmission': false,
         'thesisDeletion': false,
+        'projectCourses': true,
+        'projects': true,
     },
-
-    isThesisSubmitError: false,
-    thesisSubmitMessage: null,
-    isThesisDeleteError: false,
-    thesisDeleteMessage: null,
 };
 
 const getters = {
@@ -51,6 +58,12 @@ const getters = {
     },
     getThesisDeleteMessage: state => {
         return state.thesisDeleteMessage;
+    },
+    getProjectCourses: state => {
+        return state.projectCourses;
+    },
+    getProjects: state => {
+        return state.projects;
     }
 };
 
@@ -88,6 +101,12 @@ const mutations = {
     unsetThesisDeleteMessage(state) {
         state.isThesisDeleteError = false;
         state.thesisDeleteMessage = null;
+    },
+    setProjectCourses(state, payload) {
+        state.projectCourses = payload;
+    },
+    setProjects(state, payload) {
+        state.projects = payload;
     }
 };
 
@@ -131,7 +150,7 @@ const actions = {
                 commit('unsetLoaderFlag', 'resources');
             });
     },
-    loadThesesBatch({commit, state}, batch) {
+    loadThesesBatch({commit}, batch) {
         commit('setTheses', null);
         commit('setLoaderFlag', 'theses');
         csflowAPI.get('/archive/thesis/batch/' + batch)
@@ -228,7 +247,44 @@ const actions = {
                     commit('unsetLoaderFlag', 'thesisDeletion');
                 });
         });
-    }
+    },
+    loadProjectCourses({commit}, batch) {
+        commit('setProjectCourses', null);
+        commit('setLoaderFlag', 'projectCourses');
+        csflowAPI.get('/archive/project/batch/' + batch)
+            .then(response => {
+                let courses = {};
+                courses.batch = batch;
+                courses.payload = response.data.payload;
+
+                commit('setProjectCourses', courses);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'projectCourses');
+            });
+    },
+    loadProjects({commit}, {batch, course}) {
+        commit('setProjects', null);
+        commit('setLoaderFlag', 'projects');
+        csflowAPI.get('/archive/project/batch/' + batch + '/' + course)
+            .then(response => {
+                let projects = {};
+                projects.batch = batch;
+                projects.course = course;
+                projects.payload = response.data.payload;
+
+                commit('setProjects', projects);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'projects');
+            });
+    },
 };
 
 export default {

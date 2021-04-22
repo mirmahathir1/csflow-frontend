@@ -231,7 +231,12 @@ export default {
                     title: 'Theses',
                     icon: 'mdi-school',
                     link: '/archive/thesis'
-                }
+                },
+              {
+                title: 'Projects',
+                icon: 'mdi-file-code',
+                link: '/archive/project'
+              },
             ]
         }
     },
