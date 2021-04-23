@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-app-bar
-            color="deep-purple accent-4"
+            color="#4169e1"
             dense
             dark
             app
@@ -150,7 +150,7 @@
           </v-layout>
         </v-app-bar>
       </div> -->
-        <v-navigation-drawer app clipped v-model="drawer">
+        <v-navigation-drawer app clipped v-model="drawer" v-if="getIsSignedIn">
             <v-list
                 dense
                 nav
@@ -198,10 +198,12 @@ export default {
         ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer']),
         async signOut() {
             await this.logout();
+            await this.unsetDrawer();
             await this.$router.push("/auth/signIn");
         },
         async signOutAll() {
             await this.logoutAll();
+            await this.unsetDrawer();
             await this.$router.push("/auth/signIn");
         },
 

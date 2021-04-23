@@ -33,6 +33,11 @@ const routes = [
         component: () => import('../views/auth/SignUp')
     },
     {
+        path: '/auth/signUpConfirmation',
+        name: 'SignUpConfirmation',
+        component: () => import('../views/auth/AfterSignUp')
+    },
+    {
         path: '/auth/password/forgot',
         name: 'Forgot',
         component: () => import('../views/auth/ForgotPassword')
@@ -129,22 +134,25 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-    if(to.name=="create post"){
-        next();
-    }
-    if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
-        next('/auth/signIn');
-    }
-    if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
-        next('/search/relevant');
-    }
+// router.beforeEach((to, from, next) => {
+//     if(to.name=="create post" || to.name=="SignUpConfirmation"){
+//         next();
+//     }
+//     if(!store.getters['auth/getIsSignedIn'] && to.name=='Forgot' && to.name=='Recover'){
+//         next();
+//     }
+//     if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
+//         next('/auth/signIn');
+//     }
+//     if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
+//         next('/search/relevant');
+//     }
 
-    if(to.path != from.path){
-        next();
-    }
+//     if(to.path != from.path){
+//         next();
+//     }
 
 
 
-})
+// })
 export default router

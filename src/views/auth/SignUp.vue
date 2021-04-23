@@ -59,9 +59,9 @@
                     <v-btn
                         color="primary"
                         class="mx-auto mt-4"
-                        @click="signUp"
-                        :disabled="getSignInLoaderFlag || $v.$anyError"
-                        :loading="getSignInLoaderFlag"
+                        @click="signup"
+                        :disabled="getSignUpLoaderFlag || $v.$anyError"
+                        :loading="getSignUpLoaderFlag"
                         rounded
                     >
                         Sign Up
@@ -73,9 +73,9 @@
                     dense
                     outlined
                     type="error"
-                    v-if="getIsSignInError"
+                    v-if="getIsSignUpError"
                 >
-                    {{ getSignInMessage }}
+                    {{ getSignUpMessage }}
                 </v-alert>
             </v-form>
         </v-sheet>
@@ -117,19 +117,19 @@ export default {
 
     },
     computed: {
-        ...mapGetters('auth',['getSignInLoaderFlag','getIsSignInError','getSignInMessage'])
+        ...mapGetters('auth',['getSignUpLoaderFlag','getIsSignUpError','getSignUpMessage'])
     },
 
 
     methods: {
-        ...mapActions('auth',['login']),
-        async signUp() {
+        ...mapActions('auth',['signUp']),
+        async signup() {
             this.$v.$touch();
             if(this.$v.$error){
               return;
             }
 
-            if (await this.login({email: this.email, password: this.password})) {
+            if (await this.signUp({name:this.name, email: this.email, password: this.password})) {
                 await this.$router.push('/search/relevant');
             }
         }
