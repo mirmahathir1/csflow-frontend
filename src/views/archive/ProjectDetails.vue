@@ -148,22 +148,19 @@ export default {
     ...mapActions('archive', ['loadProjectDetails', 'deleteProject']),
     ...mapActions('user', ['getProfile']),
     onEditClicked() {
-      // this.$router.push('/archive/thesis/' + this.getThesisDetails.id + '/edit');
-      console.log('edit clicked');
+      this.$router.push('/archive/project/' + this.getProjectDetails.id + '/edit');
     },
     onDeleteClicked() {
-      // this.deleteThesis(this.id)
-      //     .then(response => {
-      //       this.$router.push('/archive/thesis/batch/' + this.details['batch']);
-      //     })
-      //     .catch(e => {
-      //       console.log(e.response);
-      //     })
-      //     .finally(() => {
-      //       this.dialog = false;
-      //     });
-
-      console.log('delete clicked');
+      this.deleteProject(this.id)
+          .then(response => {
+            this.$router.push('/archive/project/batch/' + this.details['batch'] + '/' + this.details['course_no'].replace(' ', '-'));
+          })
+          .catch(e => {
+            console.log(e.response);
+          })
+          .finally(() => {
+            this.dialog = false;
+          });
     }
   },
   watch: {

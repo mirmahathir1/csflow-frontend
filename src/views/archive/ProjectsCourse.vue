@@ -100,8 +100,7 @@ export default {
     ...mapActions('archive', ['loadProjects']),
     ...mapActions('user', ['getProfile']),
     createProject() {
-      console.log('clicked');
-      // this.$router.push('/archive/thesis/new');
+      this.$router.push('/archive/project/new');
     }
   },
   watch: {

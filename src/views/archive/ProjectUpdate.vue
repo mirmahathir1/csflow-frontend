@@ -1,0 +1,117 @@
+<template>
+  <padded-container>
+    <page-header :back-button="batchID > 0" :back-route="'/archive/thesis/batch/' + batchID">Update Thesis</page-header>
+
+    <project-form
+        v-if="loadForm"
+        type="update"
+        :prevTitle="title"
+        :prevDescription="description"
+        :prevCourse="course"
+        :prevYoutubeLink="youtubeLink"
+        :prevGitLink="gitLink"
+        :prevOwners="owners"
+        :prevUserIndex="userIndex"
+        :batchID="batchID"
+        :projectID="projectID"
+    ></project-form>
+    <details-loader v-else></details-loader>
+  </padded-container>
+</template>
+
+<script>
+import PaddedContainer from "@/components/PaddedContainer";
+import PageHeader from "@/components/PageHeader";
+import { mapGetters, mapActions } from 'vuex';
+import DetailsLoader from "@/components/DetailsLoader";
+import ProjectForm from "@/components/ProjectForm";
+
+export default {
+  name: "ProjectUpdate",
+  data() {
+    return {
+      title: '',
+      description: '',
+      course: '',
+      youtubeLink: '',
+      gitLink: '',
+      owners: [],
+      userIndex: 0,
+      loadForm: false,
+      projectID: this.$route.params.id,
+    };
+  },
+  computed: {
+    ...mapGetters('archive', ['getLoaderFlag', 'getProjectDetails']),
+    ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
+    batchID() {
+      if (this.getLoadedUser) {
+        return this.getLoadedUser['batchID'];
+      }
+
+      return 0;
+    },
+    userID() {
+      if (this.getLoadedUser) {
+        return this.getLoadedUser['id'];
+      }
+
+      return -1;
+    }
+  },
+  methods: {
+    ...mapActions('archive', ['loadProjectDetails']),
+    ...mapActions('user', ['getProfile']),
+    async updateProps() {
+      this.loadForm = false;
+      this.userIndex = -1;
+
+      await this.getProfile('me');
+      this.loadProjectDetails({id: this.projectID, force: false})
+          .then(response => {
+            const details = this.getProjectDetails.payload;
+
+            this.title = details['title'];
+            this.description = details['description'];
+            this.course = details['course_no'];
+            this.youtubeLink = details['youtube'];
+            this.gitLink = details['github'];
+
+            this.owners = [];
+            details['owners'].forEach(owner => {
+              this.owners.push({id: owner['ID'].toString()});
+
+              if (owner['ID'] === this.userID) {
+                this.userIndex = details['owners'].indexOf(owner);
+              }
+            });
+
+            if (this.userIndex === -1) {
+              this.$router.push('/archive/project');
+            }
+          })
+          .catch(e => {
+            console.log(e.response);
+            this.$router.push('/archive/project');
+          })
+          .finally(() => {
+            this.loadForm = true;
+          });
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      this.projectID = to.params.id;
+      this.updateProps();
+    }
+  },
+  components: {DetailsLoader, PageHeader, PaddedContainer, ProjectForm},
+  mounted() {
+    this.updateProps();
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

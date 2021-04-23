@@ -108,6 +108,16 @@ const routes = [
         component: () => import('../views/archive/ProjectsCourse')
     },
     {
+        path: '/archive/project/new',
+        name: 'ProjectCreation',
+        component: () => import('../views/archive/ProjectCreation')
+    },
+    {
+        path: '/archive/project/:id/edit',
+        name: 'ProjectUpdate',
+        component: () => import('../views/archive/ProjectUpdate')
+    },
+    {
         path: '/archive/project/:id',
         name: 'ProjectDetails',
         component: () => import('../views/archive/ProjectDetails')

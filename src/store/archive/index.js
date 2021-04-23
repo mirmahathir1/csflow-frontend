@@ -15,6 +15,10 @@ const state = {
     projectCourses: null,
     projects: null,
     projectDetails: null,
+    isProjectSubmitError: false,
+    projectSubmitMessage: null,
+    isProjectDeleteError: false,
+    projectDeleteMessage: null,
 
     loaderFlags: {
         'batches': true,
@@ -26,6 +30,7 @@ const state = {
         'projectCourses': true,
         'projects': true,
         'projectDetails': true,
+        'projectSubmission': false,
         'projectDeletion': false,
     },
 };
@@ -70,6 +75,18 @@ const getters = {
     },
     getProjectDetails: state => {
         return state.projectDetails;
+    },
+    getProjectSubmitError: state => {
+        return state.isProjectSubmitError;
+    },
+    getProjectSubmitMessage: state => {
+        return state.projectSubmitMessage;
+    },
+    getProjectDeleteError: state => {
+        return state.isProjectDeleteError;
+    },
+    getProjectDeleteMessage: state => {
+        return state.projectDeleteMessage;
     },
 };
 
@@ -116,6 +133,22 @@ const mutations = {
     },
     setProjectDetails(state, payload) {
         state.projectDetails = payload;
+    },
+    setProjectSubmitMessage(state, payload) {
+        state.isProjectSubmitError = true;
+        state.projectSubmitMessage = payload;
+    },
+    unsetProjectSubmitMessage(state) {
+        state.isProjectSubmitError = false;
+        state.projectSubmitMessage = null;
+    },
+    setProjectDeleteMessage(state, payload) {
+        state.isProjectDeleteError = true;
+        state.projectDeleteMessage = payload;
+    },
+    unsetProjectDeleteMessage(state) {
+        state.isProjectDeleteError = false;
+        state.projectDeleteMessage = null;
     },
 };
 
@@ -320,8 +353,59 @@ const actions = {
                 });
         });
     },
-    deleteProject({commit}, projectId) {
+    createProject({commit}, payload) {
+        commit('setLoaderFlag', 'projectSubmission');
+        commit('unsetProjectSubmitMessage');
 
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/archive/project', payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectSubmission');
+                });
+        });
+    },
+    updateProject({commit}, {payload, projectID}) {
+        commit('setLoaderFlag', 'projectSubmission');
+        commit('unsetProjectSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/archive/project/' + projectID, payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectSubmission');
+                });
+        });
+    },
+    deleteProject({commit}, projectID) {
+        commit('setLoaderFlag', 'projectDeletion');
+        commit('unsetProjectDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/project/' + projectID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectDeletion');
+                });
+        });
     },
 };
 
