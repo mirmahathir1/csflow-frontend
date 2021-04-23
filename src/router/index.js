@@ -106,7 +106,12 @@ const routes = [
         path: '/archive/project/batch/:batch/:course',
         name: 'ProjectsCourse',
         component: () => import('../views/archive/ProjectsCourse')
-    }
+    },
+    {
+        path: '/archive/project/:id',
+        name: 'ProjectDetails',
+        component: () => import('../views/archive/ProjectDetails')
+    },
 ]
 
 const router = new VueRouter({

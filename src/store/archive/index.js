@@ -14,6 +14,7 @@ const state = {
 
     projectCourses: null,
     projects: null,
+    projectDetails: null,
 
     loaderFlags: {
         'batches': true,
@@ -24,6 +25,8 @@ const state = {
         'thesisDeletion': false,
         'projectCourses': true,
         'projects': true,
+        'projectDetails': true,
+        'projectDeletion': false,
     },
 };
 
@@ -64,7 +67,10 @@ const getters = {
     },
     getProjects: state => {
         return state.projects;
-    }
+    },
+    getProjectDetails: state => {
+        return state.projectDetails;
+    },
 };
 
 const mutations = {
@@ -107,7 +113,10 @@ const mutations = {
     },
     setProjects(state, payload) {
         state.projects = payload;
-    }
+    },
+    setProjectDetails(state, payload) {
+        state.projectDetails = payload;
+    },
 };
 
 const actions = {
@@ -284,6 +293,35 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'projects');
             });
+    },
+    loadProjectDetails({commit, state}, {id, force}) {
+        return new Promise((resolve, reject) => {
+            if (!force && state.projectDetails && state.projectDetails['id'] === id) {
+                resolve('already loaded');
+                return;
+            }
+
+            commit('setProjectDetails', null);
+            commit('setLoaderFlag', 'projectDetails');
+            csflowAPI.get('/archive/project/' + id)
+                .then(response => {
+                    let details = {};
+                    details.id = id;
+                    details.payload = response.data.payload;
+                    commit('setProjectDetails', details);
+
+                    resolve('loaded');
+                })
+                .catch(e => {
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectDetails');
+                });
+        });
+    },
+    deleteProject({commit}, projectId) {
+
     },
 };
 
