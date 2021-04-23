@@ -3,7 +3,7 @@
     <page-header :back-button="batchID > 0" :back-route="'/archive/thesis/batch/' + batchID">Update Project</page-header>
 
     <project-form
-        v-if="loadForm"
+        v-if="loadForm && authorized"
         type="update"
         :prevTitle="title"
         :prevDescription="description"
@@ -15,6 +15,9 @@
         :batchID="batchID"
         :projectID="projectID"
     ></project-form>
+    <error-card v-else-if="loadForm && !authorized" class="mt-5">
+      You are not authorized to edit this project
+    </error-card>
     <details-loader v-else></details-loader>
   </padded-container>
 </template>
@@ -25,6 +28,7 @@ import PageHeader from "@/components/PageHeader";
 import { mapGetters, mapActions } from 'vuex';
 import DetailsLoader from "@/components/DetailsLoader";
 import ProjectForm from "@/components/ProjectForm";
+import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ProjectUpdate",
@@ -37,6 +41,7 @@ export default {
       gitLink: '',
       owners: [],
       userIndex: 0,
+      authorized: true,
       loadForm: false,
       projectID: this.$route.params.id,
     };
@@ -87,7 +92,7 @@ export default {
             });
 
             if (this.userIndex === -1) {
-              this.$router.push('/archive/project');
+              this.authorized = false;
             }
           })
           .catch(e => {
@@ -105,7 +110,7 @@ export default {
       this.updateProps();
     }
   },
-  components: {DetailsLoader, PageHeader, PaddedContainer, ProjectForm},
+  components: {ErrorCard, DetailsLoader, PageHeader, PaddedContainer, ProjectForm},
   mounted() {
     this.updateProps();
   }
