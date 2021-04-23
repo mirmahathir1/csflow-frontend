@@ -15,7 +15,7 @@
         >
           <resource-card
               type="folder"
-              @click.native="$router.push('/archive/project/batch/' + getProjectCourses.batch + '/' + addHyphen(course['CourseNo']))"
+              @click.native="$router.push('/archive/project/batch/' + getProjectCourses.batch + '/' + course['CourseNo'].replace(' ', '-'))"
           >
             {{ course['CourseNo'] }}
           </resource-card>

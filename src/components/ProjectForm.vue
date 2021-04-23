@@ -5,7 +5,7 @@
       class="rounded-lg px-5 pt-8 pb-4 mt-6"
   >
     <v-card-title class="justify-center text-h6">
-      Enter relevant info for thesis
+      Enter relevant info for project
     </v-card-title>
     <div class="mx-10">
       <hr class="my-divider">
@@ -51,78 +51,56 @@
         <v-row>
           <v-spacer></v-spacer>
           <v-col cols="12" md="3" v-if="!$isMobile()">
-            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">DOI Link:</v-card-text>
+            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Course:</v-card-text>
           </v-col>
           <v-col cols="12" md="5">
-            <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">DOI Link:</v-card-text>
+            <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Course:</v-card-text>
             <v-text-field
                 outlined
                 class="rounded-lg"
                 dense
-                v-model="link"
-                :error-messages="linkErrors"
-                @blur="$v.link.$touch()"
+                v-model="course"
+                :error-messages="courseErrors"
+                @blur="$v.course.$touch()"
             ></v-text-field>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
-
-        <!--          Authors-->
-        <v-row class="mt-0">
+        <v-row>
           <v-spacer></v-spacer>
-          <v-col cols="12" md="5" class="py-0">
-            <v-card-text class="text-left text--black text-body-1 pl-7">
-              Authors:
-              <p v-if="authors.length === 0" class="mb-0 red--text lighten-1 text-subheading">At least one author required</p>
-            </v-card-text>
+          <v-col cols="12" md="3" v-if="!$isMobile()">
+            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Youtube Link:</v-card-text>
           </v-col>
-          <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
-
-          <v-col cols="1" md="3"></v-col>
-          <v-col cols="10" md="5">
-            <v-text-field
-                v-for="(author, index) in authors" :key="index"
-                outlined
-                class="rounded-lg"
-                dense
-                v-model="authors[index].name"
-                @blur="$v.authors.$each[index].name.$touch()"
-                :error-messages="!$v.authors.$each[index].name.required ? 'Please enter a name' : null"
-            >
-              <template v-slot:append-outer>
-                <v-btn
-                    icon
-                    color="red lighten-1"
-                    @click="removeAuthor(index)"
-                    small
-                >
-                  <v-icon>
-                    mdi-minus-circle
-                  </v-icon>
-                </v-btn>
-              </template>
-            </v-text-field>
+          <v-col cols="12" md="5">
+            <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Youtube Link:</v-card-text>
             <v-text-field
                 outlined
                 class="rounded-lg"
                 dense
-                v-model="newAuthor"
-            >
-              <template v-slot:append-outer>
-                <v-btn
-                    icon
-                    color="primary"
-                    @click="addAuthor()"
-                    small
-                >
-                  <v-icon>
-                    mdi-plus-circle
-                  </v-icon>
-                </v-btn>
-              </template>
-            </v-text-field>
+                v-model="youtubeLink"
+                :error-messages="youtubeLinkErrors"
+                @blur="$v.youtubeLink.$touch()"
+            ></v-text-field>
           </v-col>
-          <v-col cols="1" md="4"></v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-col cols="12" md="3" v-if="!$isMobile()">
+            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Git Repository Link:</v-card-text>
+          </v-col>
+          <v-col cols="12" md="5">
+            <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Git Repository Link:</v-card-text>
+            <v-text-field
+                outlined
+                class="rounded-lg"
+                dense
+                v-model="gitLink"
+                :error-messages="gitLinkErrors"
+                @blur="$v.gitLink.$touch()"
+            ></v-text-field>
+          </v-col>
+          <v-spacer></v-spacer>
         </v-row>
 
         <!--          Owners-->
@@ -187,8 +165,8 @@
             <v-btn
                 color="primary"
                 :block="$isMobile()"
-                :disabled="$v.$invalid || getLoaderFlag('thesisSubmission')"
-                :loading="getLoaderFlag('thesisSubmission')"
+                :disabled="$v.$invalid || getLoaderFlag('projectSubmission')"
+                :loading="getLoaderFlag('projectSubmission')"
                 @click="submit"
             >Submit</v-btn>
           </v-col>
@@ -198,9 +176,9 @@
               type="error"
               outlined
               dense
-              v-if="getThesisSubmitError"
+              v-if="getProjectSubmitError"
           >
-            {{ getThesisSubmitMessage }}
+            {{ getProjectSubmitMessage }}
           </v-alert>
         </v-row>
       </v-form>
@@ -215,7 +193,7 @@ import PageHeader from "@/components/PageHeader";
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: "ThesisForm",
+  name: "ProjectForm",
   props: {
     prevTitle: {
       type: String,
@@ -225,13 +203,17 @@ export default {
       type: String,
       default: '',
     },
-    prevLink: {
+    prevYoutubeLink: {
       type: String,
       default: '',
     },
-    prevAuthors: {
-      type: Array,
-      default: () => [],
+    prevGitLink: {
+      type: String,
+      default: '',
+    },
+    prevCourse: {
+      type: String,
+      default: '',
     },
     prevOwners: {
       type: Array,
@@ -245,7 +227,7 @@ export default {
       type: String,
       required,
     },
-    thesisID: {
+    projectID: {
       type: String,
       default: '',
     },
@@ -258,9 +240,9 @@ export default {
     return {
       title: this.prevTitle,
       description: this.prevDescription,
-      link: this.prevLink,
-      authors: this.prevAuthors,
-      newAuthor: '',
+      youtubeLink: this.prevYoutubeLink,
+      gitLink: this.prevGitLink,
+      course: this.prevCourse,
       owners: this.prevOwners,
       newOwner: '',
       userIndex: this.prevUserIndex,
@@ -274,18 +256,13 @@ export default {
       required,
       minLength: minLength(100),
     },
-    link: {
+    youtubeLink: {
       required,
       url,
     },
-    authors: {
+    gitLink: {
       required,
-      minLength: minLength(1),
-      $each: {
-        name: {
-          required,
-        }
-      }
+      url,
     },
     owners: {
       required,
@@ -305,10 +282,16 @@ export default {
           }
         }
       }
+    },
+    course: {
+      required,
+      valid(val) {
+        return true;
+      }
     }
   },
   computed: {
-    ...mapGetters('archive', ['getLoaderFlag', 'getThesisSubmitError', 'getThesisSubmitMessage']),
+    ...mapGetters('archive', ['getLoaderFlag', 'getProjectSubmitError', 'getProjectSubmitMessage']),
     ...mapGetters('user', ['getLoadedUser']),
     titleErrors() {
       const errors = [];
@@ -317,7 +300,8 @@ export default {
       }
 
       !this.$v.title.required && errors.push('Title is required');
-      return errors
+
+      return errors;
     },
     descriptionErrors() {
       const errors = [];
@@ -330,14 +314,25 @@ export default {
 
       return errors;
     },
-    linkErrors() {
+    youtubeLinkErrors() {
       const errors = [];
-      if (!this.$v.link.$dirty) {
+      if (!this.$v.youtubeLink.$dirty) {
         return errors;
       }
 
-      !this.$v.link.required && errors.push('DOI link is required');
-      !this.$v.link.url && errors.push('Must be a valid url');
+      !this.$v.youtubeLink.required && errors.push('Youtube link is required');
+      !this.$v.youtubeLink.url && errors.push('Must be a valid url');
+
+      return errors;
+    },
+    gitLinkErrors() {
+      const errors = [];
+      if (!this.$v.gitLink.$dirty) {
+        return errors;
+      }
+
+      !this.$v.gitLink.required && errors.push('Git repository link is required');
+      !this.$v.gitLink.url && errors.push('Must be a valid url');
 
       return errors;
     },
@@ -358,18 +353,22 @@ export default {
       }
 
       return errors;
+    },
+    courseErrors() {
+      const errors = [];
+      if (!this.$v.course.$dirty) {
+        return errors;
+      }
+
+      !this.$v.course.required && errors.push('Course is required');
+      !this.$v.course.valid && errors.push('Invalid course id format');
+
+      return errors
     }
   },
   methods: {
-    ...mapActions('archive', ['createThesis', 'updateThesis']),
+    ...mapActions('archive', ['createProject', 'updateProject']),
     ...mapActions('user', ['getProfile']),
-    removeAuthor(index) {
-      this.authors.splice(index, 1);
-    },
-    addAuthor() {
-      this.authors.push({name: this.newAuthor});
-      this.newAuthor = '';
-    },
     removeOwner(index) {
       this.owners.splice(index, 1);
 
@@ -389,12 +388,9 @@ export default {
       const payload = {};
       payload.title = this.title;
       payload.description = this.description;
-      payload.link = this.link;
-
-      payload.writers = [];
-      this.authors.forEach(element => {
-        payload.writers.push(element.name);
-      });
+      payload.youtube = this.youtubeLink;
+      payload.github = this.gitLink;
+      payload.course = this.course;
 
       payload.owners = [];
       this.owners.forEach(element => {
@@ -402,21 +398,21 @@ export default {
       });
 
       if (this.type === 'create') {
-        this.createThesis(payload)
-          .then(response => {
-            this.$router.push('/archive/thesis/batch/' + this.batchID);
-          })
-          .catch(e => {
-            console.log(e.response);
-          });
+        this.createProject(payload)
+            .then(response => {
+              this.$router.push('/archive/project/batch/' + this.batchID + '/' + this.course.replace(' ', '-'));
+            })
+            .catch(e => {
+              console.log(e.response);
+            });
       } else {
-        this.updateThesis({payload, thesisID: this.thesisID})
-          .then(response => {
-            this.$router.push('/archive/thesis/' + this.thesisID);
-          })
-          .catch(e => {
-            console.log(e.response);
-          });
+        this.updateProject({payload, projectID: this.projectID})
+            .then(response => {
+              this.$router.push('/archive/project/' + this.projectID);
+            })
+            .catch(e => {
+              console.log(e.response);
+            });
       }
     }
   },

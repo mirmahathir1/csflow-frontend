@@ -14,6 +14,11 @@ const state = {
 
     projectCourses: null,
     projects: null,
+    projectDetails: null,
+    isProjectSubmitError: false,
+    projectSubmitMessage: null,
+    isProjectDeleteError: false,
+    projectDeleteMessage: null,
 
     loaderFlags: {
         'batches': true,
@@ -24,6 +29,9 @@ const state = {
         'thesisDeletion': false,
         'projectCourses': true,
         'projects': true,
+        'projectDetails': true,
+        'projectSubmission': false,
+        'projectDeletion': false,
     },
 };
 
@@ -64,7 +72,22 @@ const getters = {
     },
     getProjects: state => {
         return state.projects;
-    }
+    },
+    getProjectDetails: state => {
+        return state.projectDetails;
+    },
+    getProjectSubmitError: state => {
+        return state.isProjectSubmitError;
+    },
+    getProjectSubmitMessage: state => {
+        return state.projectSubmitMessage;
+    },
+    getProjectDeleteError: state => {
+        return state.isProjectDeleteError;
+    },
+    getProjectDeleteMessage: state => {
+        return state.projectDeleteMessage;
+    },
 };
 
 const mutations = {
@@ -107,7 +130,26 @@ const mutations = {
     },
     setProjects(state, payload) {
         state.projects = payload;
-    }
+    },
+    setProjectDetails(state, payload) {
+        state.projectDetails = payload;
+    },
+    setProjectSubmitMessage(state, payload) {
+        state.isProjectSubmitError = true;
+        state.projectSubmitMessage = payload;
+    },
+    unsetProjectSubmitMessage(state) {
+        state.isProjectSubmitError = false;
+        state.projectSubmitMessage = null;
+    },
+    setProjectDeleteMessage(state, payload) {
+        state.isProjectDeleteError = true;
+        state.projectDeleteMessage = payload;
+    },
+    unsetProjectDeleteMessage(state) {
+        state.isProjectDeleteError = false;
+        state.projectDeleteMessage = null;
+    },
 };
 
 const actions = {
@@ -284,6 +326,86 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'projects');
             });
+    },
+    loadProjectDetails({commit, state}, {id, force}) {
+        return new Promise((resolve, reject) => {
+            if (!force && state.projectDetails && state.projectDetails['id'] === id) {
+                resolve('already loaded');
+                return;
+            }
+
+            commit('setProjectDetails', null);
+            commit('setLoaderFlag', 'projectDetails');
+            csflowAPI.get('/archive/project/' + id)
+                .then(response => {
+                    let details = {};
+                    details.id = id;
+                    details.payload = response.data.payload;
+                    commit('setProjectDetails', details);
+
+                    resolve('loaded');
+                })
+                .catch(e => {
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectDetails');
+                });
+        });
+    },
+    createProject({commit}, payload) {
+        commit('setLoaderFlag', 'projectSubmission');
+        commit('unsetProjectSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/archive/project', payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectSubmission');
+                });
+        });
+    },
+    updateProject({commit}, {payload, projectID}) {
+        commit('setLoaderFlag', 'projectSubmission');
+        commit('unsetProjectSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/archive/project/' + projectID, payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectSubmission');
+                });
+        });
+    },
+    deleteProject({commit}, projectID) {
+        commit('setLoaderFlag', 'projectDeletion');
+        commit('unsetProjectDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/project/' + projectID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectDeletion');
+                });
+        });
     },
 };
 

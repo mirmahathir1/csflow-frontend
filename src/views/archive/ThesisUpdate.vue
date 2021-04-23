@@ -1,9 +1,9 @@
 <template>
   <padded-container>
-    <page-header :back-button="batchID > 0" :back-route="'/archive/thesis/batch/' + batchID">Update Thesis</page-header>
+    <page-header :back-button="true" :back-route="'/archive/thesis/' + thesisID">Update Thesis</page-header>
 
     <thesis-form
-        v-if="loadForm"
+        v-if="loadForm && authorized"
         type="update"
         :prevTitle="title"
         :prevDescription="description"
@@ -14,6 +14,9 @@
         :batchID="batchID"
         :thesisID="thesisID"
     ></thesis-form>
+    <error-card v-else-if="loadForm && !authorized" class="mt-5">
+      You are not authorized to edit this thesis
+    </error-card>
     <details-loader v-else></details-loader>
   </padded-container>
 </template>
@@ -24,6 +27,7 @@ import PageHeader from "@/components/PageHeader";
 import ThesisForm from "@/components/ThesisForm";
 import { mapGetters, mapActions } from 'vuex';
 import DetailsLoader from "@/components/DetailsLoader";
+import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ThesisUpdate",
@@ -36,6 +40,7 @@ export default {
       owners: [],
       userIndex: 0,
       loadForm: false,
+      authorized: true,
       thesisID: this.$route.params.id,
     };
   },
@@ -88,7 +93,7 @@ export default {
           });
 
           if (this.userIndex === -1) {
-            this.$router.push('/archive/thesis');
+            this.authorized = false;
           }
         })
         .catch(e => {
@@ -106,7 +111,7 @@ export default {
       this.updateProps();
     }
   },
-  components: {DetailsLoader, PageHeader, PaddedContainer, ThesisForm},
+  components: {ErrorCard, DetailsLoader, PageHeader, PaddedContainer, ThesisForm},
   mounted() {
     this.updateProps();
   }

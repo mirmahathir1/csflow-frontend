@@ -1,6 +1,6 @@
 <template>
   <padded-container>
-    <page-header :back-button="true" :back-route="'/archive/project/batch/' + this.batch">Theses Explorer</page-header>
+    <page-header :back-button="true" :back-route="'/archive/project/batch/' + this.batch">Project Explorer</page-header>
     <page-subheader v-if="true">Batch {{ batch }} Projects / {{ this.course.replace('-', ' ') }}</page-subheader>
 
     <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isMyBatch">
@@ -49,8 +49,8 @@
             class="justify-content-center"
             v-if="!projects || Object.keys(projects).length === 0"
         >
-          <error-card v-if="!projects">No such batch exists</error-card>
-          <error-card v-else>No theses found</error-card>
+          <error-card v-if="!projects">Not found</error-card>
+          <error-card v-else>No projects found</error-card>
         </v-col>
       </v-row>
     </v-container>
@@ -100,8 +100,7 @@ export default {
     ...mapActions('archive', ['loadProjects']),
     ...mapActions('user', ['getProfile']),
     createProject() {
-      console.log('clicked');
-      // this.$router.push('/archive/thesis/new');
+      this.$router.push('/archive/project/new');
     }
   },
   watch: {
