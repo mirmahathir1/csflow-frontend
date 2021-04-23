@@ -214,9 +214,10 @@ const actions = {
             commit('unsetSignUpLoaderFlag');
         }
     },
-    async setDrawerSideBar({getters,commit}){
-        commit('changeDrawerSideBar');
-    },
+    
+    // async setDrawerSideBar({getters,commit}){
+    //     commit('changeDrawerSideBar');
+    // },
 
     async forgetPassword({getters,commit},payload){
         return new Promise((resolve, reject) => {
@@ -230,6 +231,33 @@ const actions = {
         })         
     },
 
+    async recoverPassword({getters,commit},payload){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/auth/password/recover', payload)
+            .then(response=>{
+                resolve(response)
+            }).catch (e=>{
+                console.log(e.response);
+                reject(e)
+            })
+        })         
+    },
+
+    async completeSignup({getters,commit},payload){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/auth/signUp', payload)
+            .then(response=>{
+                commit('setToken',payload.token);
+                commit('setIsSignedIn');
+                commit('setSideBarItems','user');
+                commit('saveTokenToLocalStorage',payload.token);
+                resolve(response)
+            }).catch (e=>{
+                console.log(e.response);
+                reject(e)
+            })
+        })         
+    },
     
 };
 

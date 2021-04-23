@@ -38,6 +38,11 @@ const routes = [
         component: () => import('../views/auth/AfterSignUp')
     },
     {
+        path: '/auth/signUp/complete',
+        name: 'SignUpComplete',
+        component: () => import('../views/auth/SignupComplete')
+    },
+    {
         path: '/auth/password/forgot',
         name: 'Forgot',
         component: () => import('../views/auth/ForgotPassword')

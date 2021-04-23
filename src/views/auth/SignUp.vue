@@ -130,7 +130,7 @@ export default {
             }
 
             if (await this.signUp({name:this.name, email: this.email, password: this.password})) {
-                await this.$router.push('/search/relevant');
+                await this.$router.push('/auth/signUpConfirmation');
             }
         }
     },
