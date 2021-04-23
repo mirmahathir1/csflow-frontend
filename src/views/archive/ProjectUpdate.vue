@@ -1,6 +1,6 @@
 <template>
   <padded-container>
-    <page-header :back-button="batchID > 0" :back-route="'/archive/project/batch/' + batchID">Update Project</page-header>
+    <page-header :back-button="true" :back-route="'/archive/project/' + projectID">Update Project</page-header>
 
     <project-form
         v-if="loadForm && authorized"
@@ -62,7 +62,7 @@ export default {
       }
 
       return -1;
-    }
+    },
   },
   methods: {
     ...mapActions('archive', ['loadProjectDetails']),
