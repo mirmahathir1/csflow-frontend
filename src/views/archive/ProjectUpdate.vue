@@ -1,6 +1,6 @@
 <template>
   <padded-container>
-    <page-header :back-button="batchID > 0" :back-route="'/archive/thesis/batch/' + batchID">Update Thesis</page-header>
+    <page-header :back-button="batchID > 0" :back-route="'/archive/thesis/batch/' + batchID">Update Project</page-header>
 
     <project-form
         v-if="loadForm"
