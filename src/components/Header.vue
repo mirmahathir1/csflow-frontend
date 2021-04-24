@@ -7,8 +7,8 @@
             app
             clipped-left
         >
-            <v-app-bar-nav-icon v-if="getIsSignedIn" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
-
+            <v-app-bar-nav-icon v-if="getIsSignedIn && $isMobile()" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon v-if="getIsSignedIn && !$isMobile()" ></v-app-bar-nav-icon>
             <v-toolbar-title>CSFLOW</v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -150,7 +150,29 @@
           </v-layout>
         </v-app-bar>
       </div> -->
-        <v-navigation-drawer app clipped v-model="drawer" v-if="getIsSignedIn">
+        <v-navigation-drawer app clipped v-model="drawer" v-if="getIsSignedIn && $isMobile()">
+            <v-list
+                dense
+                nav
+            >
+                <template v-for="(item,index) in items">
+                    <v-list-item
+                        :to="item.link"
+                        :key="index"
+                        style="text-decoration:none"
+                    >
+                        <v-list-item-icon>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </template>
+            </v-list>
+        </v-navigation-drawer>
+        <v-navigation-drawer app clipped v-if="getIsSignedIn && !$isMobile()">
             <v-list
                 dense
                 nav

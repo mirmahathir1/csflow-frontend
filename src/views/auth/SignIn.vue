@@ -16,7 +16,7 @@
         </v-card>
         <v-row class="pa-6">
         <v-sheet
-            :min-width="$isMobile() ?'30vh':'60vh'"
+            :max-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mx-auto"
         >
@@ -47,12 +47,6 @@
                     disabled
                 ></v-checkbox>
 
-<!--                <v-btn-->
-<!--                    color="success"-->
-<!--                    class="mr-4"-->
-<!--                >-->
-<!--                    Sign Up-->
-<!--                </v-btn>-->
                 <v-row class="justify-content-center">
                     <v-btn
                         color="primary"
@@ -92,10 +86,12 @@
             :height="$isMobile()?'60px':'100px'"
             class="mb-4"
         >
-            <v-row class="">
-                <v-card-text class="my-auto">
-                    <p class="text-center">Forget password?click <router-link to="/auth/password/forgot">here</router-link></p>
-                </v-card-text>
+            <v-row class="mt-2 pa-5">
+                <v-spacer></v-spacer>
+                <v-card-subtitle class="black--text text-center">                   
+                    Forget password?click <router-link to="/auth/password/forgot">here</router-link>                  
+                </v-card-subtitle>
+                <v-spacer></v-spacer>
             </v-row>
         </v-card>
     <!-- </v-col> -->
