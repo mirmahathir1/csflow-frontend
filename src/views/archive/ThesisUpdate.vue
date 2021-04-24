@@ -3,7 +3,7 @@
     <page-header :back-button="true" :back-route="'/archive/thesis/' + thesisID">Update Thesis</page-header>
 
     <thesis-form
-        v-if="loadForm && authorized"
+        v-if="loadForm && authorized && !error"
         type="update"
         :prevTitle="title"
         :prevDescription="description"
@@ -14,6 +14,9 @@
         :batchID="batchID"
         :thesisID="thesisID"
     ></thesis-form>
+    <error-card v-else-if="loadForm && error" class="mt-5">
+      Thesis not found
+    </error-card>
     <error-card v-else-if="loadForm && !authorized" class="mt-5">
       You are not authorized to edit this thesis
     </error-card>
@@ -41,6 +44,7 @@ export default {
       userIndex: 0,
       loadForm: false,
       authorized: true,
+      error: false,
       thesisID: this.$route.params.id,
     };
   },
@@ -67,6 +71,8 @@ export default {
     ...mapActions('user', ['getProfile']),
     async updateProps() {
       this.loadForm = false;
+      this.error = false;
+      this.authorized = true;
       this.userIndex = -1;
 
       await this.getProfile('me');
@@ -98,7 +104,7 @@ export default {
         })
         .catch(e => {
           console.log(e.response);
-          this.$router.push('/archive/thesis');
+          this.error = true;
         })
         .finally(() => {
           this.loadForm = true;

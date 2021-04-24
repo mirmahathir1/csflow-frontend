@@ -4,9 +4,9 @@
       elevation="2"
       class="rounded-lg px-5 pt-8 pb-4 mt-6"
   >
-    <v-card-title class="justify-center text-h6">
+    <v-card-text class="text-h6 text-center black--text">
       Enter relevant info for thesis
-    </v-card-title>
+    </v-card-text>
     <div class="mx-10">
       <hr class="my-divider">
     </div>
