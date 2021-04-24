@@ -63,6 +63,11 @@ const routes = [
         component: () => import('../views/post/CreatePost')
     },
     {
+        path: '/archive',
+        name: 'Archive',
+        component: () => import('../views/archive/Archive')
+    },
+    {
         path: '/archive/resource',
         name: 'Resources',
         component: () => import('../views/archive/Resources')

@@ -3,7 +3,7 @@
     <page-header :back-button="true" :back-route="'/archive/project/' + projectID">Update Project</page-header>
 
     <project-form
-        v-if="loadForm && authorized"
+        v-if="loadForm && authorized && !error"
         type="update"
         :prevTitle="title"
         :prevDescription="description"
@@ -15,6 +15,9 @@
         :batchID="batchID"
         :projectID="projectID"
     ></project-form>
+    <error-card v-else-if="loadForm && error" class="mt-5">
+      No project found
+    </error-card>
     <error-card v-else-if="loadForm && !authorized" class="mt-5">
       You are not authorized to edit this project
     </error-card>
@@ -42,6 +45,7 @@ export default {
       owners: [],
       userIndex: 0,
       authorized: true,
+      error: false,
       loadForm: false,
       projectID: this.$route.params.id,
     };
@@ -69,6 +73,8 @@ export default {
     ...mapActions('user', ['getProfile']),
     async updateProps() {
       this.loadForm = false;
+      this.error = false;
+      this.authorized = true;
       this.userIndex = -1;
 
       await this.getProfile('me');
@@ -97,7 +103,7 @@ export default {
           })
           .catch(e => {
             console.log(e.response);
-            this.$router.push('/archive/project');
+            this.error = true;
           })
           .finally(() => {
             this.loadForm = true;
