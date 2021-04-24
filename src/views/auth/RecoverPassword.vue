@@ -50,15 +50,24 @@
                     <v-btn
                         color="primary"
                         class="mx-auto mt-6"
-                        @click="signin"
+                        @click="recover"
                         :disabled="loading || $v.$anyError"
                         :loading="loading"
                         rounded
                     >
-                        Sign In
+                        Recover
                     </v-btn>
                 </v-row>
 
+                <v-alert
+                    class="mt-5"
+                    dense
+                    outlined
+                    type="error"
+                    v-if="error"
+                >
+                    {{ message }}
+                </v-alert>
             </v-form>
         </v-sheet>
       <!-- </v-col>
@@ -67,6 +76,7 @@
 </template>
 
 <script>
+import {mapGetters,mapActions} from 'vuex';
 import { required,sameAs } from 'vuelidate/lib/validators'
 import PaddedContainer from "../../components/PaddedContainer"
 export default {
@@ -78,7 +88,10 @@ export default {
     username:'Mahathir Mohammad',
     newPassword:'',
     confirmPassword:'',
-    loading:false
+    loading:false,
+    token:null,
+    error:false,
+    message:null
   }),
   validations:{
         newPassword: {
@@ -89,18 +102,31 @@ export default {
         }
   },
   methods:{
-    signin(){
-      this.loading=true;
-      this.$v.$touch();
+      ...mapActions('auth',['recoverPassword']),
+    recover(){
+        this.loading=true;
+        this.$v.$touch();
         if(this.$v.$error){
           return;
         }
-        this.$router.push('/auth/password/reset')
+        this.forgetPassword({token: this.token,password: this.newPassword})
+            .then(response=>{
+                this.$router.push('/search/relevant')
+            }).catch(e=>{
+                this.error=true;
+                this.message=e.response.data.message;
+            }).finally(()=>{
+                this.loading=false;
+            })
     }
   },
   components:{
       PaddedContainer
+  },
+  mounted(){
+    this.token=this.$route.query.token
   }
+
 }
 </script>
 

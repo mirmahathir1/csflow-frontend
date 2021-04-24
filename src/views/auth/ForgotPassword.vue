@@ -27,9 +27,9 @@
                     :error="$v.email.$error"
                     :error-messages="$v.email.$error?'Please input a valid email':null"
                 ></v-text-field>
-                <v-toolbar-subtitle class="text-primary text-justify">
+                <v-subheader class="text-primary text-justify">
                     We will send a recovery link with this mail.The link will be valid for only 1 hour.
-                </v-toolbar-subtitle>
+                </v-subheader>
                 <v-row>
                     <v-btn
                         color="primary"
