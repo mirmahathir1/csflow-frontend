@@ -4,7 +4,7 @@
     <page-subheader v-if="theses">Batch {{ batch }} Theses</page-subheader>
 
     <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isMyBatch">
-      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="300">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
         <v-card-text class="text-center text-body-2">Create New Thesis</v-card-text>
         <div class="mx-6">
           <hr class="my-divider">
@@ -20,7 +20,7 @@
     <v-container class="my-5" v-if="!getLoaderFlag('theses')">
       <v-row>
         <v-col
-            v-if="theses"
+            :v-if="theses"
             :cols="$isMobile() ? '12' : '6'"
             :md="$isMobile() ? '12' : '4'"
             class="justify-content-center"
