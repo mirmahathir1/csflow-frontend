@@ -15,7 +15,8 @@
             </v-row>
         </v-card>
         <v-sheet
-            :min-width="$isMobile() ?'30vh':'60vh'"
+            :max-width="$isMobile()?'80vw':'70vw'"
+            :min-width="$isMobile()?'30vw':'30vw'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
             v-if="!isSuccessful"
@@ -73,7 +74,9 @@
         </v-sheet>
     <v-card
         :height="$isMobile()?'60px':'100px'"
-        class="mb-4"
+        class="mb-4 mx-auto"
+        :max-width="$isMobile()?'80vw':'70vw'"
+        :min-width="$isMobile()?'30vw':'30vw'"
         v-if="isSuccessful"
     >
         <v-row class="pa-5 mt-2">
@@ -82,6 +85,16 @@
                 Success!!Log in to continue
             </v-card-subtitle>
             <v-spacer></v-spacer>
+        </v-row>
+        <v-row class="justify-content-center">
+            <v-btn
+                color="primary"
+                class="ma-2"
+                @click="$router.push('/auth/signIn')"
+                rounded
+            >
+            Sign In
+            </v-btn>
         </v-row>
     </v-card>
   </PaddedContainer>

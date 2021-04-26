@@ -247,10 +247,10 @@ const actions = {
         return new Promise((resolve, reject) => {
             csflowAPI.patch('/auth/signUp', payload)
             .then(response=>{
-                commit('setToken',payload.token);
-                commit('setIsSignedIn');
-                commit('setSideBarItems','user');
-                commit('saveTokenToLocalStorage',payload.token);
+                // commit('setToken',payload.token);
+                // commit('setIsSignedIn');
+                // commit('setSideBarItems','user');
+                // commit('saveTokenToLocalStorage',payload.token);
                 resolve(response)
             }).catch (e=>{
                 console.log(e.response);

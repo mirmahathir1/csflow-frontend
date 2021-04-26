@@ -8,7 +8,8 @@
         >
         </v-card>
         <v-sheet
-            :min-width="$isMobile() ?'30vh':'60vh'"
+            :max-width="$isMobile()?'80vw':'70vw'"
+            :min-width="$isMobile()?'30vw':'30vw'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
             v-if="!isEmailSent"
@@ -28,7 +29,7 @@
                     :error="$v.email.$error"
                     :error-messages="$v.email.$error?'Please input a valid email':null"
                 ></v-text-field>
-                <v-subheader class="text-primary text-justify">
+                <v-subheader class="text-primary text-justify mt-2">
                     We will send a recovery link with this mail.The link will be valid for only 1 hour.
                 </v-subheader>
                 <v-row>
@@ -57,11 +58,13 @@
         </v-sheet>
     <v-card
         :height="$isMobile()?'60px':'100px'"
-        class="mb-4"
+        :max-width="$isMobile()?'30vw':'70vw'"
+        :min-width="$isMobile()?'30vw':'30vw'"
+        class="mb-4 mx-auto"
         v-if="isEmailSent"
     >
         <v-row class="pa-5 mt-2">
-            <v-card-subtitle class="black--text text-center">
+            <v-card-subtitle class="black--text text-center mx-auto">
                 A mail has been sent to your email
             </v-card-subtitle>
         </v-row>

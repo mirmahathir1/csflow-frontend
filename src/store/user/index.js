@@ -56,6 +56,38 @@ const actions = {
         }finally{
             commit('unsetUserLoaderFlag');
         }
+    },
+    async deleteUser({ getters, commit}){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/user')
+            .then(response=>{
+                resolve(response)
+            }).catch(e=>{
+                reject(e)
+            })
+        })
+    },
+    async changePassword({ getters, commit},payload){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/auth/password/change', payload)
+            .then(response=>{
+                resolve(response)
+            }).catch(e=>{
+                reject(e)
+            })
+        })
+    },
+    async changeName({ getters, commit},payload){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/user', payload)
+            .then(response=>{
+                let res = csflowAPI.get('/user/me');
+                commit('setUser',res.data.payload);
+                resolve(response)
+            }).catch(e=>{
+                reject(e)
+            })
+        })
     }
 };
 

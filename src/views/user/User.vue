@@ -1,20 +1,4 @@
 <template>
-    <!-- <v-col
-        cols="12"
-
-        sm="8"
-    > -->
-<!--        <v-card-->
-<!--            class="mx-auto text-center"-->
-<!--            flat-->
-<!--            v-if="getUserLoaderFlag"-->
-<!--        >-->
-<!--            <v-progress-circular-->
-<!--                indeterminate-->
-<!--                color="primary"-->
-<!--                class="ma-5"-->
-<!--            ></v-progress-circular>-->
-<!--        </v-card>-->
     <PaddedContainer>
         <v-skeleton-loader
             class="mx-auto text-center"
@@ -35,12 +19,12 @@
                 >
                     <img
                         alt="Avatar"
-                        src="./mahathir.png"
+                        :src="this.getLoadedUser.profilePic"
                     >
                 </v-avatar>
             </v-row>
             <v-row align="center">
-                <v-card-title class="mx-auto">{{user.name}}</v-card-title>
+                <v-card-title class="mx-auto">{{this.getLoadedUser.name}}</v-card-title>
                 <v-btn
                     :class="$isMobile()?'mr-3':'mr-7'"
                     text
@@ -66,7 +50,7 @@
                                     <v-col  md="3">
                                         <v-list-item-content
                                           >
-                                            {{user.id}}
+                                            {{this.getLoadedUser.id}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -149,7 +133,7 @@
         >
             <v-row class="">
                 <v-card-text class="my-auto">
-                    <p class="ml-3">{{user.name}}'s post</p>
+                    <p class="ml-3">{{this.getLoadedUser.name}}'s post</p>
                 </v-card-text>
             </v-row>
         </v-card>
@@ -174,6 +158,7 @@ export default {
     },
     mounted() {
         this.getProfile(this.$route.params.id);
+        // console.log(this.getLoadedUser);
     },
     data(){
         return{
@@ -190,7 +175,8 @@ export default {
     },
     components:{
         PaddedContainer
-    }
+    },
+
 }
 </script>
 

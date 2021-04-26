@@ -16,7 +16,9 @@
         </v-card>
         <v-row class="pa-6">
         <v-sheet
-            :max-width="$isMobile() ?'30vh':'60vh'"
+            
+            :max-width="$isMobile()?'80vw':'70vw'"
+            :min-width="$isMobile()?'30vw':'30vw'"
             rounded="lg"
             class="pa-6 mx-auto"
         >

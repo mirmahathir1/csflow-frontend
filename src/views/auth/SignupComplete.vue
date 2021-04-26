@@ -1,7 +1,9 @@
 <template>
   <PaddedContainer>
     <v-card :height="$isMobile() ?'60px':'100px'" class></v-card>
-    <v-card height="100px" class="mb-4">
+    <v-card height="100px" class="mb-4 mx-auto"
+      :max-width="$isMobile()?'30vw':'70vw'"
+      :min-width="$isMobile()?'30vw':'30vw'">
       <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
         <v-card-text class>
           <p class="text-center">
