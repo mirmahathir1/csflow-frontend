@@ -64,7 +64,7 @@ const routes = [
     },
     {
         path:'/post/create',
-        name:'Create Post',
+        name:'CreatePost',
         component: () => import('../views/post/CreatePost')
     },
     {
@@ -145,7 +145,7 @@ const router = new VueRouter({
 
 
 // router.beforeEach((to, from, next) => {
-//     if(to.name=="create post" || to.name=="SignUpConfirmation"){
+//     if(to.name=="CreatePost" || to.name=="SignUpConfirmation"){
 //         next();
 //     }
 //     if(!store.getters['auth/getIsSignedIn'] && to.name=='Forgot' && to.name=='Recover'){

@@ -7,7 +7,7 @@
             class=""
         >
             <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
-                <v-card-text class="">
+                <v-card-text class="" v-if="!isSuccessful">
                     <p class="text-center">Welcome.You have been redirected to
                       this page for resetting your password
                     </p>
@@ -18,6 +18,7 @@
             :min-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
+            v-if="!isSuccessful"
         >
            
             <v-toolbar-title class="mx-auto text-center">
@@ -70,8 +71,19 @@
                 </v-alert>
             </v-form>
         </v-sheet>
-      <!-- </v-col>
-  </v-row> -->
+    <v-card
+        :height="$isMobile()?'60px':'100px'"
+        class="mb-4"
+        v-if="isSuccessful"
+    >
+        <v-row class="pa-5 mt-2">
+            <v-spacer></v-spacer>
+            <v-card-subtitle class="black--text text-center">
+                Success!!Log in to continue
+            </v-card-subtitle>
+            <v-spacer></v-spacer>
+        </v-row>
+    </v-card>
   </PaddedContainer>
 </template>
 
@@ -91,7 +103,8 @@ export default {
     loading:false,
     token:null,
     error:false,
-    message:null
+    message:null,
+    isSuccessful:false
   }),
   validations:{
         newPassword: {
@@ -109,9 +122,10 @@ export default {
         if(this.$v.$error){
           return;
         }
-        this.forgetPassword({token: this.token,password: this.newPassword})
+        this.recoverPassword({token: this.token,password: this.newPassword})
             .then(response=>{
-                this.$router.push('/search/relevant')
+                this.isSuccessful=true
+                // this.$router.push('/search/relevant')
             }).catch(e=>{
                 this.error=true;
                 this.message=e.response.data.message;
@@ -124,6 +138,7 @@ export default {
       PaddedContainer
   },
   mounted(){
+      this.isSuccessful=false
     this.token=this.$route.query.token
   }
 

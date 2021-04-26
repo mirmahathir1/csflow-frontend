@@ -1,7 +1,7 @@
 <template>
   <PaddedContainer>
     <v-card :height="$isMobile() ?'60px':'100px'" class></v-card>
-    <v-card height="100px" class>
+    <v-card height="100px" class="mb-4">
       <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
         <v-card-text class>
           <p class="text-center">
@@ -10,7 +10,7 @@
         </v-card-text>
       </v-row>
     </v-card>
-    <v-card :height="$isMobile() ?'60px':'100px'" class></v-card>
+    <v-card :height="$isMobile() ?'60px':'100px'" class="mb-4"></v-card>
   </PaddedContainer>
 </template>
 

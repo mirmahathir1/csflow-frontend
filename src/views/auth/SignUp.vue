@@ -3,7 +3,7 @@
     <PaddedContainer>
     <v-row class="pa-6">
         <v-sheet
-            :min-width="$isMobile() ?'30vh':'60vh'"
+            :max-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mx-auto"
         >

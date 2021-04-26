@@ -11,6 +11,7 @@
             :min-width="$isMobile() ?'30vh':'60vh'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
+            v-if="!isEmailSent"
         >
            
             <v-toolbar-title class="mx-auto text-center">
@@ -54,8 +55,17 @@
                 </v-alert>
             </v-form>
         </v-sheet>
-      <!-- </v-col> -->
-  <!-- </v-row> -->
+    <v-card
+        :height="$isMobile()?'60px':'100px'"
+        class="mb-4"
+        v-if="isEmailSent"
+    >
+        <v-row class="pa-5 mt-2">
+            <v-card-subtitle class="black--text text-center">
+                A mail has been sent to your email
+            </v-card-subtitle>
+        </v-row>
+    </v-card>
   </PaddedContainer>
 </template>
 
@@ -72,7 +82,8 @@ export default {
         email:'',
         loading:false,
         error:false,
-        message:null
+        message:null,
+        isEmailSent:false
     }),
     validations:{
         email:{
@@ -91,7 +102,8 @@ export default {
 
             this.forgetPassword({email: this.email})
             .then(response=>{
-                this.$router.push('/auth/password/recover')
+                this.isEmailSent=true
+                // this.$router.push('/auth/password/recover')
             }).catch(e=>{
                 this.error=true;
                 this.message=e.response.data.message;
@@ -105,6 +117,9 @@ export default {
     },
     components:{
         PaddedContainer
+    },
+    mounted(){
+        this.isEmailSent=false
     }
 }
 </script>
