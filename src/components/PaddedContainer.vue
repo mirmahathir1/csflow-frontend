@@ -1,10 +1,7 @@
 <template>
   <div :class="margin">
     <v-row>
-      <v-col cols="12" :md="getDrawer? '1' : '2'">
-        <slot name="left"></slot>
-      </v-col>
-      <v-col cols="12" :md="getDrawer ? '9' : '8'">
+      <v-col cols="12" md="10" :style="padding">
         <slot></slot>
       </v-col>
       <v-col cols="12" md="2">
@@ -25,11 +22,12 @@ export default {
       if (!this.$vuetify.breakpoint.mdAndUp) {
         return 'mx-3 my-3';
       } else {
-        if (this.getDrawer) {
-          return 'mr-10 my-5';
-        } else {
-          return 'mx-10 my-5';
-        }
+        return 'mr-5 my-5';
+      }
+    },
+    padding() {
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        return 'padding-left: 80px';
       }
     }
   }
