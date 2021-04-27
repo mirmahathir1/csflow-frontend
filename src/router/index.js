@@ -137,6 +137,11 @@ const routes = [
         name: 'ProjectDetails',
         component: () => import('../views/archive/ProjectDetails')
     },
+    {
+        path: '/',
+        name: 'Index',
+        component: () => import('../views/Index')
+    }
 ]
 
 const router = new VueRouter({
