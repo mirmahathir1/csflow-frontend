@@ -11,7 +11,6 @@ const routes = [
         name: 'Relevant',
         component: () => import('../views/search/Relevant.vue')
     },
-
     {
         path: '/user/:id',
         name: 'User',
@@ -70,72 +69,86 @@ const routes = [
     {
         path: '/archive',
         name: 'Archive',
-        component: () => import('../views/archive/Archive')
+        component: () => import('../views/archive/Archive'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/resource',
         name: 'Resources',
-        component: () => import('../views/archive/Resources')
+        component: () => import('../views/archive/Resources'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/resource/:batch',
         name: 'ResourcesBatch',
-        component: () => import('../views/archive/ResourcesBatch')
+        component: () => import('../views/archive/ResourcesBatch'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/thesis',
         name: 'Theses',
-        component: () => import('../views/archive/Theses')
+        component: () => import('../views/archive/Theses'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/thesis/batch/:batch',
         name: 'ThesesBatch',
-        component: () => import('../views/archive/ThesesBatch')
+        component: () => import('../views/archive/ThesesBatch'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/thesis/new',
         name: 'ThesisCreation',
-        component: () => import('../views/archive/ThesisCreation')
+        component: () => import('../views/archive/ThesisCreation'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/thesis/:id/edit',
         name: 'ThesisUpdate',
-        component: () => import('../views/archive/ThesisUpdate')
+        component: () => import('../views/archive/ThesisUpdate'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/thesis/:id',
         name: 'ThesisDetails',
-        component: () => import('../views/archive/ThesisDetails')
+        component: () => import('../views/archive/ThesisDetails'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/project',
         name: 'Projects',
-        component: () => import('../views/archive/Projects')
+        component: () => import('../views/archive/Projects'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/project/batch/:batch',
         name: 'ProjectsBatch',
-        component: () => import('../views/archive/ProjectsBatch')
+        component: () => import('../views/archive/ProjectsBatch'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/project/batch/:batch/:course',
         name: 'ProjectsCourse',
-        component: () => import('../views/archive/ProjectsCourse')
+        component: () => import('../views/archive/ProjectsCourse'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/project/new',
         name: 'ProjectCreation',
-        component: () => import('../views/archive/ProjectCreation')
+        component: () => import('../views/archive/ProjectCreation'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/project/:id/edit',
         name: 'ProjectUpdate',
-        component: () => import('../views/archive/ProjectUpdate')
+        component: () => import('../views/archive/ProjectUpdate'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive/project/:id',
         name: 'ProjectDetails',
-        component: () => import('../views/archive/ProjectDetails')
+        component: () => import('../views/archive/ProjectDetails'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/',
@@ -146,28 +159,35 @@ const routes = [
 
 const router = new VueRouter({
     routes
-})
+});
 
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!store.getters['auth/getIsSignedIn']) {
+            next('/auth/signIn');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
 
-// router.beforeEach((to, from, next) => {
-//     if(to.name=="CreatePost" || to.name=="SignUpConfirmation"){
-//         next();
-//     }
-//     if(!store.getters['auth/getIsSignedIn'] && to.name=='Forgot' && to.name=='Recover'){
-//         next();
-//     }
-//     if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
-//         next('/auth/signIn');
-//     }
-//     if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
-//         next('/search/relevant');
-//     }
+    // if(to.name=="CreatePost" || to.name=="SignUpConfirmation"){
+    //     next();
+    // }
+    // if(!store.getters['auth/getIsSignedIn'] && to.name=='Forgot' && to.name=='Recover'){
+    //     next();
+    // }
+    // if(!store.getters['auth/getIsSignedIn'] && to.name!='SignIn' && to.name!='SignUp' && to.name!='Box'){
+    //     next('/auth/signIn');
+    // }
+    // if(store.getters['auth/getIsSignedIn'] && to.name=='SignIn'){
+    //     next('/search/relevant');
+    // }
+    //
+    // if(to.path != from.path){
+    //     next();
+    // }
+});
 
-//     if(to.path != from.path){
-//         next();
-//     }
-
-
-
-// })
 export default router
