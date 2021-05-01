@@ -4,7 +4,7 @@
     <page-subheader v-if="true">Batch {{ batch }} Projects / {{ this.course.replace('-', ' ') }}</page-subheader>
 
     <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isMyBatch">
-      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="300">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
         <v-card-text class="text-center text-body-2">Create New Project</v-card-text>
         <div class="mx-6">
           <hr class="my-divider">
