@@ -5,6 +5,7 @@ const state = {
     userLoaderMessage: null,
     isUserLoaderError: false,
     user: null,
+    name:null
 };
 
 const getters = {
@@ -19,7 +20,10 @@ const getters = {
     },
     getLoadedUser: state=>{
         return state.user;
-    }
+    },
+    getName: state=>{
+        return state.name;
+    },
 
 };
 const mutations = {
@@ -39,6 +43,7 @@ const mutations = {
     },
     setUser(state,payload){
         state.user = payload;
+        state.name=payload.name
     }
 
 

@@ -4,7 +4,7 @@
       <v-card color="white" elevation="2" class="rounded-lg px-5 pt-8 pb-4 mt-6">
         <v-row align="center">
           <v-avatar size="150px" class="mx-auto mt-2">
-            <img alt="Avatar" :src="this.getLoadedUser.profilePic" />
+            <img alt="Avatar" :src="getProfilePic" />
           </v-avatar>
         </v-row>
         <v-container>
@@ -24,7 +24,7 @@
                   class="rounded-lg"
                   dense
                   v-model="name"
-                  :value="getLoadedUser.name"
+                  :value="name"
                   @blur="$v.name.$touch()"
                 ></v-text-field>
               </v-col>
@@ -127,7 +127,10 @@ export default {
     PaddedContainerWithoutLeft
   },
   computed: {
-    ...mapGetters("user", ["getLoadedUser"])
+    ...mapGetters("user", ["getLoadedUser"]),
+    getProfilePic(){
+      return this.getLoadedUser==null?'':this.getLoadedUser.profilePic
+    }
   },
   data: () => ({
     name: null,
@@ -150,7 +153,7 @@ export default {
       }
   },
   methods: {
-    ...mapActions("user", ["deleteUser", "changePassword", "changeName"]),
+    ...mapActions("user", ["deleteUser", "changePassword", "changeName","getProfile"]),
     save() {
       this.loading = true;
       if (this.newPassword != null) {
@@ -182,8 +185,17 @@ export default {
           this.deleteClicked = false;
         });
     }
-  },created(){
-      this.name=this.getLoadedUser.name
+  },
+  // watch:{
+  //   '$route'(to,from){
+  //     this.getProfile('me')
+  //   }
+  // },
+  created(){
+    this.getProfile('me')
+  },
+  mounted(){
+    
   }
 };
 </script>

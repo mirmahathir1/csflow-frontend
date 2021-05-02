@@ -3,9 +3,10 @@
         cols="12"
         sm="8"
     > -->
+    <div :style="$isMobile()?'':'margin-left:130px'">
     <PaddedContainer>
         <v-card
-            :height="$isMobile()?'60px':'100px'"
+            :height="$isMobile()?'100px':'100px'"
             class=""
         >
             <v-row class="pa-5 mt-2">
@@ -85,7 +86,7 @@
         </v-sheet>
         </v-row>
         <v-card
-            :height="$isMobile()?'60px':'100px'"
+            :height="$isMobile()?'100px':'100px'"
             class="mb-4"
         >
             <v-row class="mt-2 pa-5">
@@ -98,12 +99,13 @@
         </v-card>
     <!-- </v-col> -->
     </PaddedContainer>
+    </div>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
-import PaddedContainer from "../../components/PaddedContainer"
+import PaddedContainer from "../../components/PaddedContainer1"
 export default {
     name:"SignIn",
     title(){
@@ -146,7 +148,8 @@ export default {
     },
     components:{
         PaddedContainer
-    }
+    },
+    
 }
 </script>
 

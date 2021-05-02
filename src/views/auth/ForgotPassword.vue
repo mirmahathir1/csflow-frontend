@@ -3,12 +3,12 @@
   <!-- <v-row class="pa-6 my-auto"> -->
       <!-- <v-col class="justify-content-center"> -->
         <v-card
-            :height="$isMobile() ?'60px':'100px'"
+            :height="$isMobile() ?'100px':'100px'"
             class=""
         >
         </v-card>
         <v-sheet
-            :max-width="$isMobile()?'80vw':'70vw'"
+            :max-width="$isMobile()?'80vw':'30vw'"
             :min-width="$isMobile()?'30vw':'30vw'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
@@ -57,8 +57,8 @@
             </v-form>
         </v-sheet>
     <v-card
-        :height="$isMobile()?'60px':'100px'"
-        :max-width="$isMobile()?'30vw':'70vw'"
+        :height="$isMobile()?'100px':'100px'"
+        :max-width="$isMobile()?'30vw':'30vw'"
         :min-width="$isMobile()?'30vw':'30vw'"
         class="mb-4 mx-auto"
         v-if="isEmailSent"
@@ -75,7 +75,7 @@
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,email } from 'vuelidate/lib/validators'
-import PaddedContainer from "../../components/PaddedContainer"
+import PaddedContainer from "../../components/PaddedContainer1"
 export default {
     name:"Forgot",
     title(){

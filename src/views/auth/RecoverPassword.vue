@@ -15,7 +15,7 @@
             </v-row>
         </v-card>
         <v-sheet
-            :max-width="$isMobile()?'80vw':'70vw'"
+            :max-width="$isMobile()?'80vw':'30vw'"
             :min-width="$isMobile()?'30vw':'30vw'"
             rounded="lg"
             class="pa-6 mt-3 mx-auto"
@@ -103,7 +103,7 @@
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,sameAs } from 'vuelidate/lib/validators'
-import PaddedContainer from "../../components/PaddedContainer"
+import PaddedContainer from "../../components/PaddedContainer1"
 export default {
     name:"",
     title(){
