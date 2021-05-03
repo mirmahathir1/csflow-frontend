@@ -64,7 +64,7 @@ const actions = {
     },
     async deleteUser({ getters, commit}){
         return new Promise((resolve, reject) => {
-            csflowAPI.patch('/user')
+            csflowAPI.delete('/user')
             .then(response=>{
                 resolve(response)
             }).catch(e=>{
@@ -78,6 +78,18 @@ const actions = {
             .then(response=>{
                 resolve(response)
             }).catch(e=>{
+                reject(e)
+            })
+        })
+    },
+    async uploadImage({ getters, commit},payload){
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/user/profilePic', payload)
+            .then(response=>{
+                console.log(response)
+                resolve(response)
+            }).catch(e=>{
+                console.log(e)
                 reject(e)
             })
         })

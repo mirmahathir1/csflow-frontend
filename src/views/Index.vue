@@ -293,9 +293,9 @@ export default {
         ...mapActions('auth',['autoLogin'])
     },
     created(){
-        if(this.autoLogin()){
-            this.$router.push('/search/relevant')
-        }
+        // if(this.autoLogin()){
+        //     this.$router.push('/search/relevant')
+        // }
     }
 }
 </script>
