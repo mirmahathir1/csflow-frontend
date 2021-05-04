@@ -23,7 +23,6 @@
               prepend-icon="mdi-camera"
               @blur="$v.image.$touch()"
               accept="image/png, image/jpeg, image/jpg"
-              
               label=".jpg .jpeg .png"
             ></v-file-input>
           </v-col>
@@ -204,38 +203,32 @@ export default {
   methods: {
     ...mapActions("user", ["deleteUser", "changePassword", "changeName","getProfile","uploadImage"]),
     ...mapActions("auth",["logoutAll"]),
-    save() {
-      this.loading = true;
+    async save() {
+      // this.loading = true;
       if(this.image!=null){
+        console.log(this.image)
         let formData=new FormData();
-        formData.append('file',this.image);
-        this.uploadImage({formData})
-          .then(response=>{
-
-          })
-          .catch(e=>{
-
-          });
+        formData.append('image',this.image);
+        await this.uploadImage(formData);
       }
+
       if (this.newPassword != null) {
-        this.changePassword({
+        let error = await this.changePassword({
           oldPassword: this.oldPassword,
           newPassword: this.newPassword
         })
-          .then(response => {
+          if(error===null){
             this.anyError = false;
-          })
-          .catch(e => {
+          }else{
             this.anyError = true;
-            this.message = e.response.data.message;
-          })
-          ;
+            this.message = error.response.data.message;
+          }
       }
+
       if (this.name != this.getLoadedUser.name) {
-        this.changeName({ name: this.name })
-          .then(response => {})
-          .catch(e => {});
+       await this.changeName({ name: this.name })
       }
+
       if(!this.anyError){
         this.$router.push('/user/me')
       }
