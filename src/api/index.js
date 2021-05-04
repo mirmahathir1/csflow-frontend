@@ -28,6 +28,10 @@ csflowAPI.interceptors.response.use( (response)=>{
     return response;
 },  (error)=>{
     // Do something with request error
+    if(error.response){
+        console.log(error.response)
+    }
+
     return Promise.reject(error);
 });
 
