@@ -107,6 +107,9 @@ import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ThesisDetails",
+  title() {
+    return 'Thesis Details';
+  },
   components: {ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {

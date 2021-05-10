@@ -70,6 +70,9 @@ import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ThesesBatch",
+  title() {
+    return 'Theses';
+  },
   data() {
     return {
       batch: this.$route.params.batch

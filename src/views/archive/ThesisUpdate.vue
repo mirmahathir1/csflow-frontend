@@ -34,6 +34,9 @@ import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ThesisUpdate",
+  title() {
+    return 'Update Thesis';
+  },
   data() {
     return {
       title: '',

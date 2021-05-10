@@ -42,9 +42,13 @@ import {mapGetters, mapActions} from "vuex";
 import ResourceCard from "@/components/ResourceCard";
 import ErrorCard from "@/components/ErrorCard";
 import FoldersLoader from "@/components/FoldersLoader";
+
 export default {
   name: "ProjectsBatch",
   components: {FoldersLoader, ErrorCard, ResourceCard, PageSubheader, PageHeader, PaddedContainer},
+  title() {
+    return 'Projects';
+  },
   data() {
     return {
       batch: this.$route.params.batch,
@@ -61,13 +65,10 @@ export default {
       }
 
       return null;
-    }
+    },
   },
   methods: {
     ...mapActions('archive', ['loadProjectCourses']),
-    addHyphen(value) {
-      return value.replace(' ', '-');
-    }
   },
   watch: {
     '$route'(to, from) {

@@ -35,6 +35,9 @@ import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ProjectUpdate",
+  title() {
+    return 'Update Project';
+  },
   data() {
     return {
       title: '',
