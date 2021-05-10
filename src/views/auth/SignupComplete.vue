@@ -1,8 +1,8 @@
 <template>
   <PaddedContainer>
-    <v-card :height="$isMobile() ?'60px':'100px'" class></v-card>
+    <v-card :height="$isMobile() ?'100px':'100px'" class></v-card>
     <v-card height="100px" class="mb-4 mx-auto"
-      :max-width="$isMobile()?'30vw':'70vw'"
+      :max-width="$isMobile()?'30vw':'30vw'"
       :min-width="$isMobile()?'30vw':'30vw'">
       <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
         <v-card-text class>
@@ -12,13 +12,13 @@
         </v-card-text>
       </v-row>
     </v-card>
-    <v-card :height="$isMobile() ?'60px':'100px'" class="mb-4"></v-card>
+    <v-card :height="$isMobile() ?'100px':'100px'" class="mb-4"></v-card>
   </PaddedContainer>
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
-import PaddedContainer from "../../components/PaddedContainer"
+import PaddedContainer from "../../components/PaddedContainer1"
 export default {
     name:"SignupComplete",
     title(){

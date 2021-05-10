@@ -1,25 +1,29 @@
 <template>
+<PaddedContainer>
   <v-card class="mt-2 ml-2" dense>
     <v-row>
         <v-col cols="2" md="1" class="my-auto">
-          <v-list-item>
-            <p>
-            <v-icon class="" medium color="green darken-2">
-              mdi-arrow-up-bold-outline
-            </v-icon><br>
-            {{post.votes}}
-            <br>
-            <v-icon class="" medium color="red darken-2">
-              mdi-arrow-down-bold-outline
-            </v-icon>
+            <p style="background-color:#f0f0f0">
+              <v-row class="mx-auto text-center" >
+                <v-icon class="mx-auto text-center" large color="green darken-2">
+                  mdi-arrow-up-bold-outline
+                </v-icon>
+              </v-row>
+              <v-row class="mx-auto text-center">
+                <span class="mx-auto text-center">{{post.votes}}</span>
+              </v-row>
+              <v-row class="mx-auto text-center">
+                <v-icon class="mx-auto text-center" large color="red darken-2">
+                  mdi-arrow-down-bold-outline
+                </v-icon>
+              </v-row>
             </p>
-          </v-list-item>
         </v-col>
         <v-col cols="5" md="8" class="text-justify my-auto">
             {{post.text}}
         </v-col>
         <v-col cols="5" md="3" class="">
-            <v-card>
+            <v-card rounded>
               <v-list-item three-line>
                 <v-list-item-content>
                   
@@ -64,7 +68,8 @@
       >
         {{post.type}} Thread
       </v-chip>
-      <v-card class="" elevation="2">
+      <br>
+      <!-- <v-card rounded class=""> -->
           <v-chip
           class="ma-2"
           color="indigo"
@@ -74,12 +79,14 @@
           >
               {{item}}
           </v-chip>
-      </v-card>
+      <!-- </v-card> -->
     </v-card-text>
   </v-card>
+</PaddedContainer>
 </template>
 
 <script>
+import PaddedContainer from '../PaddedContainer'
 export default {
     data(){
         return{
@@ -88,11 +95,14 @@ export default {
                 'date':'21 August 2020,2.20AM',
                 'type':'Question',
                 'totalAnswer':9,
-                'votes':56,
+                'votes':5678,
                 'tags':['CSE 300','AI','Networking'],
                 'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
             }
         }
+    },
+    components:{
+      PaddedContainer
     }
 }
 </script>

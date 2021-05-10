@@ -233,6 +233,7 @@
     </div>
 </template>
 <script>
+import {mapGetters,mapActions} from 'vuex';
 export default {
     name: "Index",
     data() {
@@ -287,6 +288,14 @@ export default {
                 ['945', 'Answers'],
             ],
         }
+    },
+    methods:{
+        ...mapActions('auth',['autoLogin'])
+    },
+    created(){
+        // if(this.autoLogin()){
+        //     this.$router.push('/search/relevant')
+        // }
     }
 }
 </script>

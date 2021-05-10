@@ -5,6 +5,7 @@ const state = {
     userLoaderMessage: null,
     isUserLoaderError: false,
     user: null,
+    name:null
 };
 
 const getters = {
@@ -19,7 +20,10 @@ const getters = {
     },
     getLoadedUser: state=>{
         return state.user;
-    }
+    },
+    getName: state=>{
+        return state.name;
+    },
 
 };
 const mutations = {
@@ -39,6 +43,7 @@ const mutations = {
     },
     setUser(state,payload){
         state.user = payload;
+        state.name=payload.name
     }
 
 
@@ -59,7 +64,7 @@ const actions = {
     },
     async deleteUser({ getters, commit}){
         return new Promise((resolve, reject) => {
-            csflowAPI.patch('/user')
+            csflowAPI.delete('/user')
             .then(response=>{
                 resolve(response)
             }).catch(e=>{
@@ -68,14 +73,20 @@ const actions = {
         })
     },
     async changePassword({ getters, commit},payload){
-        return new Promise((resolve, reject) => {
-            csflowAPI.patch('/auth/password/change', payload)
-            .then(response=>{
-                resolve(response)
-            }).catch(e=>{
-                reject(e)
-            })
-        })
+        try {
+            await csflowAPI.patch('/auth/password/change', payload);
+            return null;
+        }catch(e){
+            return e;
+        }
+
+    },
+    async uploadImage({ getters, commit},payload){
+        try {
+            await csflowAPI.patch('/user/profilePic', payload)
+        }catch (e){
+
+        }
     },
     async changeName({ getters, commit},payload){
         return new Promise((resolve, reject) => {

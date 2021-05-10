@@ -1,9 +1,10 @@
 <template>
   <!-- <v-col cols="12" sm="8"> -->
+    
     <PaddedContainer>
     <v-row class="pa-6">
         <v-sheet
-            :max-width="$isMobile()?'30vw':'70vw'"
+            :max-width="$isMobile()?'70vw':'70vw'"
             :min-width="$isMobile()?'30vw':'30vw'"
             rounded="lg"
             class="pa-6 mx-auto"
@@ -83,12 +84,13 @@
     </v-row>
   <!-- </v-col> -->
     </PaddedContainer>
+    
 </template>
 
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import { required,email,sameAs } from 'vuelidate/lib/validators'
-import PaddedContainer from "../../components/PaddedContainer"
+import PaddedContainer from "../../components/PaddedContainer1"
 export default {
     name:"SignUp",
     title(){

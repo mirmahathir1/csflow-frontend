@@ -3,9 +3,30 @@
     <PaddedContainerWithoutLeft>
       <v-card color="white" elevation="2" class="rounded-lg px-5 pt-8 pb-4 mt-6">
         <v-row align="center">
-          <v-avatar size="150px" class="mx-auto mt-2">
-            <img alt="Avatar" :src="this.getLoadedUser.profilePic" />
-          </v-avatar>
+          <!-- <v-avatar size="150px" class="mx-auto mt-2">
+            <img alt="Avatar" :src="getLoadedUser.profilePic" />
+          </v-avatar> -->
+          <v-spacer></v-spacer>
+          <v-col cols="12" md="4" v-if="!$isMobile()">
+            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Profile Picture</v-card-text>
+          </v-col>
+          <v-col cols="12" md="5">
+            <v-card-text
+              v-if="$isMobile()"
+              class="text-left text--black text-body-1 pb-3 pl-4"
+            >Profile Picture</v-card-text>
+            <v-file-input
+              v-model.trim="image"
+              outlined
+              rounded-lg
+              dense
+              prepend-icon="mdi-camera"
+              @blur="$v.image.$touch()"
+              accept="image/png, image/jpeg, image/jpg"
+              label=".jpg .jpeg .png"
+            ></v-file-input>
+          </v-col>
+          <v-spacer></v-spacer>
         </v-row>
         <v-container>
           <v-form ref="form" class="mt-6">
@@ -24,8 +45,10 @@
                   class="rounded-lg"
                   dense
                   v-model="name"
-                  :value="getLoadedUser.name"
+                  :value="name"
                   @blur="$v.name.$touch()"
+                  :error="$v.name.$error"
+                  :error-messages="nameErrors"
                 ></v-text-field>
               </v-col>
               <v-spacer></v-spacer>
@@ -56,6 +79,7 @@
                   type="password"
                   v-model="oldPassword"
                   @blur="$v.oldPassword.$touch()"
+                  :error="$v.oldPassword.$error"
                 ></v-text-field>
               </v-col>
               <v-spacer></v-spacer>
@@ -78,6 +102,8 @@
                   type="password"
                   value
                   @blur="$v.newPassword.$touch()"
+                  :error="$v.newPassword.$error"
+                  :error-messages="newPasswordErrors"
                 ></v-text-field>
               </v-col>
               <v-spacer></v-spacer>
@@ -88,6 +114,7 @@
                 class="mx-auto mt-4"
                 @click="save"
                 :loading="loading"
+                :disabled="$v.$anyError"
                 rounded
               >Save</v-btn>
             </v-row>
@@ -116,7 +143,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { required,email,sameAs } from 'vuelidate/lib/validators'
+import { required,email,sameAs,minLength } from 'vuelidate/lib/validators'
 import PaddedContainerWithoutLeft from "../../components/PaddedContainerWithoutLeft";
 export default {
   name: "EditProfile",
@@ -127,9 +154,30 @@ export default {
     PaddedContainerWithoutLeft
   },
   computed: {
-    ...mapGetters("user", ["getLoadedUser"])
+    ...mapGetters("user", ["getLoadedUser"]),
+    getProfilePic(){
+      return this.getLoadedUser==null?'':this.getLoadedUser.profilePic
+    },
+    nameErrors(){
+      const errors=[]
+
+      if(this.name!=null){
+        !this.$v.name.minLength && errors.push('Must be at least 4 characters')
+      }
+      return errors
+    },
+    newPasswordErrors(){
+      const errors=[]
+
+      if(this.newPassword!=null){
+        !this.newPassword.minLength && errors.push('Password must contain at least 6 characters')
+      }
+
+      return errors
+    }
   },
   data: () => ({
+    image:null,
     name: null,
     oldPassword: null,
     newPassword: null,
@@ -143,47 +191,73 @@ export default {
 
       },
       newPassword:{
-
+        minLength:minLength(6),
       },
       name:{
+        minLength: minLength(4),
+      },
+      image:{
 
       }
   },
   methods: {
-    ...mapActions("user", ["deleteUser", "changePassword", "changeName"]),
-    save() {
-      this.loading = true;
+    ...mapActions("user", ["deleteUser", "changePassword", "changeName","getProfile","uploadImage"]),
+    ...mapActions("auth",["logoutAll"]),
+    async save() {
+      // this.loading = true;
+      if(this.image!=null){
+        console.log(this.image)
+        let formData=new FormData();
+        formData.append('image',this.image);
+        await this.uploadImage(formData);
+      }
+
       if (this.newPassword != null) {
-        this.changePassword({
+        let error = await this.changePassword({
           oldPassword: this.oldPassword,
           newPassword: this.newPassword
         })
-          .then(response => {
+          if(error===null){
             this.anyError = false;
-          })
-          .catch(e => {
+          }else{
             this.anyError = true;
-            this.message = e.response.data.message;
-          });
+            this.message = error.response.data.message;
+          }
       }
+
       if (this.name != this.getLoadedUser.name) {
-        this.changeName({ name: this.name })
-          .then(response => {})
-          .catch(e => {});
+       await this.changeName({ name: this.name })
+      }
+
+      if(!this.anyError){
+        this.$router.push('/user/me')
       }
       this.loading = false;
     },
     deleteProfile() {
       this.deleteClicked = true;
       this.deleteUser()
-        .then(response => {})
+        .then(response => {
+          this.logoutAll()
+          this.$router.push('/')
+        })
         .catch(e => {})
         .finally(() => {
           this.deleteClicked = false;
         });
     }
-  },created(){
-      this.name=this.getLoadedUser.name
+  },
+  // watch:{
+  //   '$route'(to,from){
+  //     this.getProfile('me')
+  //   }
+  // },
+  created(){
+    // this.getProfile('me')
+    // this.name=this.getLoadedUser.name
+  },
+  mounted(){
+    
   }
 };
 </script>

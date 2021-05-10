@@ -63,7 +63,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content>
-                                            {{user.discussion}}
+                                            {{this.getLoadedUser.totalDiscussion}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -76,7 +76,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content>
-                                            {{user.question}}
+                                            {{this.getLoadedUser.totalQuestion}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -89,7 +89,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content>
-                                            {{user.answers}}
+                                            {{this.getLoadedUser.totalAnswer}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -102,7 +102,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content class="text-success">
-                                            {{user.upvotes}}
+                                            {{this.getLoadedUser.upvoteCount}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -115,7 +115,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content class="text-danger">
-                                            {{user.downvotes}}
+                                            {{this.getLoadedUser.downvoteCount}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>

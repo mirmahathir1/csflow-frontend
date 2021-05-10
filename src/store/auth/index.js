@@ -165,14 +165,18 @@ const actions = {
     autoLogin({ getters, commit }) {
         commit('loadTokenFromLocalStorage');
 
-        if (getters.getToken === null) {
-            commit('unsetIsSignedIn');
-            return false;
-        } else {
+        try {
+            let response = csflowAPI.post('/auth/signIn/auto',);
             commit('setIsSignedIn');
             commit('setSideBarItems');
             return true;
+            
+        } catch(e){
+            commit('unsetIsSignedIn');
+            commit('unsetToken');
+            return false;
         }
+            
     },
 
     async login({ getters, commit }, payload) {
