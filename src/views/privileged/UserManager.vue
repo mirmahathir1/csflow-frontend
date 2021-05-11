@@ -20,26 +20,29 @@
         <hr class="my-divider">
       </div>
 
-      <v-row v-for="user in users" :key="user.id">
+      <v-row
+          v-for="user in users" :key="user.id"
+          class="my-2"
+      >
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
-        <v-col cols="6" md="4" class="text-center">
-          <v-card-text class="text-body-1">
+        <v-col cols="5" md="4" class="text-center">
+          <v-card-text class="text-body-2 text-md-body-1">
             {{ user.ID }}
           </v-card-text>
         </v-col>
-        <v-col cols="6" md="5" class="align-center">
-          <user-card></user-card>
+        <v-col cols="7" md="5">
+          <user-card
+              :name="user.name"
+              :ID="user.ID"
+              :karma="user.karma"
+              :image="user.image"
+              class="mx-auto"
+          ></user-card>
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
     </v-card>
-<!--    <user-card class="ml-12 mt-12"></user-card>-->
-
-<!--    <user-card class="ml-12 mt-12"-->
-<!--               name="Mir Mahathir Mohammad" :ID="1605011" :karma="100"-->
-<!--               image="https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/162013689652715227032.jpg"-->
-<!--    ></user-card>-->
   </padded-container>
 </template>
 
@@ -64,6 +67,48 @@ export default {
           ID: 1605011,
           karma: 100,
           image: "https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/162013689652715227032.jpg",
+        },
+        {
+         name: 'Md Ashraful Islam',
+         ID: 1605001,
+         karma: -45,
+         image: 'https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/161884860368716282694.jpg',
+        },
+        {
+          name: 'Navid Bin Hasan',
+          ID: 1605005,
+          karma: 69,
+          image: 'https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/162063784423617792183.png',
+        },
+        {
+          name: 'Mir Mahathir Mohammad',
+          ID: 1605011,
+          karma: 100,
+          image: "https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/162013689652715227032.jpg",
+        },
+        {
+          name: 'Md Ashraful Islam',
+          ID: 1605001,
+          karma: -45,
+          image: 'https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/161884860368716282694.jpg',
+        },
+        {
+          name: 'Navid Bin Hasan',
+          ID: 1605005,
+          karma: 69,
+          image: 'https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/162063784423617792183.png',
+        },
+        {
+          name: 'Mir Mahathir Mohammad',
+          ID: 1605011,
+          karma: 100,
+          image: "https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/162013689652715227032.jpg",
+        },
+        {
+          name: 'Md Ashraful Islam',
+          ID: 1605001,
+          karma: -45,
+          image: 'https://storage.googleapis.com/csflow-buet.appspot.com/profile-pic/161884860368716282694.jpg',
         },
       ]
     }

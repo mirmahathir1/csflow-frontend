@@ -169,24 +169,28 @@ const router = new VueRouter({
     routes
 });
 
-store.dispatch('auth/autoLogin');
+// store.dispatch('auth/autoLogin');
 
-// let attemptedAutoLogin = false;
+let attemptedAutoLogin = false;
 router.beforeEach(async (to, from, next) => {
-    // try to auto login
-    // if (!attemptedAutoLogin) {
-    //     await store.dispatch('auth/autoLogin');
-    //     attemptedAutoLogin = true;
-    // }
+    try {
+        // try to auto login
+        if (!attemptedAutoLogin) {
+            attemptedAutoLogin = true;
+            await store.dispatch('auth/autoLogin');
+        }
+    } catch (e) {
 
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!store.getters['auth/getIsSignedIn']) {
-            next('/auth/signIn');
+    } finally {
+        if (to.matched.some(record => record.meta.requiresAuth)) {
+            if (!store.getters['auth/getIsSignedIn']) {
+                next('/auth/signIn');
+            } else {
+                next();
+            }
         } else {
             next();
         }
-    } else {
-        next();
     }
 
     // if(to.name=="CreatePost" || to.name=="SignUpConfirmation"){
