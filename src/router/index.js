@@ -154,6 +154,14 @@ const routes = [
         path: '/',
         name: 'Index',
         component: () => import('../views/Index')
+    },
+
+    ////////////////// privileged module /////////////////////
+    {
+        path: '/privileged/user',
+        name: 'PrivilegedUserManager',
+        component: () => import('../views/privileged/UserManager'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
     }
 ]
 
@@ -162,7 +170,6 @@ const router = new VueRouter({
 });
 
 let attemptedAutoLogin = false;
-
 router.beforeEach(async (to, from, next) => {
     // try to auto login
     if (!attemptedAutoLogin) {
