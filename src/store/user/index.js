@@ -49,18 +49,24 @@ const mutations = {
 
 };
 const actions = {
+    getProfile({commit}, payload) {
+        return new Promise((resolve, reject) => {
+            commit('setUserLoaderFlag');
+            commit('unsetUserLoaderMessage');
 
-    async getProfile({ getters, commit},payload) {
-        commit('setUserLoaderFlag');
-        commit('unsetUserLoaderMessage');
-        try{
-            let response = await csflowAPI.get('/user/'+payload);
-            commit('setUser',response.data.payload);
-        }catch(e){
-            commit('setUserLoaderMessage',e.response.data.message);
-        }finally{
-            commit('unsetUserLoaderFlag');
-        }
+            csflowAPI.get('/user/'+payload)
+                .then(response => {
+                    commit('setUser', response.data.payload);
+                    resolve(response.data.payload);
+                })
+                .catch(e => {
+                    commit('setUserLoaderMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetUserLoaderFlag');
+                });
+        });
     },
     async deleteUser({ getters, commit}){
         return new Promise((resolve, reject) => {
