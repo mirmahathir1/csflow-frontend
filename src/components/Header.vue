@@ -155,43 +155,216 @@
                 dense
                 nav
             >
-                <template v-for="(item,index) in items">
-                    <v-list-item
-                        :to="item.link"
-                        :key="index"
-                        style="text-decoration:none"
-                    >
-                        <v-list-item-icon>
-                            <v-icon>{{ item.icon }}</v-icon>
-                        </v-list-item-icon>
+              <template v-if="!inPrivilegedDash">
+                <template v-for="(item, index) in items">
+                  <v-list-item
+                      :to="item.link"
+                      :key="index"
+                      style="text-decoration:none"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
 
-                        <v-list-item-content>
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
                 </template>
+                <v-list-item
+                    v-if="getIsCR"
+                    @click="inPrivilegedDash = true"
+                    style="text-decoration:none"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-account-star</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Privileged Dash</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+
+<!--              Privileged Dash-->
+              <template v-if="inPrivilegedDash">
+                <v-list-item class="text-center">
+                  <v-card-text class="text-body-1 grey--text text--darken-2">
+                    Privileged Dash
+                  </v-card-text>
+                </v-list-item>
+
+                <v-list-item
+                    @click="inPrivilegedDash = false"
+                    style="text-decoration:none"
+                    class="grey lighten-4 my-3"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-arrow-left</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Back</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <template v-for="(item,index) in privilegedItems">
+                  <v-list-item
+                      v-if="!item.hasChildren"
+                      :to="item.link"
+                      :key="index"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-group
+                      v-if="item.hasChildren"
+                      :value="false"
+                      :prepend-icon="item.icon"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3"
+                  >
+                    <template v-slot:activator>
+                      <v-list-item-title>Shared Items</v-list-item-title>
+                    </template>
+
+                    <v-list-item
+                        v-for="child in item.children"
+                        :key="child.title"
+                        :to="child.link"
+                        style="text-decoration:none"
+                        class="grey lighten-4 my-3 ml-5"
+                    >
+                      <v-list-item-icon>
+                        <v-icon>{{ child.icon }}</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-content>
+                        <v-list-item-title>{{ child.title }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                  </v-list-group>
+                </template>
+              </template>
             </v-list>
         </v-navigation-drawer>
+
+
+
         <v-navigation-drawer app clipped v-if="getIsSignedIn && !$isMobile()">
             <v-list
                 dense
                 nav
             >
-                <template v-for="(item,index) in items">
+              <template v-if="!inPrivilegedDash">
+                  <template v-for="(item, index) in items">
                     <v-list-item
                         :to="item.link"
                         :key="index"
                         style="text-decoration:none"
                     >
-                        <v-list-item-icon>
-                            <v-icon>{{ item.icon }}</v-icon>
-                        </v-list-item-icon>
+                      <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                      </v-list-item-icon>
 
-                        <v-list-item-content>
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                        </v-list-item-content>
+                      <v-list-item-content>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      </v-list-item-content>
                     </v-list-item>
+                  </template>
+                  <v-list-item
+                      v-if="getIsCR"
+                      @click="inPrivilegedDash = true"
+                      style="text-decoration:none"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>mdi-account-star</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                      <v-list-item-title>Privileged Dash</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+              </template>
+
+<!--              Privileged Dash-->
+              <template v-if="inPrivilegedDash">
+                <v-list-item class="text-center">
+                  <v-card-text class="text-body-1 grey--text text--darken-2">
+                    Privileged Dash
+                  </v-card-text>
+                </v-list-item>
+
+                <v-list-item
+                    @click="inPrivilegedDash = false"
+                    style="text-decoration:none"
+                    class="grey lighten-4 my-3"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-arrow-left</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Back</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <template v-for="(item,index) in privilegedItems">
+                  <v-list-item
+                      v-if="!item.hasChildren"
+                      :to="item.link"
+                      :key="index"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-group
+                      v-if="item.hasChildren"
+                      :value="false"
+                      :prepend-icon="item.icon"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3"
+                  >
+                    <template v-slot:activator>
+                      <v-list-item-title>Shared Items</v-list-item-title>
+                    </template>
+
+                    <v-list-item
+                        v-for="child in item.children"
+                        :key="child.title"
+                        :to="child.link"
+                        style="text-decoration:none"
+                        class="my-3 ml-5"
+                    >
+                      <v-list-item-icon>
+                        <v-icon>{{ child.icon }}</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-content>
+                        <v-list-item-title>{{ child.title }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                  </v-list-group>
                 </template>
+              </template>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -204,7 +377,7 @@ import Button from '../components/Button'
 export default {
     name: "Header",
     computed: {
-        ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn"]),
+        ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn", "getIsCR"]),
         ...mapGetters('others',['getDrawer']),
         drawer:{
             get: function () {
@@ -238,8 +411,8 @@ export default {
     },
     data() {
         return {
-
             dialog: false,
+            inPrivilegedDash: false,
             items: [
                 {
                     title: 'Unanswered',
@@ -261,7 +434,44 @@ export default {
                   icon: 'mdi-file-code',
                   link: '/archive/project'
                 },
-            ]
+            ],
+            privilegedItems: [
+              {
+                title: 'User Manager',
+                icon: 'mdi-account',
+                link: '/privileged/user'
+              },
+              {
+                title: 'Tag Manager',
+                icon: 'mdi-tag',
+                link: '/privileged/tag'
+              },
+              {
+                title: 'Report Manager',
+                icon: 'mdi-alert',
+                link: '/privileged/report'
+              },
+              {
+                title: 'Shared Items',
+                icon: 'mdi-share-variant',
+                hasChildren: true,
+                showChildren: false,
+                children: [
+                  {
+                    title: 'Resources',
+                    icon: 'mdi-folder',
+                    link: '/privileged/archive/resource',
+                    nested: true,
+                  },
+                  {
+                    title: 'Projects',
+                    icon: 'mdi-file-code',
+                    link: '/privileged/archive/project',
+                    nested: true,
+                  },
+                ]
+              },
+            ],
         }
     },
     mounted() {
