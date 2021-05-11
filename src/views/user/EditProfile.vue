@@ -126,7 +126,7 @@
       <template v-slot:right>
         <v-sheet rounded="lg" class="pa-8 mx-auto rounded-lg mt-6">
           <v-row justify="center">Delete My Profile</v-row>
-          <v-row>
+          <!-- <v-row>
             <v-btn
               color="error"
               class="mx-auto mt-4"
@@ -134,7 +134,55 @@
               @click="deleteProfile"
               :loading="deleteClicked"
             >Delete</v-btn>
-          </v-row>
+          </v-row> -->
+
+          <div class="text-center mt-6">
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="red lighten-2"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Delete
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline grey lighten-2">
+                  Delete Account
+                </v-card-title>
+
+                <v-card-text>
+                  Your account will be removed. You will have to create an account again if you want to use this platform again.
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    
+                    @click="deleteProfile"
+                  >
+                    I accept
+                  </v-btn>
+                  <v-btn
+                    @click="dialog = false"
+                    color="red lighten-2"
+                  >
+                    Close
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+
         </v-sheet>
       </template>
     </PaddedContainerWithoutLeft>
@@ -184,7 +232,8 @@ export default {
     loading: false,
     message: null,
     anyError: false,
-    deleteClicked: false
+    deleteClicked: false,
+    dialog:false,
   }),
   validations:{
       oldPassword:{

@@ -12,9 +12,6 @@
             <v-toolbar-title>CSFLOW</v-toolbar-title>
 
             <v-spacer></v-spacer>
-            <!-- <button :click="()=>{$router.push('/about')}">
-              Sign In
-            </button> -->
             <div v-if="!getIsSignedIn">
                 <v-btn
                     to="/auth/signIn"
@@ -75,7 +72,7 @@
                     </v-text-field> -->
                 </div>
 
-                <v-menu left bottom v-if="getIsSignedIn">
+                <v-menu left bottom>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn icon v-bind="attrs" v-on="on" :loading="getLogoutLoaderFlag">
                             <v-icon>mdi-dots-vertical</v-icon>

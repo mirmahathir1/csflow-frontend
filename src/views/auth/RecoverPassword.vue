@@ -75,16 +75,16 @@
     <v-card
         :height="$isMobile()?'60px':'100px'"
         class="mb-4 mx-auto"
-        :max-width="$isMobile()?'80vw':'70vw'"
+        :max-width="$isMobile()?'30vw':'30vw'"
         :min-width="$isMobile()?'30vw':'30vw'"
         v-if="isSuccessful"
     >
-        <v-row class="pa-5 mt-2">
-            <v-spacer></v-spacer>
-            <v-card-subtitle class="black--text text-center">
-                Success!!Log in to continue
-            </v-card-subtitle>
-            <v-spacer></v-spacer>
+        <v-row :class="$isMobile() ?'pa-2':'pa-5 mt-2'">
+            <v-card-text class>
+                <p class="text-center">
+                    Success!!Log in to continue
+                </p>
+            </v-card-text>
         </v-row>
         <v-row class="justify-content-center">
             <v-btn

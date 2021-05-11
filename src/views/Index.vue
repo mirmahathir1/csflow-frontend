@@ -290,7 +290,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions('auth',['autoLogin'])
+        // ...mapActions('auth',['autoLogin'])
     },
     created(){
         // if(this.autoLogin()){
