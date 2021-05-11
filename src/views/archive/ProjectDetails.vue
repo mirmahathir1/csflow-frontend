@@ -112,6 +112,9 @@ import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ProjectDetails",
+  title() {
+    return 'Project Details';
+  },
   components: {ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {

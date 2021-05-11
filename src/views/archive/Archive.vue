@@ -30,6 +30,9 @@ import PaddedContainer from "@/components/PaddedContainer";
 
 export default {
   name: "Archive",
+  title() {
+    return 'Archive';
+  },
   data() {
     return {
       items: [

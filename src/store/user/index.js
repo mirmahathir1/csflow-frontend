@@ -73,26 +73,20 @@ const actions = {
         })
     },
     async changePassword({ getters, commit},payload){
-        return new Promise((resolve, reject) => {
-            csflowAPI.patch('/auth/password/change', payload)
-            .then(response=>{
-                resolve(response)
-            }).catch(e=>{
-                reject(e)
-            })
-        })
+        try {
+            await csflowAPI.patch('/auth/password/change', payload);
+            return null;
+        }catch(e){
+            return e;
+        }
+
     },
     async uploadImage({ getters, commit},payload){
-        return new Promise((resolve, reject) => {
-            csflowAPI.patch('/user/profilePic', payload)
-            .then(response=>{
-                console.log(response)
-                resolve(response)
-            }).catch(e=>{
-                console.log(e)
-                reject(e)
-            })
-        })
+        try {
+            await csflowAPI.patch('/user/profilePic', payload)
+        }catch (e){
+
+        }
     },
     async changeName({ getters, commit},payload){
         return new Promise((resolve, reject) => {

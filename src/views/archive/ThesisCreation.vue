@@ -26,6 +26,9 @@ import DetailsLoader from "@/components/DetailsLoader";
 
 export default {
   name: "ThesisCreation",
+  title() {
+    return 'Create Thesis';
+  },
   data() {
     return {
       title: '',

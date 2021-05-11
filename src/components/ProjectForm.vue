@@ -188,8 +188,6 @@
 
 <script>
 import { required, minLength, url, integer } from 'vuelidate/lib/validators'
-import PaddedContainer from "@/components/PaddedContainer";
-import PageHeader from "@/components/PageHeader";
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -254,7 +252,7 @@ export default {
     },
     description: {
       required,
-      minLength: minLength(100),
+      minLength: minLength(50),
     },
     youtubeLink: {
       required,
@@ -310,7 +308,7 @@ export default {
       }
 
       !this.$v.description.required && errors.push('Description is required');
-      !this.$v.description.minLength && errors.push('Must be at least 100 characters');
+      !this.$v.description.minLength && errors.push('Must be at least 50 characters');
 
       return errors;
     },

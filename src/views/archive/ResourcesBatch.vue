@@ -45,6 +45,9 @@ import ErrorCard from "@/components/ErrorCard";
 
 export default {
   name: "ResourcesBatch",
+  title() {
+    return 'Resources';
+  },
   data() {
     return {
       batch: this.$route.params.batch

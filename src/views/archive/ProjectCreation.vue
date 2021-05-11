@@ -27,6 +27,9 @@ import DetailsLoader from "@/components/DetailsLoader";
 
 export default {
   name: "ProjectCreation",
+  title() {
+    return 'Create Project';
+  },
   data() {
     return {
       title: '',

@@ -34,6 +34,9 @@ import PaddedContainer from "@/components/PaddedContainer";
 
 export default {
   name: "Theses",
+  title() {
+    return 'Theses';
+  },
   computed: {
     ...mapGetters('archive', ['getBatches', 'getLoaderFlag']),
   },
