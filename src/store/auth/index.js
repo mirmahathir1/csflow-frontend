@@ -170,6 +170,7 @@ const actions = {
 
     autoLogin({ commit, dispatch }) {
         commit('loadTokenFromLocalStorage');
+        dispatch('others/unsetPrivilegedDash', null, {root: true});
 
         return new Promise((resolve, reject) => {
             csflowAPI.post('/auth/signIn/auto')
@@ -195,6 +196,7 @@ const actions = {
         commit('unsetSignInMessage');
         commit('unsetIsSignedIn');
         commit('setSignInLoaderFlag');
+        dispatch('others/unsetPrivilegedDash', null, {root: true});
 
         csflowAPI.post('/auth/signIn', payload)
             .then(response => {
