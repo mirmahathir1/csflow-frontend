@@ -206,7 +206,7 @@ const actions = {
                     commit('setSideBarItems','user');
                     commit('saveTokenToLocalStorage',response.data.payload);
 
-                    return dispatch('user/getProfile', 'me', {root: true});
+                    return dispatch('user/getUser', 'me', {root: true});
                 })
                 .then(me => {
                     commit('setIsCR', me['isCR']);
