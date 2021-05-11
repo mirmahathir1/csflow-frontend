@@ -230,7 +230,7 @@
                       class="grey lighten-4 my-3"
                   >
                     <template v-slot:activator>
-                      <v-list-item-title>Shared Items</v-list-item-title>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </template>
 
                     <v-list-item
@@ -340,7 +340,7 @@
                       class="grey lighten-4 my-3"
                   >
                     <template v-slot:activator>
-                      <v-list-item-title>Shared Items</v-list-item-title>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </template>
 
                     <v-list-item
