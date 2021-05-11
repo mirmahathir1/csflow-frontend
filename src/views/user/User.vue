@@ -52,6 +52,7 @@
                                         <v-list-item-content
                                           >
                                             {{this.getLoadedUserForProfile.id}}
+                                            <!-- {{this.id}} -->
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -158,25 +159,32 @@ export default {
         ...mapActions('user',['getProfile'])
     },
     mounted() {
+        console.log("here");
         this.getProfile(this.$route.params.id);
         // console.log(this.getLoadedUser);
     },
     data(){
         return{
-            user:{'E-mail':'mirmahathir@gmail.com',
-                  'discussion': 278,
-                  'question': 15,
-                  'answers' : 20,
-                  'upvotes': 78,
-                  'downvotes': 45,
-                  'id':1605011,
-                  'name':'Mir Mahathir Mohammad'
-            }
+            // user:{'E-mail':'mirmahathir@gmail.com',
+            //       'discussion': 278,
+            //       'question': 15,
+            //       'answers' : 20,
+            //       'upvotes': 78,
+            //       'downvotes': 45,
+            //       'id':1605011,
+            //       'name':'Mir Mahathir Mohammad'
+            // }
+            id:this.$route.params.id
         }
     },
     components:{
         PaddedContainer
     },
+    watch: {
+        '$route'(to, from) {
+            this.id=to.params.id
+        }
+    }
 
 }
 </script>

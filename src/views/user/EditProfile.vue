@@ -274,7 +274,7 @@ export default {
           }
       }
 
-      if (this.name != this.getLoadedUser.name) {
+      if (this.name != null) {
        await this.changeName({ name: this.name })
       }
 
