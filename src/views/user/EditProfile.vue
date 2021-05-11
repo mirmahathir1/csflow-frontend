@@ -253,7 +253,7 @@ export default {
     ...mapActions("user", ["deleteUser", "changePassword", "changeName","getProfile","uploadImage"]),
     ...mapActions("auth",["logoutAll"]),
     async save() {
-      // this.loading = true;
+      this.loading = true;
       if(this.image!=null){
         console.log(this.image)
         let formData=new FormData();

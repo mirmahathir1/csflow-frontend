@@ -10,7 +10,7 @@
             class="mx-auto mt-3"
             flat
             elevation="3"
-            v-else-if="getLoadedUser!==null"
+            v-else-if="getLoadedUserForProfile!==null"
         >
             <v-row align="center">
                 <v-avatar
@@ -19,13 +19,14 @@
                 >
                     <img
                         alt="Avatar"
-                        :src="this.getLoadedUser.profilePic"
+                        :src="this.getLoadedUserForProfile.profilePic"
                     >
                 </v-avatar>
             </v-row>
             <v-row align="center">
-                <v-card-title class="mx-auto">{{this.getLoadedUser.name}}</v-card-title>
+                <v-card-title class="mx-auto">{{this.getLoadedUserForProfile.name}}</v-card-title>
                 <v-btn
+                    v-if="$route.params.id=='me'"
                     :class="$isMobile()?'mr-3':'mr-7'"
                     text
                     icon
@@ -50,7 +51,7 @@
                                     <v-col  md="3">
                                         <v-list-item-content
                                           >
-                                            {{this.getLoadedUser.id}}
+                                            {{this.getLoadedUserForProfile.id}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -63,7 +64,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content>
-                                            {{this.getLoadedUser.totalDiscussion}}
+                                            {{this.getLoadedUserForProfile.totalDiscussion}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -76,7 +77,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content>
-                                            {{this.getLoadedUser.totalQuestion}}
+                                            {{this.getLoadedUserForProfile.totalQuestion}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -89,7 +90,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content>
-                                            {{this.getLoadedUser.totalAnswer}}
+                                            {{this.getLoadedUserForProfile.totalAnswer}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -102,7 +103,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content class="text-success">
-                                            {{this.getLoadedUser.upvoteCount}}
+                                            {{this.getLoadedUserForProfile.upvoteCount}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -115,7 +116,7 @@
                                     </v-col>
                                     <v-col md="3">
                                         <v-list-item-content class="text-danger">
-                                            {{this.getLoadedUser.downvoteCount}}
+                                            {{this.getLoadedUserForProfile.downvoteCount}}
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -129,11 +130,11 @@
         <v-card
             height="60px"
             class="mt-8"
-            v-if="getLoadedUser!==null"
+            v-if="getLoadedUserForProfile!==null"
         >
             <v-row class="">
                 <v-card-text class="my-auto">
-                    <p class="ml-3">{{this.getLoadedUser.name}}'s post</p>
+                    <p class="ml-3">{{this.getLoadedUserForProfile.name}}'s post</p>
                 </v-card-text>
             </v-row>
         </v-card>
@@ -151,7 +152,7 @@ export default {
         return "My Profile"
     },
     computed:{
-        ...mapGetters('user',['getLoadedUser','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage'])
+        ...mapGetters('user',['getLoadedUserForProfile','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage'])
     },
     methods:{
         ...mapActions('user',['getProfile'])
