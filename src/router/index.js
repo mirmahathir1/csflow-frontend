@@ -161,6 +161,12 @@ const router = new VueRouter({
     routes
 });
 
+// try to auto login
+store.dispatch('auth/autoLogin')
+    .catch(e => {
+       console.log(e.response);
+    });
+
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!store.getters['auth/getIsSignedIn']) {

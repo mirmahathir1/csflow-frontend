@@ -5,6 +5,7 @@ const state = {
     signInLoaderFlag: false,
 
     isSignedIn: false,
+    isCR: false,
 
     signInMessage: null,
     isSignInError: false,
@@ -52,8 +53,10 @@ const getters = {
     },
     getDrawerSideBar: state=>{
         return state.drawerSidebar
-    }
-
+    },
+    getIsCR: state => {
+        return state.isCR;
+    },
 };
 const mutations = {
     setToken(state,payload) {
@@ -130,6 +133,9 @@ const mutations = {
     },
     changeDrawerSideBar(state){
         if(state.isSignedIn) state.drawerSidebar=!state.drawerSidebar;
+    },
+    setIsCR(state, payload) {
+        state.isCR = payload;
     }
 };
 const actions = {
@@ -162,43 +168,56 @@ const actions = {
         }
     },
 
-    autoLogin({ getters, commit }) {
+    autoLogin({ commit, dispatch }) {
         commit('loadTokenFromLocalStorage');
 
-        try {
-            let response = csflowAPI.post('/auth/signIn/auto',);
-            commit('setIsSignedIn');
-            commit('setSideBarItems');
-            return true;
-            
-        } catch(e){
-            commit('unsetIsSignedIn');
-            commit('unsetToken');
-            return false;
-        }
-            
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/auth/signIn/auto')
+                .then(response => {
+                    commit('setIsSignedIn');
+                    commit('setSideBarItems');
+
+                    return dispatch('user/getProfile', 'me', {root: true});
+                })
+                .then(me => {
+                    commit('setIsCR', me['isCR']);
+                    resolve(true);
+                })
+                .catch(e => {
+                    commit('unsetIsSignedIn');
+                    commit('unsetToken');
+                    reject(false);
+                });
+        })
     },
 
-    async login({ getters, commit }, payload) {
+    login({ commit, dispatch }, payload) {
         commit('unsetSignInMessage');
         commit('unsetIsSignedIn');
         commit('setSignInLoaderFlag');
 
-        try {
-            let response = await csflowAPI.post('/auth/signIn', payload);
-            commit('setToken',response.data.payload);
-            commit('setIsSignedIn');
-            commit('setSideBarItems','user');
-            commit('saveTokenToLocalStorage',response.data.payload);
-            return true;
-        }catch (e){
-            console.log(e.response);
-            commit('setSignInMessage',e.response.data.message);
-            commit('unsetIsSignedIn');
-            return false;
-        }finally {
-            commit('unsetSignInLoaderFlag');
-        }
+        csflowAPI.post('/auth/signIn', payload)
+            .then(response => {
+                commit('setToken',response.data.payload);
+                commit('setIsSignedIn');
+                commit('setSideBarItems','user');
+                commit('saveTokenToLocalStorage',response.data.payload);
+
+                return dispatch('user/getProfile', 'me', {root: true});
+            })
+            .then(me => {
+                commit('setIsCR', me['isCR']);
+                return true;
+            })
+            .catch(e => {
+                console.log(e.response);
+                commit('setSignInMessage',e.response.data.message);
+                commit('unsetIsSignedIn');
+                return false;
+            })
+            .finally(() => {
+                commit('unsetSignInLoaderFlag');
+            });
     },
 
     async signUp({ getters, commit }, payload){

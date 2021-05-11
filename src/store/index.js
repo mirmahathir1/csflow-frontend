@@ -22,6 +22,6 @@ let store = new Vuex.Store({
   }
 })
 
-store.dispatch('auth/autoLogin');
+// store.dispatch('auth/autoLogin');
 
 export default store;
