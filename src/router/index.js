@@ -154,6 +154,14 @@ const routes = [
         path: '/',
         name: 'Index',
         component: () => import('../views/Index')
+    },
+
+    ////////////////// privileged module /////////////////////
+    {
+        path: '/privileged/user',
+        name: 'PrivilegedUserManager',
+        component: () => import('../views/privileged/UserManager'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
     }
 ]
 
@@ -161,13 +169,14 @@ const router = new VueRouter({
     routes
 });
 
-// try to auto login
-store.dispatch('auth/autoLogin')
-    .catch(e => {
-       console.log(e.response);
-    });
+let attemptedAutoLogin = false;
+router.beforeEach(async (to, from, next) => {
+    // try to auto login
+    if (!attemptedAutoLogin) {
+        await store.dispatch('auth/autoLogin');
+        attemptedAutoLogin = true;
+    }
 
-router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!store.getters['auth/getIsSignedIn']) {
             next('/auth/signIn');
