@@ -170,6 +170,7 @@ const actions = {
 
     autoLogin({ commit, dispatch }) {
         commit('loadTokenFromLocalStorage');
+        dispatch('others/unsetPrivilegedDash', null, {root: true});
 
         return new Promise((resolve, reject) => {
             csflowAPI.post('/auth/signIn/auto')
@@ -186,38 +187,43 @@ const actions = {
                 .catch(e => {
                     commit('unsetIsSignedIn');
                     commit('unsetToken');
-                    reject(false);
+                    reject(e);
                 });
-        })
+        });
     },
 
     login({ commit, dispatch }, payload) {
         commit('unsetSignInMessage');
         commit('unsetIsSignedIn');
         commit('setSignInLoaderFlag');
+        dispatch('others/unsetPrivilegedDash', null, {root: true});
 
-        csflowAPI.post('/auth/signIn', payload)
-            .then(response => {
-                commit('setToken',response.data.payload);
-                commit('setIsSignedIn');
-                commit('setSideBarItems','user');
-                commit('saveTokenToLocalStorage',response.data.payload);
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/auth/signIn', payload)
+                .then(response => {
+                    commit('setToken',response.data.payload);
+                    commit('setIsSignedIn');
+                    commit('setSideBarItems','user');
+                    commit('saveTokenToLocalStorage',response.data.payload);
 
-                return dispatch('user/getUser', 'me', {root: true});
-            })
-            .then(me => {
-                commit('setIsCR', me['isCR']);
-                return true;
-            })
-            .catch(e => {
-                console.log(e.response);
-                commit('setSignInMessage',e.response.data.message);
-                commit('unsetIsSignedIn');
-                return false;
-            })
-            .finally(() => {
-                commit('unsetSignInLoaderFlag');
-            });
+                    return dispatch('user/getProfile', 'me', {root: true});
+                })
+                .then(me => {
+                    commit('setIsCR', me['isCR']);
+
+                    resolve(true);
+                })
+                .catch(e => {
+                    commit('setSignInMessage',e.response.data.message);
+                    commit('unsetIsSignedIn');
+
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetSignInLoaderFlag');
+                });
+        });
+
     },
 
     async signUp({ getters, commit }, payload){

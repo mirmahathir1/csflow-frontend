@@ -152,7 +152,8 @@
                 dense
                 nav
             >
-              <template v-if="!inPrivilegedDash">
+<!--              Main Dash-->
+              <template v-if="getMainDash">
                 <template v-for="(item, index) in items">
                   <v-list-item
                       :to="item.link"
@@ -170,7 +171,7 @@
                 </template>
                 <v-list-item
                     v-if="getIsCR"
-                    @click="inPrivilegedDash = true"
+                    @click="setPrivilegedDash"
                     style="text-decoration:none"
                 >
                   <v-list-item-icon>
@@ -184,7 +185,7 @@
               </template>
 
 <!--              Privileged Dash-->
-              <template v-if="inPrivilegedDash">
+              <template v-if="getPrivilegedDash">
                 <v-list-item class="text-center">
                   <v-card-text class="text-body-1 grey--text text--darken-2">
                     Privileged Dash
@@ -192,7 +193,7 @@
                 </v-list-item>
 
                 <v-list-item
-                    @click="inPrivilegedDash = false"
+                    @click="unsetPrivilegedDash"
                     style="text-decoration:none"
                     class="grey lighten-4 my-3"
                 >
@@ -262,7 +263,8 @@
                 dense
                 nav
             >
-              <template v-if="!inPrivilegedDash">
+<!--              Main Dash-->
+              <template v-if="getMainDash">
                   <template v-for="(item, index) in items">
                     <v-list-item
                         :to="item.link"
@@ -280,7 +282,7 @@
                   </template>
                   <v-list-item
                       v-if="getIsCR"
-                      @click="inPrivilegedDash = true"
+                      @click="setPrivilegedDash"
                       style="text-decoration:none"
                   >
                     <v-list-item-icon>
@@ -294,7 +296,7 @@
               </template>
 
 <!--              Privileged Dash-->
-              <template v-if="inPrivilegedDash">
+              <template v-if="getPrivilegedDash">
                 <v-list-item class="text-center">
                   <v-card-text class="text-body-1 grey--text text--darken-2">
                     Privileged Dash
@@ -302,7 +304,7 @@
                 </v-list-item>
 
                 <v-list-item
-                    @click="inPrivilegedDash = false"
+                    @click="unsetPrivilegedDash"
                     style="text-decoration:none"
                     class="grey lighten-4 my-3"
                 >
@@ -375,7 +377,7 @@ export default {
     name: "Header",
     computed: {
         ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn", "getIsCR"]),
-        ...mapGetters('others',['getDrawer']),
+        ...mapGetters('others',['getDrawer', 'getPrivilegedDash', 'getMainDash']),
         drawer:{
             get: function () {
                 return this.getDrawer
@@ -387,7 +389,7 @@ export default {
     },
     methods: {
         ...mapActions("auth", ["logoutAll", "logout", "setDrawerSideBar"]),
-        ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer']),
+        ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer', 'setPrivilegedDash', 'unsetPrivilegedDash']),
         async signOut() {
             await this.logout();
             await this.unsetDrawer();

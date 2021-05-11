@@ -135,15 +135,19 @@ export default {
 
     methods: {
         ...mapActions('auth',['login']),
-        async signIn() {
-            this.$v.$touch();
-            if(this.$v.$error){
-              return;
-            }
+        signIn() {
+          this.$v.$touch();
+          if (this.$v.$error){
+            return;
+          }
 
-            if (await this.login({email: this.email, password: this.password})) {
-                await this.$router.push('/search/relevant');
-            }
+          this.login({email: this.email, password: this.password})
+            .then(response => {
+              this.$router.push('/search/relevant');
+            })
+            .catch(e => {
+              console.log(e.response);
+            });
         }
     },
     components:{
