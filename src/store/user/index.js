@@ -5,6 +5,7 @@ const state = {
     userLoaderMessage: null,
     isUserLoaderError: false,
     user: null,
+    userForProfile:null,
     name:null
 };
 
@@ -20,6 +21,9 @@ const getters = {
     },
     getLoadedUser: state=>{
         return state.user;
+    },
+    getLoadedUserForProfile: state=>{
+        return state.userForProfile;
     },
     getName: state=>{
         return state.name;
@@ -44,11 +48,33 @@ const mutations = {
     setUser(state,payload){
         state.user = payload;
         state.name=payload.name
+    },
+    setUserForProfile(state,payload){
+        state.userForProfile = payload;
     }
 
 
 };
 const actions = {
+    getUser({commit},payload){
+        return new Promise((resolve, reject) => {
+            // commit('setUserLoaderFlag');
+            // commit('unsetUserLoaderMessage');
+
+            csflowAPI.get('/user/'+payload)
+                .then(response => {
+                    commit('setUser', response.data.payload);
+                    resolve(response.data.payload);
+                })
+                .catch(e => {
+                    // commit('setUserLoaderMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    // commit('unsetUserLoaderFlag');
+                });
+        });
+    },
     getProfile({commit}, payload) {
         return new Promise((resolve, reject) => {
             commit('setUserLoaderFlag');
@@ -56,7 +82,7 @@ const actions = {
 
             csflowAPI.get('/user/'+payload)
                 .then(response => {
-                    commit('setUser', response.data.payload);
+                    commit('setUserForProfile', response.data.payload);
                     resolve(response.data.payload);
                 })
                 .catch(e => {
@@ -98,8 +124,8 @@ const actions = {
         return new Promise((resolve, reject) => {
             csflowAPI.patch('/user', payload)
             .then(response=>{
-                let res = csflowAPI.get('/user/me');
-                commit('setUser',res.data.payload);
+                // let res = csflowAPI.get('/user/me');
+                // commit('setUser',res.data.payload);
                 resolve(response)
             }).catch(e=>{
                 reject(e)
