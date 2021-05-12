@@ -7,49 +7,69 @@ Vue.use(VueRouter)
 
 const routes = [
     {
+        path: '/',
+        name: 'Index',
+        component: () => import('../views/Index')
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () => import('../views/Home.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/search/relevant',
         name: 'Relevant',
-        component: () => import('../views/search/Relevant.vue')
+        component: () => import('../views/search/Relevant.vue'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/user/:id',
         name: 'User',
-        component: () => import('../views/user/User')
+        component: () => import('../views/user/User'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/user/profile/edit',
         name: 'EditProfile',
-        component: () => import('../views/user/EditProfile')
+        component: () => import('../views/user/EditProfile'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/auth/signIn',
         name: 'SignIn',
-        component: () => import('../views/auth/SignIn')
+        component: () => import('../views/auth/SignIn'),
+        meta: {isLoggedIn: true}
     },
     {
         path: '/auth/signUp',
         name: 'SignUp',
-        component: () => import('../views/auth/SignUp')
+        component: () => import('../views/auth/SignUp'),
+        meta: {isLoggedIn: true}
     },
     {
         path: '/auth/signUpConfirmation',
         name: 'SignUpConfirmation',
-        component: () => import('../views/auth/AfterSignUp')
+        component: () => import('../views/auth/AfterSignUp'),
+        meta: {isLoggedIn: true}
     },
     {
         path: '/auth/signUp/complete',
         name: 'SignUpComplete',
-        component: () => import('../views/auth/SignupComplete')
+        component: () => import('../views/auth/SignupComplete'),
+        meta: {isLoggedIn: true}
     },
     {
         path: '/auth/password/forgot',
         name: 'Forgot',
-        component: () => import('../views/auth/ForgotPassword')
+        component: () => import('../views/auth/ForgotPassword'),
+        meta: {isLoggedIn: true}
     },
     {
         path: '/auth/password/recover',
         name: 'Recover',
-        component: () => import('../views/auth/RecoverPassword')
+        component: () => import('../views/auth/RecoverPassword'),
+        meta: {isLoggedIn: true}
     },
     {
         path: '/about',
@@ -64,7 +84,8 @@ const routes = [
     {
         path:'/post/create',
         name:'CreatePost',
-        component: () => import('../views/post/CreatePost')
+        component: () => import('../views/post/CreatePost'),
+        meta: { requiresAuth: true }
     },
     {
         path: '/archive',
@@ -150,11 +171,7 @@ const routes = [
         component: () => import('../views/archive/ProjectDetails'),
         meta: { requiresAuth: true }
     },
-    {
-        path: '/',
-        name: 'Index',
-        component: () => import('../views/Index')
-    },
+    
 
     ////////////////// privileged module /////////////////////
     {
@@ -173,13 +190,24 @@ let attemptedAutoLogin = false;
 router.beforeEach(async (to, from, next) => {
     // try to auto login
     if (!attemptedAutoLogin) {
-        await store.dispatch('auth/autoLogin');
+        store.dispatch('auth/autoLogin')
+        // if(await store.dispatch('auth/autoLogin')){
+        //     console.log('done')
+        // }else{
+        //     console.log('error')
+        // }
         attemptedAutoLogin = true;
     }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!store.getters['auth/getIsSignedIn']) {
             next('/auth/signIn');
+        } else {
+            next();
+        }
+    } else if(to.matched.some(record => record.meta.isLoggedIn)){
+        if (store.getters['auth/getIsSignedIn']) {
+            next('/home');
         } else {
             next();
         }

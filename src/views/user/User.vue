@@ -139,6 +139,18 @@
                 </v-card-text>
             </v-row>
         </v-card>
+
+        <v-card
+            height="100px"
+            class="mt-12"
+            v-if="getUserLoaderMessage!==null"
+        >
+            <v-row class="pa-5 mt-2">
+                <v-card-text class="">
+                    <p class="text-center">{{getUserLoaderMessage}}</p>
+                </v-card-text>
+            </v-row>
+        </v-card>
     <!-- </v-col> -->
     </PaddedContainer>
 
@@ -159,7 +171,7 @@ export default {
         ...mapActions('user',['getProfile'])
     },
     mounted() {
-        console.log("here");
+        // console.log("here");
         this.getProfile(this.$route.params.id);
         // console.log(this.getLoadedUser);
     },
@@ -182,7 +194,8 @@ export default {
     },
     watch: {
         '$route'(to, from) {
-            this.id=to.params.id
+            this.id=to.params.id;
+            this.getProfile(this.id);
         }
     }
 

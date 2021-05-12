@@ -175,13 +175,15 @@ const actions = {
         return new Promise((resolve, reject) => {
             csflowAPI.post('/auth/signIn/auto')
                 .then(response => {
-                    commit('setIsSignedIn');
-                    commit('setSideBarItems');
+                    // commit('setIsSignedIn');
+                    // commit('setSideBarItems');
 
                     return dispatch('user/getUser', 'me', {root: true});
                 })
                 .then(me => {
                     commit('setIsCR', me['isCR']);
+                    commit('setIsSignedIn');
+                    commit('setSideBarItems');
                     resolve(true);
                 })
                 .catch(e => {

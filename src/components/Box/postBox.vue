@@ -26,11 +26,7 @@
             <v-card rounded>
               <v-list-item three-line>
                 <v-list-item-content>
-                  
-                  <!-- <div class="overline mb-4">
-                    OVERLINE
-                  </div> -->
-                  <v-list-item-title class="mb-1">
+                  <v-list-item-title class="mb-1" text-truncate>
                     {{post.user.name}}
                   </v-list-item-title>
                   <v-list-item-subtitle>
@@ -47,6 +43,9 @@
                 ><img src="../../assets/mahathir.png" alt=""></v-list-item-avatar>
               </v-list-item>
             </v-card>
+            <!-- <div style="padding-right:5px">
+              <UserCard></UserCard>
+            </div> -->
         </v-col>
     </v-row>
     <v-card-text>
@@ -82,11 +81,13 @@
       <!-- </v-card> -->
     </v-card-text>
   </v-card>
+  <UserCard></UserCard>
 </PaddedContainer>
 </template>
 
 <script>
-import PaddedContainer from '../PaddedContainer'
+import PaddedContainer from '../PaddedContainer1'
+import UserCard from '../Card/UserCard'
 export default {
     data(){
         return{
@@ -102,7 +103,8 @@ export default {
         }
     },
     components:{
-      PaddedContainer
+      PaddedContainer,
+      UserCard
     }
 }
 </script>
