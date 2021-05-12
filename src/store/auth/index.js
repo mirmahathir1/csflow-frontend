@@ -3,6 +3,7 @@ import {csflowAPI} from '../../api';
 const state = {
     token: null,
     signInLoaderFlag: false,
+    signInDialogFlag: false,
 
     isSignedIn: false,
     isCR: false,
@@ -26,6 +27,9 @@ const getters = {
     },
     getSignInLoaderFlag: state =>{
         return state.signInLoaderFlag;
+    },
+    getSignInDialogFlag: state => {
+        return state.signInDialogFlag;
     },
     getIsSignedIn: state =>{
         return state.isSignedIn;
@@ -70,6 +74,12 @@ const mutations = {
     },
     unsetSignInLoaderFlag(state){
         state.signInLoaderFlag = false;
+    },
+    setSignInDialogFlag(state){
+        state.signInDialogFlag = true;
+    },
+    unsetSignInDialogFlag(state){
+        state.signInDialogFlag = false;
     },
     setIsSignedIn(state){
         state.isSignedIn=true;
@@ -170,6 +180,7 @@ const actions = {
 
     autoLogin({ commit, dispatch }) {
         commit('loadTokenFromLocalStorage');
+        commit('setSignInDialogFlag');
         dispatch('others/unsetPrivilegedDash', null, {root: true});
 
         return new Promise((resolve, reject) => {
@@ -190,6 +201,9 @@ const actions = {
                     commit('unsetIsSignedIn');
                     commit('unsetToken');
                     reject(e);
+                })
+                .finally(() => {
+                    commit('unsetSignInDialogFlag');
                 });
         });
     },
@@ -198,6 +212,7 @@ const actions = {
         commit('unsetSignInMessage');
         commit('unsetIsSignedIn');
         commit('setSignInLoaderFlag');
+        commit('setSignInDialogFlag');
         dispatch('others/unsetPrivilegedDash', null, {root: true});
 
         return new Promise((resolve, reject) => {
@@ -223,6 +238,7 @@ const actions = {
                 })
                 .finally(() => {
                     commit('unsetSignInLoaderFlag');
+                    commit('unsetSignInDialogFlag');
                 });
         });
 

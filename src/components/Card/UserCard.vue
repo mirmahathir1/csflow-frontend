@@ -7,24 +7,37 @@
     <v-list-item>
       <v-list-item-avatar
           tile
-          size="50"
+          :size="avatarSize"
           color="grey"
       ><img :src="image" alt=""></v-list-item-avatar>
 
       <v-list-item-content class="pb-0">
-        <v-card-text class="py-0 pl-1 mb-2 grey--text text--darken-3">
+        <v-card-text
+            class="py-0 pl-1 mb-2 grey--text text--darken-3"
+            :class="{'text-caption pr-0': $isMobile()}"
+        >
           {{ name }}
         </v-card-text>
       </v-list-item-content>
     </v-list-item>
 
-    <v-row class="mx-3">
-      <v-col cols="7" class="pb-1">
+    <v-row
+        :class="{'mx-3': !$isMobile(), 'mx-1': $isMobile()}"
+    >
+      <v-col
+          :cols="$isMobile() ? '12' : '7'"
+          class="pb-1"
+          :class="{'pt-1': $isMobile()}"
+      >
         <v-list-item-action-text>
           Student ID: {{ ID }}
         </v-list-item-action-text>
       </v-col>
-      <v-col cols="5" class="pb-1">
+      <v-col
+          :cols="$isMobile() ? '12' : '5'"
+          class="pb-1"
+          :class="{'pt-0': $isMobile()}"
+      >
         <v-list-item-action-text>
           Karma: {{ signedKarma }}
         </v-list-item-action-text>
@@ -65,6 +78,12 @@ export default {
       }
 
       return this.karma;
+    },
+    avatarSize() {
+      if (this.$isMobile())
+        return 35;
+
+      return this.$vuetify.breakpoint.mdAndUp ? 50 : 40;
     }
   }
 }
