@@ -9,7 +9,9 @@
         >
             <v-app-bar-nav-icon v-if="getIsSignedIn && $isMobile()" @click.stop="toggleDrawer"></v-app-bar-nav-icon>
             <!-- <v-app-bar-nav-icon v-if="getIsSignedIn && !$isMobile()" ></v-app-bar-nav-icon> -->
-            <v-toolbar-title>CSFLOW</v-toolbar-title>
+            <v-toolbar-title @click="$router.push('/home')">
+              CSFLOW
+            </v-toolbar-title>
 
             <v-spacer></v-spacer>
             <div v-if="!getIsSignedIn">
