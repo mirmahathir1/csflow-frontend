@@ -51,6 +51,9 @@ const mutations = {
     },
     setUserForProfile(state,payload){
         state.userForProfile = payload;
+    },
+    unsetUserForProfile(state){
+        state.userForProfile = null;
     }
 
 
@@ -79,7 +82,8 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit('setUserLoaderFlag');
             commit('unsetUserLoaderMessage');
-
+            commit('unsetUserForProfile')
+            
             csflowAPI.get('/user/'+payload)
                 .then(response => {
                     commit('setUserForProfile', response.data.payload);
