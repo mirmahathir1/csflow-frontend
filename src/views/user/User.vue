@@ -26,7 +26,7 @@
             <v-row align="center">
                 <v-card-title class="mx-auto">{{this.getLoadedUserForProfile.name}}</v-card-title>
                 <v-btn
-                    v-if="$route.params.id=='me'"
+                    v-if="$route.params.id=='me' || $route.params.id==getID"
                     :class="$isMobile()?'mr-3':'mr-7'"
                     text
                     icon
@@ -165,7 +165,8 @@ export default {
         return "My Profile"
     },
     computed:{
-        ...mapGetters('user',['getLoadedUserForProfile','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage'])
+        ...mapGetters('user',['getLoadedUserForProfile','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage']),
+        ...mapGetters('auth',['getID'])
     },
     methods:{
         ...mapActions('user',['getProfile'])
