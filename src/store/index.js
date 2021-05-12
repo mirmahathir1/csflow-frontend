@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import auth from '../store/auth'
 import user from '../store/user'
 import archive from '../store/archive'
+import privileged from '../store/privileged';
 import others from "./others/drawerControl";
 
 Vue.use(Vuex)
@@ -18,7 +19,8 @@ let store = new Vuex.Store({
     auth,
     user,
     archive,
-    others
+    others,
+    privileged,
   }
 })
 

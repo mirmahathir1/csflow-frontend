@@ -186,7 +186,16 @@ router.beforeEach(async (to, from, next) => {
             if (!store.getters['auth/getIsSignedIn']) {
                 next('/auth/signIn');
             } else {
-                next();
+                // check if privilege is needed
+                if (to.matched.some(record => record.meta.requiresPrivilege)) {
+                    if (!store.getters['auth/getIsCR']) {
+                        next('/search/relevant');
+                    } else {
+                        next();
+                    }
+                } else {
+                    next();
+                }
             }
         } else {
             next();
