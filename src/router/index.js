@@ -179,7 +179,13 @@ const routes = [
         name: 'PrivilegedUserManager',
         component: () => import('../views/privileged/UserManager'),
         meta: { requiresAuth: true, requiresPrivilege: true }
-    }
+    },
+    {
+        path: '/privileged/tag',
+        name: 'PrivilegedTagManager',
+        component: () => import('../views/privileged/TagManager'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    },
 ]
 
 const router = new VueRouter({

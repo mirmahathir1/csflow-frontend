@@ -102,40 +102,6 @@ export default {
         return Math.ceil(this.users.length/this.pageSize);
       }
     },
-    buttons() {
-      if (this.getUsers) {
-        if (this.pages > 1) {
-          let ret = [];
-          ret.push(1);
-
-          if (this.pages === 3) {
-            ret.push(2);
-          } else if (this.pages > 3) {
-            if (this.page === 1) {
-              ret.push(2);
-              ret.push(0);
-            } else if (this.page === this.pages) {
-              ret.push(0);
-              ret.push(this.pages-1);
-            } else {
-              if (this.page > 2) {
-                ret.push(0);
-              }
-              ret.push(this.page);
-              if (this.page < (this.pages-1)) {
-                ret.push(0);
-              }
-            }
-          }
-
-          ret.push(this.pages);
-
-          return ret;
-        }
-      }
-
-      return [];
-    }
   },
   methods: {
     ...mapActions('privileged', ['loadUsers']),
