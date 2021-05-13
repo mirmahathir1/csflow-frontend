@@ -454,13 +454,8 @@ export default {
                   },
                   {
                     title: 'Requested Tags',
-                    icon: 'mdi-tag-multiple',
-                    link: '/privileged/tag/requested',
-                  },
-                  {
-                    title: 'Create Tag',
                     icon: 'mdi-tag-plus-outline',
-                    link: '/privileged/tag/new',
+                    link: '/privileged/tag/requested',
                   },
                 ]
               },

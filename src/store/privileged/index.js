@@ -4,9 +4,16 @@ const state = {
     users: null,
     tags: null,
     tagsUnwrapped: null,
+    tagSubmitMessage: null,
+    isTagSubmitError: false,
+    tagDeleteMessage: null,
+    isTagDeleteError: false,
+
     loaderFlags: {
         'users': true,
         'tags': true,
+        'tagSubmission': false,
+        'tagDeletion': false,
     }
 };
 
@@ -22,6 +29,18 @@ const getters = {
     },
     getTagsUnwrapped: state => {
         return state.tagsUnwrapped;
+    },
+    getTagSubmitError: state => {
+        return state.isTagSubmitError;
+    },
+    getTagSubmitMessage: state => {
+        return state.tagSubmitMessage;
+    },
+    getTagDeleteError: state => {
+        return state.isTagDeleteError;
+    },
+    getTagDeleteMessage: state => {
+        return state.tagDeleteMessage;
     },
 };
 
@@ -40,6 +59,22 @@ const mutations = {
     },
     setTagsUnwrapped(state, payload) {
         state.tagsUnwrapped = payload;
+    },
+    setTagSubmitMessage(state, payload) {
+        state.isTagSubmitError = true;
+        state.tagSubmitMessage = payload;
+    },
+    unsetTagSubmitMessage(state) {
+        state.isTagSubmitError = false;
+        state.tagSubmitMessage = null;
+    },
+    setTagDeleteMessage(state, payload) {
+        state.isTagDeleteError = true;
+        state.tagDeleteMessage = payload;
+    },
+    unsetTagDeleteMessage(state) {
+        state.isTagDeleteError = false;
+        state.tagDeleteMessage = null;
     },
 };
 
@@ -93,7 +128,61 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'tags');
             });
-    }
+    },
+    createTag({commit}, payload) {
+        commit('setLoaderFlag', 'tagSubmission');
+        commit('unsetTagSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/privileged/tag/', payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setTagSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'tagSubmission');
+                });
+        });
+    },
+    updateTag({commit}, {payload, tagID}) {
+        commit('setLoaderFlag', 'tagSubmission');
+        commit('unsetTagSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/privileged/tag/' + tagID, payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setTagSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'tagSubmission');
+                });
+        });
+    },
+    deleteTag({commit}, tagID) {
+        commit('setLoaderFlag', 'tagDeletion');
+        commit('unsetTagDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/privileged/tag/' + tagID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setTagDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'tagDeletion');
+                });
+        });
+    },
 };
 
 export default {
