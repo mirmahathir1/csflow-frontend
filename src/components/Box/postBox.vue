@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import PaddedContainer from '../PaddedContainer1'
+import PaddedContainer from '../PaddedContainerWithoutLeft'
 import UserCard from '../Card/UserCard'
 export default {
     data(){

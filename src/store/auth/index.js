@@ -7,6 +7,7 @@ const state = {
 
     isSignedIn: false,
     isCR: false,
+    id:null,
 
     signInMessage: null,
     isSignInError: false,
@@ -61,6 +62,9 @@ const getters = {
     getIsCR: state => {
         return state.isCR;
     },
+    getID: state =>{
+        return state.id
+    }
 };
 const mutations = {
     setToken(state,payload) {
@@ -146,6 +150,9 @@ const mutations = {
     },
     setIsCR(state, payload) {
         state.isCR = payload;
+    },
+    setID(state, payload){
+        state.id = payload;
     }
 };
 const actions = {
@@ -193,6 +200,7 @@ const actions = {
                 })
                 .then(me => {
                     commit('setIsCR', me['isCR']);
+                    commit('setID',me['id']);
                     commit('setIsSignedIn');
                     commit('setSideBarItems');
                     resolve(true);
@@ -227,7 +235,7 @@ const actions = {
                 })
                 .then(me => {
                     commit('setIsCR', me['isCR']);
-
+                    commit('setID',me['id']);
                     resolve(true);
                 })
                 .catch(e => {
