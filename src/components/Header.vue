@@ -352,7 +352,7 @@
                         :key="child.title"
                         :to="child.link"
                         style="text-decoration:none"
-                        class="my-3 ml-5"
+                        class="my-3 ml-5 grey lighten-3"
                     >
                       <v-list-item-icon>
                         <v-icon>{{ child.icon }}</v-icon>
@@ -444,8 +444,25 @@ export default {
               },
               {
                 title: 'Tag Manager',
-                icon: 'mdi-tag',
-                link: '/privileged/tag'
+                icon: 'mdi-link-variant',
+                hasChildren: true,
+                children: [
+                  {
+                    title: 'Existing Tags',
+                    icon: 'mdi-tag',
+                    link: '/privileged/tag/existing',
+                  },
+                  {
+                    title: 'Requested Tags',
+                    icon: 'mdi-tag-multiple',
+                    link: '/privileged/tag/requested',
+                  },
+                  {
+                    title: 'Create Tag',
+                    icon: 'mdi-tag-plus-outline',
+                    link: '/privileged/tag/new',
+                  },
+                ]
               },
               {
                 title: 'Report Manager',
@@ -456,19 +473,16 @@ export default {
                 title: 'Shared Items',
                 icon: 'mdi-share-variant',
                 hasChildren: true,
-                showChildren: false,
                 children: [
                   {
                     title: 'Resources',
                     icon: 'mdi-folder',
                     link: '/privileged/archive/resource',
-                    nested: true,
                   },
                   {
                     title: 'Projects',
                     icon: 'mdi-file-code',
                     link: '/privileged/archive/project',
-                    nested: true,
                   },
                 ]
               },

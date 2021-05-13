@@ -89,10 +89,10 @@ import {mapActions, mapGetters} from "vuex";
 import DetailsLoader from "@/components/DetailsLoader";
 import IconButton from "@/components/IconButton";
 export default {
-  name: "TagManager",
+  name: "TagExisting",
   components: {IconButton, DetailsLoader, PaddedContainer, PageHeader},
   title() {
-    return 'Tag Manager';
+    return 'Existing Tags';
   },
   data() {
     return {

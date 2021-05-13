@@ -181,9 +181,9 @@ const routes = [
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
     {
-        path: '/privileged/tag',
-        name: 'PrivilegedTagManager',
-        component: () => import('../views/privileged/TagManager'),
+        path: '/privileged/tag/existing',
+        name: 'Existing Tags',
+        component: () => import('../views/privileged/TagExisting'),
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
 ]
