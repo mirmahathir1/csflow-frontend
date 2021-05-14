@@ -2,7 +2,7 @@
     <v-app id="app">
 
         <!-- <AppBar></AppBar> -->
-        <Header></Header>
+        <Header v-if="!showSignInDialog"></Header>
 <!--        <SideBar></SideBar>-->
         <v-main class="grey lighten-3">
           <router-view v-if="!showSignInDialog"></router-view>
