@@ -9,7 +9,7 @@
           <hr class="my-divider">
         </div>
         <v-card-actions class="mx-2">
-          <v-btn block color="primary" small @click="onCreateClicked">
+          <v-btn block color="primary" small @click.stop="onCreateClicked">
             Create
           </v-btn>
         </v-card-actions>
@@ -63,7 +63,7 @@
                 </v-list-item-content>
 
                 <icon-button
-                    @click.native="onEditClicked(item)"
+                    @click.native.stop="onEditClicked(item)"
                     size="30"
                     class="mx-1"
                 >
@@ -71,7 +71,7 @@
                 </icon-button>
 
                 <icon-button
-                    @click.native="onDeleteClicked(item.id)"
+                    @click.native.stop="onDeleteClicked(item.id)"
                     size="30"
                     class="mx-1"
                 >
