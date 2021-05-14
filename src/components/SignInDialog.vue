@@ -1,13 +1,19 @@
 <template>
-  <padded-container>
-    <v-sheet max-width="400" class="mx-auto pb-10 px-10 mt-12">
-      <v-card-text class="blue--text">Loading... Please Wait...</v-card-text>
-      <v-progress-linear
-          indeterminate
-          color="blue"
-      ></v-progress-linear>
-    </v-sheet>
-  </padded-container>
+  <v-container>
+    <v-dialog
+        max-width="400"
+        :value="true"
+        persistent
+    >
+      <v-sheet max-width="400" class="rounded-lg pt-5 pb-10 px-10 text-center">
+        <v-card-text class="blue--text">Loading... Please Wait...</v-card-text>
+        <v-progress-linear
+            indeterminate
+            color="blue"
+        ></v-progress-linear>
+      </v-sheet>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
