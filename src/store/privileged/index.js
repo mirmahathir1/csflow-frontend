@@ -2,8 +2,12 @@ import {csflowAPI} from "../../api";
 
 const state = {
     users: null,
+
     tags: null,
     tagsUnwrapped: null,
+
+    requestedTags: null,
+
     tagSubmitMessage: null,
     isTagSubmitError: false,
     tagDeleteMessage: null,
@@ -14,6 +18,7 @@ const state = {
         'tags': true,
         'tagSubmission': false,
         'tagDeletion': false,
+        'requestedTags': true,
     }
 };
 
@@ -41,6 +46,9 @@ const getters = {
     },
     getTagDeleteMessage: state => {
         return state.tagDeleteMessage;
+    },
+    getRequestedTags: state => {
+        return state.requestedTags;
     },
 };
 
@@ -76,9 +84,20 @@ const mutations = {
         state.isTagDeleteError = false;
         state.tagDeleteMessage = null;
     },
+    setRequestedTags(state, payload) {
+        state.requestedTags = payload;
+    },
 };
 
 const actions = {
+    clearError({commit}, which) {
+        if (which === 'all' || which === 'submit') {
+            commit('unsetTagSubmitMessage');
+        }
+        if (which === 'all' || which === 'delete') {
+            commit('unsetTagDeleteMessage');
+        }
+    },
     loadUsers({ commit }) {
         commit('setLoaderFlag', 'users');
         commit('setUsers', null);
@@ -183,6 +202,39 @@ const actions = {
                 });
         });
     },
+    loadRequestedTags({commit}) {
+        commit('setLoaderFlag', 'requestedTags');
+        commit('setRequestedTags', null);
+
+        csflowAPI.get('/privileged/tag/requested')
+            .then(response => {
+                commit('setRequestedTags', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'requestedTags');
+            });
+    },
+    acceptRequestedTag({commit}, tagID) {
+        commit('setLoaderFlag', 'tagSubmission');
+        commit('unsetTagSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/privileged/tag/' + tagID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setTagSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'tagSubmission');
+                });
+        });
+    }
 };
 
 export default {

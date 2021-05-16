@@ -7,6 +7,11 @@ export default {
             })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         },
+        $capitalizeFirstLetter(text) {
+            if (text || text !== undefined)
+                return text.charAt(0).toUpperCase() + text.slice(1);
+            return '';
+        },
     },
     filters: {
         shorten: value => {
