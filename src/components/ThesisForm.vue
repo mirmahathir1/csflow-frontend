@@ -198,7 +198,7 @@
               type="error"
               outlined
               dense
-              v-if="getThesisSubmitError"
+              v-if="submitted && getThesisSubmitError"
           >
             {{ getThesisSubmitMessage }}
           </v-alert>
@@ -262,6 +262,7 @@ export default {
       owners: this.prevOwners,
       newOwner: '',
       userIndex: this.prevUserIndex,
+      submitted: false,
     };
   },
   validations: {
@@ -401,20 +402,26 @@ export default {
 
       if (this.type === 'create') {
         this.createThesis(payload)
-          .then(response => {
-            this.$router.push('/archive/thesis/batch/' + this.batchID);
-          })
-          .catch(e => {
-            console.log(e.response);
-          });
+            .then(response => {
+              this.$router.push('/archive/thesis/batch/' + this.batchID);
+            })
+            .catch(e => {
+              console.log(e.response);
+            })
+            .finally(() => {
+              this.submitted = true;
+            });
       } else {
         this.updateThesis({payload, thesisID: this.thesisID})
-          .then(response => {
-            this.$router.push('/archive/thesis/' + this.thesisID);
-          })
-          .catch(e => {
-            console.log(e.response);
-          });
+            .then(response => {
+              this.$router.push('/archive/thesis/' + this.thesisID);
+            })
+            .catch(e => {
+              console.log(e.response);
+            })
+            .finally(() => {
+              this.submitted = true;
+            });
       }
     }
   },

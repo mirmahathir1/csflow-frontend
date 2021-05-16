@@ -176,7 +176,7 @@
               type="error"
               outlined
               dense
-              v-if="getProjectSubmitError"
+              v-if="submitted && getProjectSubmitError"
           >
             {{ getProjectSubmitMessage }}
           </v-alert>
@@ -244,6 +244,7 @@ export default {
       owners: this.prevOwners,
       newOwner: '',
       userIndex: this.prevUserIndex,
+      submitted: false,
     };
   },
   validations: {
@@ -402,6 +403,9 @@ export default {
             })
             .catch(e => {
               console.log(e.response);
+            })
+            .finally(() => {
+              this.submitted = true;
             });
       } else {
         this.updateProject({payload, projectID: this.projectID})
@@ -410,6 +414,9 @@ export default {
             })
             .catch(e => {
               console.log(e.response);
+            })
+            .finally(() => {
+              this.submitted = true;
             });
       }
     }
