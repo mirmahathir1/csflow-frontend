@@ -93,7 +93,7 @@
                   @updated="afterUpdate"
                   type="edit"
                   :id="editItem.id"
-                  :prevTagType="capitalizeFirstLetter(editItem.type)"
+                  :prevTagType="$capitalizeFirstLetter(editItem.type)"
                   :prevTagText="editItem.name"
                   :prevCourse="editItem.courseId"
                   :prevCourses="courses"
@@ -210,8 +210,7 @@ export default {
 
       if (this.getTagsUnwrapped) {
         let type = this.type === 'Topics' ? 'topic' : 'book';
-        ret = this.getTagsUnwrapped.filter(e => e['type'] === type);
-        ret = ret.filter(e => e.type === type);
+        ret = this.getTagsUnwrapped.filter(e => e.type === type);
         if (this.course) {
           ret = ret.filter(e => e.courseId === this.course);
         }
@@ -232,11 +231,6 @@ export default {
   },
   methods: {
     ...mapActions('privileged', ['loadTags', 'deleteTag']),
-    capitalizeFirstLetter(text) {
-      if (text || text !== undefined)
-        return text.charAt(0).toUpperCase() + text.slice(1);
-      return '';
-    },
     onEditClicked(item) {
       this.editItem = item;
       this.editDialog = true;

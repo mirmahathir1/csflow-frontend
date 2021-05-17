@@ -186,6 +186,12 @@ const routes = [
         component: () => import('../views/privileged/TagExisting'),
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
+    {
+        path: '/privileged/tag/requested',
+        name: 'Requested Tags',
+        component: () => import('../views/privileged/TagRequested'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    }
 ]
 
 const router = new VueRouter({

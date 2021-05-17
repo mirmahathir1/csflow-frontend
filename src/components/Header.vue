@@ -341,7 +341,7 @@
                       :value="false"
                       :prepend-icon="item.icon"
                       style="text-decoration:none"
-                      class="grey lighten-4 my-3"
+                      class="grey lighten-4 my-3 pb-1"
                   >
                     <template v-slot:activator>
                       <v-list-item-title>{{ item.title }}</v-list-item-title>
