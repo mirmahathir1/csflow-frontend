@@ -18,9 +18,15 @@
                   class="mx-auto mt-2"
                 >
                     <img
+                    v-if="this.getLoadedUserForProfile.profilePic!=null"
                         alt="Avatar"
                         :src="this.getLoadedUserForProfile.profilePic"
                     >
+                    <v-icon
+                    v-else
+                    color="green"
+                    v-text="mdi-account-tie"
+                  ></v-icon>
                 </v-avatar>
             </v-row>
             <v-row align="center">
@@ -166,7 +172,8 @@ export default {
     },
     computed:{
         ...mapGetters('user',['getLoadedUserForProfile','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage']),
-        ...mapGetters('auth',['getID'])
+        ...mapGetters('auth',['getID']),
+
     },
     methods:{
         ...mapActions('user',['getProfile'])

@@ -17,7 +17,6 @@ import "./assets/css/main.css";
 Vue.use(Vuelidate);
 Vue.mixin(Mixins);
 Vue.mixin(titleSetter)
-
 Vue.config.productionTip = false
 
 new Vue({

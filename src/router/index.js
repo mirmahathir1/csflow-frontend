@@ -39,37 +39,37 @@ const routes = [
         path: '/auth/signIn',
         name: 'SignIn',
         component: () => import('../views/auth/SignIn'),
-        meta: {isLoggedIn: true}
+        meta: {requiresAuth: false}
     },
     {
         path: '/auth/signUp',
         name: 'SignUp',
         component: () => import('../views/auth/SignUp'),
-        meta: {isLoggedIn: true}
+        meta: {requiresAuth: false}
     },
     {
         path: '/auth/signUpConfirmation',
         name: 'SignUpConfirmation',
         component: () => import('../views/auth/AfterSignUp'),
-        meta: {isLoggedIn: true}
+        meta: {requiresAuth: false}
     },
     {
         path: '/auth/signUp/complete',
         name: 'SignUpComplete',
         component: () => import('../views/auth/SignupComplete'),
-        meta: {isLoggedIn: true}
+        meta: {requiresAuth: false}
     },
     {
         path: '/auth/password/forgot',
         name: 'Forgot',
         component: () => import('../views/auth/ForgotPassword'),
-        meta: {isLoggedIn: true}
+        meta: {requiresAuth: false}
     },
     {
         path: '/auth/password/recover',
         name: 'Recover',
         component: () => import('../views/auth/RecoverPassword'),
-        meta: {isLoggedIn: true}
+        meta: {requiresAuth: false}
     },
     {
         path: '/about',
@@ -220,14 +220,12 @@ router.beforeEach(async (to, from, next) => {
                     next();
                 }
             }
-        } else if(to.matched.some(record => record.meta.isLoggedIn)){
+        } else {
             if (store.getters['auth/getIsSignedIn']) {
                 next('/home');
             } else {
                 next();
             }
-        } else {
-            next();
         }
     }
 

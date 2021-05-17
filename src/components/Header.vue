@@ -416,8 +416,23 @@ export default {
             inPrivilegedDash: false,
             items: [
                 {
-                    title: 'Unanswered',
+                    title: 'Relevant',
+                    icon: 'mdi-newspaper-variant-multiple',
+                    link: '/about'
+                },
+                {
+                    title: 'Search',
                     icon: 'mdi-magnify',
+                    link: '/about'
+                },
+                {
+                    title: 'Create Post',
+                    icon: 'mdi-plus-thick',
+                    link: '/post/create'
+                },
+                {
+                    title: 'Unanswered',
+                    icon: 'mdi-help',
                     link: '/about'
                 },
                 {
