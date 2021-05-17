@@ -81,7 +81,7 @@
               :disabled="$v.$invalid || !changed || getLoaderFlag('tagSubmission')"
               :loading="getLoaderFlag('tagSubmission')"
               @click="submit"
-          >Submit</v-btn>
+          >{{ type === 'editAndAccept' ? 'Accept' : 'Submit' }}</v-btn>
         </v-card-actions>
 
         <v-row class="justify-center" v-if="getTagSubmitError && submitted">
@@ -136,7 +136,7 @@ export default {
       tagType: this.prevTagType,
       tagText: this.prevTagText,
       course: this.prevCourse,
-      courses: this.prevCourses,
+      courses: this.prevCourses.sort((a, b) => a < b ? -1 : 1),
       submitted: false,
     };
   },
@@ -154,9 +154,13 @@ export default {
   computed: {
     ...mapGetters('privileged', ['getLoaderFlag', 'getTagSubmitError', 'getTagSubmitMessage']),
     title() {
-      if (this.type === 'edit')
+      if (this.type === 'edit') {
         return 'Update Tag';
-      return 'Create New Tag';
+      } else if (this.type === 'create') {
+        return 'Create New Tag';
+      } else if (this.type === 'editAndAccept') {
+        return 'Edit & Accept Tag Request';
+      }
     },
     tagTypeErrors() {
       const errors = [];
@@ -190,7 +194,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('privileged', ['updateTag', 'createTag']),
+    ...mapActions('privileged', ['updateTag', 'createTag', 'editAndAcceptRequestedTag']),
     submit() {
       if (this.$v.$invalid) {
         return;
@@ -212,7 +216,7 @@ export default {
           .finally(() => {
             this.submitted = true;
           });
-      } else {
+      } else if (this.type === 'create') {
         this.createTag(payload)
           .then(response => {
             this.$emit('created');
@@ -223,6 +227,17 @@ export default {
           .finally(() => {
             this.submitted = true;
           });
+      } else if (this.type === 'editAndAccept') {
+        this.editAndAcceptRequestedTag({tagID: this.id, payload: payload})
+            .then(response => {
+              this.$emit('accepted');
+            })
+            .catch(e => {
+              console.log(e.response);
+            })
+            .finally(() => {
+              this.submitted = true;
+            });
       }
     }
   },
