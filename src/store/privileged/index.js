@@ -5,6 +5,7 @@ const state = {
 
     tags: null,
     tagsUnwrapped: null,
+    tagCourses: null,
 
     requestedTags: null,
 
@@ -16,6 +17,7 @@ const state = {
     loaderFlags: {
         'users': true,
         'tags': true,
+        'tagCourses': true,
         'tagSubmission': false,
         'tagDeletion': false,
         'requestedTags': true,
@@ -49,6 +51,9 @@ const getters = {
     },
     getRequestedTags: state => {
         return state.requestedTags;
+    },
+    getTagCourses: state => {
+        return state.tagCourses;
     },
 };
 
@@ -86,6 +91,9 @@ const mutations = {
     },
     setRequestedTags(state, payload) {
         state.requestedTags = payload;
+    },
+    setTagCourses(state, payload) {
+        state.tagCourses = payload;
     },
 };
 
@@ -234,7 +242,62 @@ const actions = {
                     commit('unsetLoaderFlag', 'tagSubmission');
                 });
         });
-    }
+    },
+    editAndAcceptRequestedTag({commit}, {tagID, payload}) {
+        commit('setLoaderFlag', 'tagSubmission');
+        commit('unsetTagSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.patch('/privileged/tag/requested/' + tagID, payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setTagSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'tagSubmission');
+                });
+        });
+    },
+    rejectRequestedTag({commit}, tagID) {
+        commit('setLoaderFlag', 'tagDeletion');
+        commit('unsetTagDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/privileged/tag/requested/' + tagID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setTagDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'tagDeletion');
+                });
+        });
+    },
+    loadTagCourses({commit, state}) {
+        if (state.tagCourses) {
+            return;
+        }
+
+        commit('setLoaderFlag', 'tagCourses');
+        commit('setTagCourses', null);
+
+        csflowAPI.get('/privileged/tagCourse')
+            .then(response => {
+                commit('setTagCourses', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'tagCourses');
+            });
+    },
 };
 
 export default {

@@ -14,10 +14,10 @@
           rounded
       >
         <v-row :class="'mx-' + margins + ' py-2'">
-          <v-col cols="2"><v-card-text class="text-body-1 px-0">Type</v-card-text></v-col>
-          <v-col cols="3"><v-card-text class="text-body-1 px-0">Name</v-card-text></v-col>
-          <v-col cols="2"><v-card-text class="text-body-1 px-0">Course</v-card-text></v-col>
-          <v-col cols="2"><v-card-text class="text-body-1 px-0">Requester</v-card-text></v-col>
+          <v-col cols="2"><v-card-text class="text-body-2 px-0 font-weight-bold">Type</v-card-text></v-col>
+          <v-col cols="3"><v-card-text class="text-body-2 px-0 font-weight-bold">Name</v-card-text></v-col>
+          <v-col cols="2"><v-card-text class="text-body-2 px-0 font-weight-bold">Course</v-card-text></v-col>
+          <v-col cols="2"><v-card-text class="text-body-2 px-0 font-weight-bold">Requester</v-card-text></v-col>
           <v-spacer></v-spacer>
         </v-row>
       </v-card>
@@ -27,6 +27,7 @@
           elevation="1"
           outlined
           rounded
+          min-height="100"
       >
         <template v-for="item in getRequestedTags">
           <v-row :key="item.id" :class="'mx-' + margins + ' py-2'">
@@ -64,16 +65,23 @@
                   mdi-check
                 </icon-button>
 
-                <icon-button
-                    @click.native.stop=""
-                    :size="iconSize"
-                    class="mx-1"
-                >
-                  mdi-square-edit-outline
-                </icon-button>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <div v-bind="attrs" v-on="on">
+                      <icon-button
+                          @click.native.stop="onEditClicked(item)"
+                          :size="iconSize"
+                          class="mx-2"
+                      >
+                        mdi-square-edit-outline
+                      </icon-button>
+                    </div>
+                  </template>
+                  <span>Edit & Accept</span>
+                </v-tooltip>
 
                 <icon-button
-                    @click.native.stop=""
+                    @click.native.stop="onRejectClicked(item.id)"
                     :size="iconSize"
                     class="mx-1"
                 >
@@ -124,6 +132,67 @@
             </v-alert>
           </v-card>
         </v-dialog>
+
+<!--        Edit & Accept Dialog-->
+        <v-dialog
+            v-model="editDialog"
+            max-width="600"
+            :retain-focus="false"
+        >
+          <tag-form
+              v-if="!getLoaderFlag('tagCourses')"
+              :key="'edit' + editItem.id"
+              @cancel="editDialog = false"
+              @accepted="afterUpdate"
+              type="editAndAccept"
+              :id="editItem.id"
+              :prevTagType="$capitalizeFirstLetter(editItem.type)"
+              :prevTagText="editItem.name"
+              :prevCourse="editItem.courseId"
+              :prevCourses="getTagCourses"
+          ></tag-form>
+          <regular-loader v-else></regular-loader>
+        </v-dialog>
+
+<!--        Reject Dialog-->
+        <v-dialog
+            v-model="rejectDialog"
+            max-width="290"
+        >
+          <v-card :key="'delete'+ rejectItem.id">
+            <v-card-title class="headline">
+              Reject this request?
+            </v-card-title>
+            <v-card-text>Are you sure you want to reject this tag request?</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="green darken-1"
+                  text
+                  @click="rejectDialog = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                  color="red darken-1"
+                  text
+                  @click="onRejectConfirmed"
+                  :loading="getLoaderFlag('tagDeletion')"
+                  :disabled="getLoaderFlag('tagDeletion')"
+              >
+                Reject
+              </v-btn>
+            </v-card-actions>
+            <v-alert
+                type="error"
+                outlined
+                dense
+                v-if="submitted && getTagDeleteError"
+            >
+              {{ getTagDeleteMessage }}
+            </v-alert>
+          </v-card>
+        </v-dialog>
       </v-card>
     </v-card>
     <details-loader v-else></details-loader>
@@ -136,19 +205,26 @@ import PageHeader from "@/components/PageHeader";
 import IconButton from "@/components/IconButton";
 import {mapActions, mapGetters} from "vuex";
 import DetailsLoader from "@/components/DetailsLoader";
+import RegularLoader from "@/components/Loader/RegularLoader";
+import TagForm from "@/components/Form/TagForm";
 export default {
   name: "TagRequested",
-  components: {DetailsLoader, IconButton, PageHeader, PaddedContainer},
+  components: {TagForm, RegularLoader, DetailsLoader, IconButton, PageHeader, PaddedContainer},
   data() {
     return {
       acceptDialog: false,
-      acceptItem: null,
+      acceptItem: -1,
       acceptKey: 0,
+      editDialog: false,
+      editItem: {},
+      rejectDialog: false,
+      rejectItem: -1,
       submitted: false,
     };
   },
   computed: {
-    ...mapGetters('privileged', ['getLoaderFlag', 'getRequestedTags', 'getTagSubmitError', 'getTagSubmitMessage']),
+    ...mapGetters('privileged', ['getLoaderFlag', 'getRequestedTags', 'getTagSubmitError', 'getTagSubmitMessage', 'getTagCourses',
+                  'getTagDeleteError', 'getTagDeleteMessage']),
     small() {
       return this.$isMobile() || !this.$vuetify.breakpoint.smAndUp;
     },
@@ -162,7 +238,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('privileged', ['loadRequestedTags', 'acceptRequestedTag', 'clearError']),
+    ...mapActions('privileged', ['loadRequestedTags', 'acceptRequestedTag', 'loadTagCourses', 'rejectRequestedTag']),
     onAcceptClicked(id) {
       this.submitted = false;
       this.acceptItem = id;
@@ -172,8 +248,38 @@ export default {
     onAcceptConfirmed() {
       this.acceptRequestedTag(this.acceptItem)
         .then(response => {
-          this.acceptItem = null;
+          this.acceptItem = -1;
           this.acceptDialog = false;
+          this.loadRequestedTags();
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submitted = true;
+        });
+    },
+    onEditClicked(item) {
+      this.loadTagCourses();
+      this.editItem = item;
+      this.editDialog = true;
+      this.editKey ^= 1;
+    },
+    afterUpdate() {
+      this.editDialog = false;
+      this.editItem = {};
+      this.loadRequestedTags();
+    },
+    onRejectClicked(id) {
+      this.rejectItem = id;
+      this.submitted = false;
+      this.rejectDialog = true;
+    },
+    onRejectConfirmed() {
+      this.rejectRequestedTag(this.rejectItem)
+        .then(response => {
+          this.rejectItem = -1;
+          this.rejectDialog = false;
           this.loadRequestedTags();
         })
         .catch(e => {
@@ -186,6 +292,7 @@ export default {
   },
   mounted() {
     this.loadRequestedTags();
+    // this.loadTagCourses();
   }
 }
 </script>
