@@ -418,7 +418,7 @@ export default {
                 {
                     title: 'Relevant',
                     icon: 'mdi-newspaper-variant-multiple',
-                    link: '/about'
+                    link: '/search/relevant'
                 },
                 {
                     title: 'Search',
