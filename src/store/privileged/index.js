@@ -14,6 +14,8 @@ const state = {
     tagDeleteMessage: null,
     isTagDeleteError: false,
 
+    reportedComments: null,
+
     loaderFlags: {
         'users': true,
         'tags': true,
@@ -21,6 +23,7 @@ const state = {
         'tagSubmission': false,
         'tagDeletion': false,
         'requestedTags': true,
+        'reportedComments': true,
     }
 };
 
@@ -54,6 +57,9 @@ const getters = {
     },
     getTagCourses: state => {
         return state.tagCourses;
+    },
+    getReportedComments: state => {
+        return state.reportedComments;
     },
 };
 
@@ -94,6 +100,9 @@ const mutations = {
     },
     setTagCourses(state, payload) {
         state.tagCourses = payload;
+    },
+    setReportedComments(state, payload) {
+        state.reportedComments = payload;
     },
 };
 
@@ -296,6 +305,21 @@ const actions = {
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'tagCourses');
+            });
+    },
+    loadReportedComments({commit}) {
+        commit('setLoaderFlag', 'reportedComments');
+        commit('setReportedComments', null);
+
+        csflowAPI.get('/privileged/report/comment')
+            .then(response => {
+                commit('setReportedComments', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+               commit('unsetLoaderFlag', 'reportedComments');
             });
     },
 };
