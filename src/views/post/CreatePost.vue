@@ -66,7 +66,7 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <v-app-tooltip-btn class="d-inline-block">
+                        <v-app-tooltip-btn class="d-inline-block" name="gh">
                           <!-- <v-btn
                             class="mx-2"
                             fab
@@ -84,7 +84,7 @@
                             small-chips
                           ></v-file-input>
                         </v-app-tooltip-btn>
-                        <v-app-tooltip-btn class="d-inline-block">
+                        <v-app-tooltip-btn class="d-inline-block" name="">
                           <v-file-input
                             multiple
                             hide-input
@@ -179,6 +179,83 @@
                   <v-col cols="1" md="3"></v-col> -->
                   <v-spacer></v-spacer>
                 </v-row>
+                <v-row class="mt-0">
+                  <v-spacer></v-spacer>
+                  <v-col cols="12" md="3" class="py-0">
+                    <v-card-text class="text-left text--black text-body-1 pl-7">Custom Tags:</v-card-text>
+                  </v-col>
+                  <v-col cols="12" md="7" v-if="!$isMobile()"></v-col>
+
+                  <v-col cols="1" md="3"></v-col>
+                  <v-col cols="10" md="5">
+                    <v-text-field
+                        v-for="(tag, index) in tags" :key="index"
+                        outlined
+                        class="rounded-lg"
+                        dense
+                        v-model="tags[index].tag"
+                        @blur="$v.tags.$each[index].tag.$touch()"
+                        :error-messages="tagErrors[index]"
+                        
+                    >
+                      <template v-slot:append-outer>
+                        <v-btn
+                            icon
+                            color="red lighten-1"
+                            @click="removeTag(index)"
+                            small
+                            
+                        >
+                          <v-icon>
+                            mdi-minus-circle
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                    </v-text-field>
+                    <v-text-field
+                        outlined
+                        class="rounded-lg"
+                        dense
+                        v-model="newTag"
+                    >
+                      <template v-slot:append-outer>
+                        <v-btn
+                          icon
+                          color="primary"
+                          @click="addTag"
+                          small
+                        >
+                          <v-icon>
+                            mdi-plus-circle
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="1" md="4"></v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="7"></v-col>
+                  <v-col cols="5" align="center">
+                    <v-btn
+                        color="primary"
+                        :block="$isMobile()"
+                        :disabled="$v.$invalid || clicked"
+                        :loading="clicked"
+                        @click="submit"
+                    >Submit</v-btn>
+                  </v-col>
+                </v-row>
+                <v-row class="justify-center">
+                  <v-alert
+                      type="error"
+                      outlined
+                      dense
+                      v-if="anyError"
+                  >
+                    {{ errorMessage }}
+                  </v-alert>
+                </v-row>
             </v-form>
           </v-container>
         </v-card>
@@ -231,10 +308,11 @@
 </template>
 
 <script>
+import { required, minLength } from 'vuelidate/lib/validators'
 import PaddedContainerWithoutLeft from "../../components/PaddedContainerWithoutLeft"
 import PageHeader from "../../components/PageHeader"
 export default {
-    name:"createPost",
+    name:"CreatePost",
     title(){
         return "Create Post"
     },
@@ -242,7 +320,8 @@ export default {
         PageHeader,
         PaddedContainerWithoutLeft
     },
-    data:()=>({
+    data(){
+      return{
         type:null,
         title:null,
         tagTypes:['Book','Course'],
@@ -251,7 +330,76 @@ export default {
         topic:null,
         course:null,
         additional:null,
-    })
+        tags:[],
+        newTag:'',
+        userIndex:0,
+        errorMessage:null,
+        anyError:false,
+        clicked:false
+      };
+    },
+    methods: {
+      removeTag(index) {
+        this.tags.splice(index, 1);
+
+        if (index < this.userIndex) {
+          this.userIndex--;
+        }
+      },
+      addTag() {
+        this.tags.push({tag: this.newTag});
+        this.newTag = '';
+      },
+      submit(){
+        console.log('here')
+      }
+    },
+    computed:{
+      tagErrors(){
+        const errors = [];
+
+        for (let index=0; index < this.tags.length; index++) {
+          const element = this.$v.tags.$each[index.toString()];
+          const temp = [];
+
+          !element.tag.required && temp.push('Please enter a tag name');
+          // !element.id.integer && temp.push('Student id must be a number');
+          // !element.id.positive && temp.push('Student id cannot be negative');
+          // !element.id.len && temp.push('Student id must be of 7 digits');
+          !element.tag.unique && temp.push('Same tag cannot be used more than once');
+
+          errors.push(temp);
+        }
+
+        return errors;
+      }
+    },
+    validations:{
+      title:{
+        required
+      },
+      tags: {
+        required,
+        minLength: minLength(1),
+        $each: {
+          tag: {
+            required,
+            unique(val) {
+              return this.tags.filter(element => element.tag === val).length < 2;
+            },
+            // len(val) {
+            //   return val.length === 7;
+            // },
+            // integer,
+            // positive(val) {
+            //   return val[0] !== '-';
+            // }
+          }
+        }
+    },
+    
+    
+  }
 }
 </script>
 
