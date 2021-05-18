@@ -213,6 +213,11 @@ router.beforeEach(async (to, from, next) => {
         if (!attemptedAutoLogin) {
             attemptedAutoLogin = true;
             await store.dispatch('auth/autoLogin');
+
+            // turn on privileged sidebar if needed
+            if (to.matched.some(record => record.meta.requiresPrivilege)) {
+                await store.dispatch('others/setPrivilegedDash');
+            }
         }
     } catch (e) {
 
