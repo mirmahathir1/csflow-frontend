@@ -210,6 +210,9 @@ import TagForm from "@/components/Form/TagForm";
 export default {
   name: "TagRequested",
   components: {TagForm, RegularLoader, DetailsLoader, IconButton, PageHeader, PaddedContainer},
+  title() {
+    return 'Requested Tags';
+  },
   data() {
     return {
       acceptDialog: false,
