@@ -191,7 +191,13 @@ const routes = [
         name: 'Requested Tags',
         component: () => import('../views/privileged/TagRequested'),
         meta: { requiresAuth: true, requiresPrivilege: true }
-    }
+    },
+    {
+        path: '/privileged/report',
+        name: 'Report Manager',
+        component: () => import('../views/privileged/ReportManager'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    },
 ]
 
 const router = new VueRouter({

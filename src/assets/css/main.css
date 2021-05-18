@@ -7,3 +7,7 @@
 .my-hover {
     cursor: pointer;
 }
+
+.no-click {
+    pointer-events: none;
+}
