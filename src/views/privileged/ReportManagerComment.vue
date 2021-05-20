@@ -1,6 +1,6 @@
 <template>
   <padded-container>
-    <page-header>Report Manager</page-header>
+    <page-header>Report Manager / Comments</page-header>
 
 <!--    Comments-->
     <v-card
@@ -166,10 +166,10 @@ import UserCard from "@/components/Card/UserCard";
 import {mapActions, mapGetters} from "vuex";
 import DetailsLoader from "@/components/DetailsLoader";
 export default {
-  name: "ReportManager",
+  name: "ReportManagerComment",
   components: {DetailsLoader, UserCard, PageHeader, PaddedContainer},
   title() {
-    return 'Report Manager';
+    return 'Report Manager (Comments)';
   },
   data() {
     return {

@@ -87,6 +87,8 @@ const routes = [
         component: () => import('../views/post/CreatePost'),
         meta: { requiresAuth: true }
     },
+
+    ////////////////// archive module /////////////////////
     {
         path: '/archive',
         name: 'Archive',
@@ -171,7 +173,6 @@ const routes = [
         component: () => import('../views/archive/ProjectDetails'),
         meta: { requiresAuth: true }
     },
-    
 
     ////////////////// privileged module /////////////////////
     {
@@ -193,9 +194,9 @@ const routes = [
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
     {
-        path: '/privileged/report',
-        name: 'Report Manager',
-        component: () => import('../views/privileged/ReportManager'),
+        path: '/privileged/report/comment',
+        name: 'Report Manager Comment',
+        component: () => import('../views/privileged/ReportManagerComment'),
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
 ]

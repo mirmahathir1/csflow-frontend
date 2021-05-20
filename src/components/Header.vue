@@ -477,7 +477,24 @@ export default {
               {
                 title: 'Report Manager',
                 icon: 'mdi-alert',
-                link: '/privileged/report'
+                hasChildren: true,
+                children: [
+                  {
+                    title: 'Posts',
+                    icon: 'mdi-post',
+                    link: '/privileged/report/post'
+                  },
+                  {
+                    title: 'Answers',
+                    icon: 'mdi-message-reply-text',
+                    link: '/privileged/report/answer'
+                  },
+                  {
+                    title: 'Comments',
+                    icon: 'mdi-comment-outline',
+                    link: '/privileged/report/comment'
+                  },
+                ],
               },
               {
                 title: 'Shared Items',
@@ -488,11 +505,6 @@ export default {
                     title: 'Resources',
                     icon: 'mdi-folder',
                     link: '/privileged/archive/resource',
-                  },
-                  {
-                    title: 'Projects',
-                    icon: 'mdi-file-code',
-                    link: '/privileged/archive/project',
                   },
                 ]
               },
