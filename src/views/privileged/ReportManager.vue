@@ -95,19 +95,19 @@
                   color="red darken-1"
                   text
                   @click="onResolveConfirmed"
-                  :loading="false"
-                  :disabled="false"
+                  :loading="getLoaderFlag('reportResolution')"
+                  :disabled="getLoaderFlag('reportResolution')"
               >
                 Yes
               </v-btn>
             </v-card-actions>
-            <v-row class="justify-center" v-if="false && submitted">
+            <v-row class="justify-center" v-if="getReportResolveError && submitted">
               <v-alert
                   type="error"
                   outlined
                   dense
               >
-                message here
+                {{ getReportResolveMessage }}
               </v-alert>
             </v-row>
           </v-card>
@@ -136,19 +136,19 @@
                   color="red darken-1"
                   text
                   @click="onDeleteConfirmed"
-                  :loading="false"
-                  :disabled="false"
+                  :loading="getLoaderFlag('reportDeletion')"
+                  :disabled="getLoaderFlag('reportDeletion')"
               >
                 Yes
               </v-btn>
             </v-card-actions>
-            <v-row class="justify-center" v-if="false && submitted">
+            <v-row class="justify-center" v-if="getReportDeleteError && submitted">
               <v-alert
                   type="error"
                   outlined
                   dense
               >
-                message here
+                {{ getReportDeleteMessage }}
               </v-alert>
             </v-row>
           </v-card>
@@ -185,7 +185,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('privileged', ['getLoaderFlag', 'getReportedComments']),
+    ...mapGetters('privileged', ['getLoaderFlag', 'getReportedComments', 'getReportResolveError', 'getReportResolveMessage',
+                  'getReportDeleteError', 'getReportDeleteMessage']),
     margin() {
       return this.$vuetify.breakpoint.mdAndUp ? 'mx-5' : 'mx-1';
     },
@@ -209,7 +210,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('privileged', ['loadReportedComments']),
+    ...mapActions('privileged', ['loadReportedComments', 'resolveReport', 'deleteReport']),
     formatDate(date) {
       return new Date(date).toLocaleString('en-US', {
         day: 'numeric',
@@ -225,8 +226,17 @@ export default {
       this.resolveDialog = true;
     },
     onResolveConfirmed() {
-      console.log('will resolve ' + this.resolveItem);
-      this.resolveDialog = false;
+      this.resolveReport({type: 'comment', id: this.resolveItem})
+        .then(response => {
+          this.resolveDialog = false;
+          this.loadReportedComments();
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submitted = true;
+        });
     },
     onDeleteClicked(commentID) {
       this.deleteItem = commentID;
@@ -234,8 +244,17 @@ export default {
       this.deleteDialog = true;
     },
     onDeleteConfirmed() {
-      console.log('will delete ' + this.deleteItem);
-      this.deleteDialog = false;
+      this.deleteReport({type: 'comment', id: this.deleteItem})
+        .then(response => {
+          this.deleteDialog = false;
+          this.loadReportedComments();
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submitted = true;
+        });
     },
     truncate(text, commentID) {
       if (text.length > this.maxLength && !this.showFull[commentID]) {
