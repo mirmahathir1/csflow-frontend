@@ -60,8 +60,7 @@ const getters = {
         return state.drawerSidebar
     },
     getIsCR: state => {
-        // return state.isCR;
-        return false;
+        return state.isCR;
     },
     getID: state =>{
         return state.id

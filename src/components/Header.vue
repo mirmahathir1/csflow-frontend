@@ -420,21 +420,21 @@ export default {
                     icon: 'mdi-newspaper-variant-multiple',
                     link: '/search/relevant'
                 },
-                // {
-                //     title: 'Search',
-                //     icon: 'mdi-magnify',
-                //     link: '/about'
-                // },
-                // {
-                //     title: 'Create Post',
-                //     icon: 'mdi-plus-thick',
-                //     link: '/post/create'
-                // },
-                // {
-                //     title: 'Unanswered',
-                //     icon: 'mdi-help',
-                //     link: '/about'
-                // },
+                {
+                    title: 'Search',
+                    icon: 'mdi-magnify',
+                    link: '/about'
+                },
+                {
+                    title: 'Create Post',
+                    icon: 'mdi-plus-thick',
+                    link: '/post/create'
+                },
+                {
+                    title: 'Unanswered',
+                    icon: 'mdi-help',
+                    link: '/about'
+                },
                 {
                     title: 'Resources',
                     icon: 'mdi-folder-multiple',
