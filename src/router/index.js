@@ -87,6 +87,8 @@ const routes = [
         component: () => import('../views/post/CreatePost'),
         meta: { requiresAuth: true }
     },
+
+    ////////////////// archive module /////////////////////
     {
         path: '/archive',
         name: 'Archive',
@@ -171,7 +173,6 @@ const routes = [
         component: () => import('../views/archive/ProjectDetails'),
         meta: { requiresAuth: true }
     },
-    
 
     ////////////////// privileged module /////////////////////
     {
@@ -191,7 +192,13 @@ const routes = [
         name: 'Requested Tags',
         component: () => import('../views/privileged/TagRequested'),
         meta: { requiresAuth: true, requiresPrivilege: true }
-    }
+    },
+    {
+        path: '/privileged/report/comment',
+        name: 'Report Manager Comment',
+        component: () => import('../views/privileged/ReportManagerComment'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    },
 ]
 
 const router = new VueRouter({
@@ -207,6 +214,11 @@ router.beforeEach(async (to, from, next) => {
         if (!attemptedAutoLogin) {
             attemptedAutoLogin = true;
             await store.dispatch('auth/autoLogin');
+
+            // turn on privileged sidebar if needed
+            if (to.matched.some(record => record.meta.requiresPrivilege)) {
+                await store.dispatch('others/setPrivilegedDash');
+            }
         }
     } catch (e) {
 

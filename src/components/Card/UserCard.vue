@@ -4,6 +4,7 @@
         class="rounded-lg"
         color="blue lighten-5"
         :width="width"
+        :max-width="width"
         :elevation="hover ? 3 : 2"
         :class="{ 'my-hover': hover }"
     >

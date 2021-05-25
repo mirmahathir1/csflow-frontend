@@ -14,6 +14,13 @@ const state = {
     tagDeleteMessage: null,
     isTagDeleteError: false,
 
+    reportedComments: null,
+
+    isReportResolveError: false,
+    reportResolveMessage: null,
+    isReportDeleteError: false,
+    reportDeleteMessage: null,
+
     loaderFlags: {
         'users': true,
         'tags': true,
@@ -21,6 +28,9 @@ const state = {
         'tagSubmission': false,
         'tagDeletion': false,
         'requestedTags': true,
+        'reportedComments': true,
+        'reportResolution': false,
+        'reportDeletion': false,
     }
 };
 
@@ -54,6 +64,21 @@ const getters = {
     },
     getTagCourses: state => {
         return state.tagCourses;
+    },
+    getReportedComments: state => {
+        return state.reportedComments;
+    },
+    getReportResolveError: state => {
+        return state.isReportResolveError;
+    },
+    getReportResolveMessage: state => {
+        return state.reportResolveMessage;
+    },
+    getReportDeleteError: state => {
+        return state.isReportDeleteError;
+    },
+    getReportDeleteMessage: state => {
+        return state.reportDeleteMessage;
     },
 };
 
@@ -94,6 +119,25 @@ const mutations = {
     },
     setTagCourses(state, payload) {
         state.tagCourses = payload;
+    },
+    setReportedComments(state, payload) {
+        state.reportedComments = payload;
+    },
+    setReportResolveMessage(state, payload) {
+        state.isReportResolveError = true;
+        state.reportResolveMessage = payload;
+    },
+    unsetReportResolveMessage(state) {
+        state.isReportResolveError = false;
+        state.reportResolveMessage = null;
+    },
+    setReportDeleteMessage(state, payload) {
+        state.isReportDeleteError = true;
+        state.reportDeleteMessage = payload;
+    },
+    unsetReportDeleteMessage(state) {
+        state.isReportDeleteError = false;
+        state.reportDeleteMessage = null;
     },
 };
 
@@ -297,6 +341,57 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'tagCourses');
             });
+    },
+    loadReportedComments({commit}) {
+        commit('setLoaderFlag', 'reportedComments');
+        commit('setReportedComments', null);
+
+        csflowAPI.get('/privileged/report/comment')
+            .then(response => {
+                commit('setReportedComments', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+               commit('unsetLoaderFlag', 'reportedComments');
+            });
+    },
+    resolveReport({commit}, {type, id}) {
+        commit('setLoaderFlag', 'reportResolution');
+        commit('unsetReportResolveMessage');
+
+        return new Promise((resolve, reject) => {
+           csflowAPI.delete('/privileged/report/' + type + '/' + id + '/resolve')
+               .then(response => {
+                   resolve(response);
+               })
+               .catch(e => {
+                   commit('setReportResolveMessage', e.response.data.message);
+                   reject(e);
+               })
+               .finally(() => {
+                   commit('unsetLoaderFlag', 'reportResolution');
+               });
+        });
+    },
+    deleteReport({commit}, {type, id}) {
+        commit('setLoaderFlag', 'reportDeletion');
+        commit('unsetReportDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/privileged/report/' + type + '/' + id + '/remove')
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setReportDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'reportDeletion');
+                });
+        });
     },
 };
 
