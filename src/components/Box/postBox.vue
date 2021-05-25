@@ -1,5 +1,5 @@
 <template>
-<PaddedContainer>
+<div class="mx-2 mt-4">
   <v-card class="mt-2 ml-2" dense>
     <v-row>
         <v-col cols="2" md="1" class="my-auto">
@@ -81,8 +81,8 @@
       <!-- </v-card> -->
     </v-card-text>
   </v-card>
-  <UserCard></UserCard>
-</PaddedContainer>
+  <!-- <UserCard></UserCard> -->
+</div>
 </template>
 
 <script>

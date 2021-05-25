@@ -1,0 +1,62 @@
+<template>
+  <v-hover v-slot:default="{ hover }">
+    <v-card
+        class="rounded-lg"
+        color="blue lighten-5"
+        :width="width"
+        :max-width="width"
+        
+        :elevation="hover ? 3 : 2"
+        :class="{ 'my-hover': hover }"
+    >
+        <v-row class="mx-1 my-auto">
+            <v-col cols="3" class="my-auto">
+                <p style="background-color:#f0f0f0">
+                <v-row class="mx-auto text-center" >
+                    <v-icon class="mx-auto text-center" large color="green darken-2">
+                    mdi-arrow-up-bold-outline
+                    </v-icon>
+                </v-row>
+                <v-row class="mx-auto text-center">
+                    <span class="mx-auto text-center">{{votes}}</span>
+                </v-row>
+                <v-row class="mx-auto text-center">
+                    <v-icon class="mx-auto text-center" large color="red darken-2">
+                    mdi-arrow-down-bold-outline
+                    </v-icon>
+                </v-row>
+                </p>
+            </v-col>
+            <v-col cols="9" class="text-justify my-auto">
+                {{text}}
+            </v-col>
+        </v-row>
+    </v-card>
+  </v-hover>
+</template>
+
+<script>
+export default {
+    name:"PostCard",
+    props:{
+        width:{
+            type: Number,
+            default:250
+        },
+        text:{
+            type:String,
+            default:"What is your name?"
+        },
+        votes:{
+            type: Number,
+            default: 0
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>
+    
+    

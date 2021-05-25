@@ -74,12 +74,14 @@ const routes = [
     {
         path: '/about',
         name: 'About',
-        component: () => import('../views/About.vue')
+        component: () => import('../views/About.vue'),
+        meta: {requiresAuth: true}
     },
     {
         path:'/box',
         name:'Box',
-        component: () => import('../components/Box/postBox')
+        component: () => import('../components/Box/postBox'),
+        meta: {requiresAuth: true}
     },
     {
         path:'/post/create',
