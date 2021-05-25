@@ -147,18 +147,19 @@
                     <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Additional info</v-card-text>
                   </v-col>
                   <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
-                  <v-col md="3"></v-col>
+                  <!-- <v-col md="3"></v-col> -->
                   <!-- <v-col cols="1" md="3"></v-col> -->
                   <!-- <v-spacer></v-spacer>
                 </v-row>
                 <v-row>
                   <v-spacer></v-spacer> -->
-                  <v-col cols="12" md="6" class="mt-n7">
+                  <v-col md="3"></v-col>
+                  <v-col cols="6" md="3" class="mt-n7">
                       <v-radio-group
                         v-model="additional"
                         mandatory
                         class=""
-                        row
+                        column
                       >
                         <v-radio
                             label="None"
@@ -174,6 +175,39 @@
                             value="term"
                         ></v-radio>
                     </v-radio-group>
+                  </v-col>
+                  <v-col cols="6" class="d-flex">
+                    <v-row align="center">
+                      <v-col
+                        class="d-flex"
+                        cols="12"
+                        
+                      >
+                      </v-col>
+                      <v-col
+                        class="d-flex mt-n5"
+                        cols="12"
+                        
+                      >
+                        <v-select
+                          :items="items"
+                          label="Standard"
+                          
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col
+                        class="d-flex mt-n9"
+                        cols="12"
+                        
+                      >
+                        <v-select
+                          :items="items"
+                          label="Standard"
+                          dense
+                        ></v-select>
+                      </v-col>
+                    </v-row>
                   </v-col>
                   <!-- <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
                   <v-col cols="1" md="3"></v-col> -->
