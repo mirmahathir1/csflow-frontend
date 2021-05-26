@@ -12,37 +12,98 @@
             elevation="3"
             v-else-if="getLoadedUserForProfile!==null"
         >
-            <v-row align="center">
-                <v-avatar
-                  size="150px"
-                  class="mx-auto mt-2"
-                >
-                    <img
-                    v-if="this.getLoadedUserForProfile.profilePic!=null"
-                        alt="Avatar"
-                        :src="this.getLoadedUserForProfile.profilePic"
+            <!-- <v-row align="center"> -->
+            <v-col cols="11">
+                <v-row>
+                    <v-avatar
+                    size="150px"
+                    class="mx-auto mt-2"
                     >
-                    <v-icon
-                    v-else
-                    color="green"
-                    v-text="mdi-account-tie"
-                  ></v-icon>
-                </v-avatar>
+                        <img
+                        v-if="this.getLoadedUserForProfile.profilePic!=''"
+                            alt="Avatar"
+                            :src="this.getLoadedUserForProfile.profilePic"
+                        >
+                        <v-icon
+                            v-else
+                            color="green"
+                            dark
+                            size="148"
+                        >mdi-account-circle</v-icon>
+                    </v-avatar>
+                </v-row>
+            </v-col>
+            <v-col cols="1"></v-col>
+            <!-- </v-row> -->
+            <v-row>
+                <v-col cols="11">
+                    <v-row>
+                        <v-card-title class="mx-auto">{{this.getLoadedUserForProfile.name}}</v-card-title>
+                    </v-row>
+                </v-col>
+                <v-col cols="1">
+                    <v-btn
+                        v-if="$route.params.id=='me' || $route.params.id==getID"
+                        :class="$isMobile()?'mr-3':'pr-12'"
+                        text
+                        icon
+                        color="blue lighten-2"
+                        @click="$router.push('/user/profile/edit')"
+                    >
+                        <v-icon>mdi-square-edit-outline</v-icon>
+                    </v-btn>
+                </v-col>
             </v-row>
-            <v-row align="center">
-                <v-card-title class="mx-auto">{{this.getLoadedUserForProfile.name}}</v-card-title>
-                <v-btn
-                    v-if="$route.params.id=='me' || $route.params.id==getID"
-                    :class="$isMobile()?'mr-3':'mr-7'"
-                    text
-                    icon
-                    color="blue lighten-2"
-                    @click="$router.push('/user/profile/edit')"
+            <v-col cols="11">
+                <v-row>
+                    <v-card-title class="mx-auto mt-n6">
+                        {{this.getLoadedUserForProfile.id}}
+                    </v-card-title>
+                </v-row>
+            </v-col>
+            <div class="text-center">
+                <v-chip
+                    class="ma-2"
+                    color="teal"
+                    text-color="white"
                 >
-                    <v-icon>mdi-square-edit-outline</v-icon>
-                </v-btn>
-            </v-row>
-                <v-container>
+                    Total Questions:  {{this.getLoadedUserForProfile.totalQuestion}}
+                </v-chip>
+
+                <v-chip
+                    class="ma-2"
+                    color="teal"
+                    text-color="white"
+                >
+                    Total Discussions:  {{this.getLoadedUserForProfile.totalDiscussion}}
+                </v-chip>
+
+                <v-chip
+                    class="ma-2"
+                    color="teal"
+                    text-color="white"
+                >
+                    Total Answers:  {{this.getLoadedUserForProfile.totalAnswer}}
+                </v-chip>
+
+                <v-chip
+                    class="ma-2"
+                    color="teal"
+                    text-color="white"
+                >
+                    Downvotes:  {{this.getLoadedUserForProfile.downvoteCount}}
+                </v-chip>
+
+                <v-chip
+                    class="ma-2"
+                    color="teal"
+                    text-color="white"
+                >
+                    Upvotes:  {{this.getLoadedUserForProfile.upvoteCount}}
+                </v-chip>
+
+            </div>
+                <!-- <v-container>
                     <v-card color="rgb(210,210,240)" light class="mx-3">
                         <v-list flat nav
                             class="transparent"
@@ -58,7 +119,6 @@
                                         <v-list-item-content
                                           >
                                             {{this.getLoadedUserForProfile.id}}
-                                            <!-- {{this.id}} -->
                                         </v-list-item-content>
                                     </v-col>
                                 </v-list-item>
@@ -130,8 +190,7 @@
                             </v-list-item-group>
                         </v-list>
                     </v-card>
-                </v-container>
-            <!-- </v-card-text> -->
+                </v-container> -->
         </v-card>
         
         <v-card
