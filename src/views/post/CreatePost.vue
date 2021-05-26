@@ -66,7 +66,7 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <v-app-tooltip-btn class="d-inline-block" name="gh">
+                        <v-app-tooltip-btn class="d-inline-block">
                           <!-- <v-btn
                             class="mx-2"
                             fab
@@ -84,7 +84,7 @@
                             small-chips
                           ></v-file-input>
                         </v-app-tooltip-btn>
-                        <v-app-tooltip-btn class="d-inline-block" name="">
+                        <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
                             hide-input
@@ -147,33 +147,73 @@
                     <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Additional info</v-card-text>
                   </v-col>
                   <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
-                  <v-col md="3"></v-col>
+                  <!-- <v-col md="3"></v-col> -->
                   <!-- <v-col cols="1" md="3"></v-col> -->
                   <!-- <v-spacer></v-spacer>
                 </v-row>
                 <v-row>
                   <v-spacer></v-spacer> -->
-                  <v-col cols="12" md="6" class="mt-n7">
-                      <v-radio-group
+                  <v-col md="3"></v-col>
+                  <v-col cols="6" md="3" class="mt-n7">
+                      <!-- <v-radio-group
                         v-model="additional"
                         mandatory
                         class=""
-                        row
-                      >
-                        <v-radio
+                        column
+                      > -->
+                        <v-checkbox
                             label="None"
                             value="none"
+                            v-model="selected"
                         >
-                        </v-radio>
-                        <v-radio
+                        </v-checkbox>
+                        <v-checkbox
                             label="Book"
                             value="book"
-                        ></v-radio>
-                        <v-radio
+                            v-model="selected"
+                            :disabled="selected.includes('none')"
+                        ></v-checkbox>
+                        <v-checkbox
                             label="Term Q/A"
                             value="term"
-                        ></v-radio>
-                    </v-radio-group>
+                            v-model="selected"
+                            :disabled="selected.includes('none')"
+                        ></v-checkbox>
+                    <!-- </v-radio-group> -->
+                  </v-col>
+                  <v-col cols="6" class="d-flex">
+                    <v-row align="center">
+                      <v-col
+                        class="d-flex"
+                        cols="12"
+                        
+                      >
+                      </v-col>
+                      <v-col
+                        class="d-flex mt-n5"
+                        cols="12"
+                        
+                      >
+                        <v-select
+                          :items="books"
+                          label="Standard"
+                          :disabled="!selected.includes('book')"
+                          dense
+                        ></v-select>
+                      </v-col>
+                      <v-col
+                        class="d-flex mt-n9"
+                        cols="12"
+                        
+                      >
+                        <v-select
+                          :items="years"
+                          label="Standard"
+                          :disabled="!selected.includes('term')"
+                          dense
+                        ></v-select>
+                      </v-col>
+                    </v-row>
                   </v-col>
                   <!-- <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
                   <v-col cols="1" md="3"></v-col> -->
@@ -335,7 +375,10 @@ export default {
         userIndex:0,
         errorMessage:null,
         anyError:false,
-        clicked:false
+        clicked:false,
+        selected:[],
+        books:['Schaums','Sadiq'],
+        years:['2016-17','2017-18','2018-19']
       };
     },
     methods: {

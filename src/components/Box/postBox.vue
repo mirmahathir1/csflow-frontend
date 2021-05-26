@@ -1,6 +1,6 @@
 <template>
-<PaddedContainer>
-  <v-card class="mt-2 ml-2" dense>
+<div class="mx-2 mt-4">
+  <v-card class="mt-2 ml-2" dense rounded="lg">
     <v-row>
         <v-col cols="2" md="1" class="my-auto">
             <p style="background-color:#f0f0f0">
@@ -81,8 +81,8 @@
       <!-- </v-card> -->
     </v-card-text>
   </v-card>
-  <UserCard></UserCard>
-</PaddedContainer>
+  <!-- <UserCard></UserCard> -->
+</div>
 </template>
 
 <script>
