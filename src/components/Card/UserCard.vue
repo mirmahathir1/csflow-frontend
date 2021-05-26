@@ -3,8 +3,8 @@
     <v-card
         class="rounded-lg"
         color="blue lighten-5"
-        :width="width"
-        :max-width="width"
+        :width="width > -1 ? width : ''"
+        :max-width="maxWidth"
         :elevation="hover ? 3 : 2"
         :class="{ 'my-hover': hover }"
     >
@@ -72,6 +72,10 @@ export default {
       default: ''
     },
     width: {
+      type: Number,
+      default: -1,
+    },
+    maxWidth: {
       type: Number,
       default: 250,
     },

@@ -42,6 +42,7 @@
                       :ID="report['owner']['studentId']"
                       :karma="parseInt(report['owner']['karma'])"
                       :image="report['owner']['profilePic']"
+                      :width="250"
                       @click.native="$router.push('/user/' + report['owner']['studentId'])"
                   ></user-card>
                 </v-col>
