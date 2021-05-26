@@ -1,10 +1,10 @@
 <template>
   <div :class="margin">
     <v-row>
-      <v-col cols="12" md="10" :style="padding">
+      <v-col cols="12" md="10" :class="padding">
         <slot></slot>
       </v-col>
-      <v-col cols="12" md="2">
+      <v-col cols="12" md="2" class="pl-0 pr-1">
         <slot name="right"></slot>
       </v-col>
     </v-row>
@@ -27,7 +27,8 @@ export default {
     },
     padding() {
       if (this.$vuetify.breakpoint.mdAndUp) {
-        return 'padding-left: 80px';
+        // return 'padding-left: 80px';
+        return 'px-10';
       }
     }
   }
