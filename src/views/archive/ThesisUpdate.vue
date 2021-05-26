@@ -10,6 +10,8 @@
         :prevLink="link"
         :prevAuthors="authors"
         :prevOwners="owners"
+        :prevTags="tags"
+        :tagAutocompleteItems="getThesisTags"
         :prevUserIndex="userIndex"
         :batchID="batchID"
         :thesisID="thesisID"
@@ -44,6 +46,7 @@ export default {
       link: '',
       authors: [],
       owners: [],
+      tags: [],
       userIndex: 0,
       loadForm: false,
       authorized: true,
@@ -52,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('archive', ['getLoaderFlag', 'getThesisDetails']),
+    ...mapGetters('archive', ['getLoaderFlag', 'getThesisDetails', 'getThesisTags']),
     ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
     batchID() {
       if (this.getLoadedUser) {
@@ -70,7 +73,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesisDetails']),
+    ...mapActions('archive', ['loadThesisDetails', 'loadThesisTags']),
     ...mapActions('user', ['getProfile']),
     async updateProps() {
       this.loadForm = false;
@@ -79,6 +82,7 @@ export default {
       this.userIndex = -1;
 
       await this.getProfile('me');
+      await this.loadThesisTags(false);
       this.loadThesisDetails({id: this.thesisID, force: false})
         .then(response => {
           const details = this.getThesisDetails.payload;
@@ -99,6 +103,11 @@ export default {
             if (owner['ID'] === this.userID) {
               this.userIndex = details['owners'].indexOf(owner);
             }
+          });
+
+          this.tags = [];
+          details['tags'].forEach(tag => {
+            this.tags.push({name: tag});
           });
 
           if (this.userIndex === -1) {

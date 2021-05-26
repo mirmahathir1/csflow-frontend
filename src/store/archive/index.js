@@ -323,22 +323,26 @@ const actions = {
         });
     },
     loadThesisTags({commit, state}, force) {
-        if (state.thesisTags && !force) {
-            return;
-        }
+        return new Promise((resolve, reject) => {
+            if (state.thesisTags && !force) {
+                resolve(state.thesisTags);
+                return;
+            }
 
-        commit('setLoaderFlag', 'thesisTags');
-        commit('setThesisTags', null);
-        csflowAPI.get('/archive/thesis/topics')
-            .then(response => {
-                commit('setThesisTags', response.data.payload);
-            })
-            .catch(e => {
-                console.log(e.response);
-            })
-            .finally(() => {
-                commit('unsetLoaderFlag', 'thesisTags');
-            });
+            commit('setLoaderFlag', 'thesisTags');
+            commit('setThesisTags', null);
+            csflowAPI.get('/archive/thesis/topics')
+                .then(response => {
+                    commit('setThesisTags', response.data.payload);
+                    resolve(response.data.payload);
+                })
+                .catch(e => {
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisTags');
+                });
+        });
     },
     searchTheses({commit}, text) {
         commit('setLoaderFlag', 'thesesSearch');
@@ -476,22 +480,26 @@ const actions = {
         });
     },
     loadProjectTags({commit, state}, force) {
-        if (state.projectTags && !force) {
-            return;
-        }
+        return new Promise((resolve, reject) => {
+            if (state.projectTags && !force) {
+                resolve(state.projectTags);
+                return;
+            }
 
-        commit('setLoaderFlag', 'projectTags');
-        commit('setProjectTags', null);
-        csflowAPI.get('/archive/project/topics')
-            .then(response => {
-                commit('setProjectTags', response.data.payload);
-            })
-            .catch(e => {
-                console.log(e.response);
-            })
-            .finally(() => {
-                commit('unsetLoaderFlag', 'projectTags');
-            });
+            commit('setLoaderFlag', 'projectTags');
+            commit('setProjectTags', null);
+            csflowAPI.get('/archive/project/topics')
+                .then(response => {
+                    commit('setProjectTags', response.data.payload);
+                    resolve(response.data.payload);
+                })
+                .catch(e => {
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectTags');
+                });
+        });
     },
     searchProjects({commit}, text) {
         commit('setLoaderFlag', 'projectsSearch');

@@ -181,6 +181,68 @@
           </v-col>
           <v-col cols="1" md="4"></v-col>
         </v-row>
+
+        <!--          Tags-->
+        <v-row class="mt-0">
+          <v-spacer></v-spacer>
+          <v-col cols="12" md="5" class="py-0">
+            <v-card-text class="text-left text--black text-body-1 pl-7">
+              Tags:
+            </v-card-text>
+          </v-col>
+          <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
+
+          <v-col cols="1" md="3"></v-col>
+          <v-col cols="10" md="5">
+            <v-combobox
+                v-for="(tag, index) in tags" :key="index"
+                outlined
+                class="rounded-lg"
+                dense
+                v-model="tags[index].name"
+                :items="tagAutocompleteItems"
+                @input.native="tags[index].name = $event.target.value"
+                @blur="$v.tags.$each[index].name.$touch()"
+                :error-messages="tagErrors[index]"
+            >
+              <template v-slot:append-outer>
+                <v-btn
+                    icon
+                    color="red lighten-1"
+                    @click="removeTag(index)"
+                    small
+                >
+                  <v-icon>
+                    mdi-minus-circle
+                  </v-icon>
+                </v-btn>
+              </template>
+            </v-combobox>
+            <v-combobox
+                outlined
+                class="rounded-lg"
+                dense
+                v-model="newTag"
+                :items="tagAutocompleteItems"
+                @input.native="newTag = $event.target.value"
+            >
+              <template v-slot:append-outer>
+                <v-btn
+                    icon
+                    color="primary"
+                    @click="addTag()"
+                    small
+                >
+                  <v-icon>
+                    mdi-plus-circle
+                  </v-icon>
+                </v-btn>
+              </template>
+            </v-combobox>
+          </v-col>
+          <v-col cols="1" md="4"></v-col>
+        </v-row>
+
         <v-row>
           <v-col cols="7"></v-col>
           <v-col cols="5" align="center">
@@ -239,6 +301,14 @@ export default {
       type: Number,
       default: -1,
     },
+    prevTags: {
+      type: Array,
+      default: () => [],
+    },
+    tagAutocompleteItems: {
+      type: Array,
+      default: () => [],
+    },
     type: {
       type: String,
       required,
@@ -261,6 +331,8 @@ export default {
       newAuthor: '',
       owners: this.prevOwners,
       newOwner: '',
+      tags: this.prevTags,
+      newTag: '',
       userIndex: this.prevUserIndex,
       submitted: false,
     };
@@ -304,7 +376,19 @@ export default {
           }
         }
       }
-    }
+    },
+    tags: {
+      required,
+      minLength: minLength(1),
+      $each: {
+        name: {
+          required,
+          unique(val) {
+            return this.tags.filter(element => element.name.toLowerCase() === val.toLowerCase()).length < 2;
+          },
+        }
+      }
+    },
   },
   computed: {
     ...mapGetters('archive', ['getLoaderFlag', 'getThesisSubmitError', 'getThesisSubmitMessage']),
@@ -357,10 +441,25 @@ export default {
       }
 
       return errors;
-    }
+    },
+    tagErrors() {
+      const errors = [];
+
+      for (let index=0; index < this.tags.length; index++) {
+        const element = this.$v.tags.$each[index.toString()];
+        const temp = [];
+
+        !element.name.required && temp.push('Please enter a tag');
+        !element.name.unique && temp.push('Same tag cannot be used more than once');
+
+        errors.push(temp);
+      }
+
+      return errors;
+    },
   },
   methods: {
-    ...mapActions('archive', ['createThesis', 'updateThesis']),
+    ...mapActions('archive', ['createThesis', 'updateThesis', 'loadThesisTags']),
     ...mapActions('user', ['getProfile']),
     removeAuthor(index) {
       this.authors.splice(index, 1);
@@ -380,6 +479,13 @@ export default {
       this.owners.push({id: this.newOwner});
       this.newOwner = '';
     },
+    removeTag(index) {
+      this.tags.splice(index, 1);
+    },
+    addTag() {
+      this.tags.push({name: this.newTag});
+      this.newTag = '';
+    },
     submit() {
       if (this.$v.$invalid) {
         return;
@@ -398,6 +504,11 @@ export default {
       payload.owners = [];
       this.owners.forEach(element => {
         payload.owners.push(parseInt(element.id));
+      });
+
+      payload.tags = [];
+      this.tags.forEach(tag => {
+        payload.tags.push(tag.name);
       });
 
       if (this.type === 'create') {

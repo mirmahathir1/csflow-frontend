@@ -12,6 +12,7 @@
         :prevOwners="owners"
         :prevUserIndex="userIndex"
         :batchID="batchID"
+        :tagAutocompleteItems="getThesisTags"
     ></thesis-form>
     <details-loader v-else></details-loader>
   </padded-container>
@@ -41,6 +42,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('archive', ['getThesisTags']),
     ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
     batchID() {
       if (this.getLoadedUser) {
@@ -51,12 +53,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions('archive', ['createThesis']),
+    ...mapActions('archive', ['createThesis', 'loadThesisTags']),
     ...mapActions('user', ['getProfile']),
   },
   components: {DetailsLoader, PageHeader, PaddedContainer, ThesisForm},
   async mounted() {
     await this.getProfile('me');
+    await this.loadThesisTags(false);
     this.owners.push({id: this.getLoadedUser['id'].toString()});
 
     this.loadForm = true;
