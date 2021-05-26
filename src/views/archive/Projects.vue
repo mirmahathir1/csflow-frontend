@@ -6,9 +6,17 @@
       <v-card class="mt-4 pb-4 rounded-lg mx-auto" max-width="250">
         <v-card-text class="text-center text-body-2">Search by topic</v-card-text>
         <v-card-text class="text-body-2 black--text">Enter Search Text:</v-card-text>
-        <v-text-field class="mx-3" outlined rounded dense></v-text-field>
+        <v-text-field
+            class="mx-3" outlined rounded dense
+            v-model="topic"
+            @keyup.enter="$router.push('/archive/project/search/' + topic)"
+        ></v-text-field>
         <v-card-actions class="mx-2 pt-0">
-          <v-btn block color="primary" small @click="">
+          <v-btn
+              block color="primary" small
+              @click="$router.push('/archive/project/search/' + topic)"
+              :disabled="topic === ''"
+          >
             Search
           </v-btn>
         </v-card-actions>
@@ -27,6 +35,7 @@
                 color="blue lighten-4"
                 class="mx-1 my-2 text-wrap text-body-2"
                 :large="topic.length > 25"
+                @click="$router.push('/archive/project/search/' + topic)"
             >
               {{ topic }}
             </v-chip>
@@ -77,6 +86,11 @@ export default {
   name: "Projects",
   title() {
     return 'Projects';
+  },
+  data() {
+    return {
+      topic: '',
+    };
   },
   computed: {
     ...mapGetters('archive', ['getBatches', 'getLoaderFlag', 'getProjectTags']),

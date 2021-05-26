@@ -179,6 +179,12 @@ const routes = [
         component: () => import('../views/archive/ProjectDetails'),
         meta: { requiresAuth: true }
     },
+    {
+        path: '/archive/project/search/:topic',
+        name: 'ProjectsSearchResult',
+        component: () => import('../views/archive/ProjectsSearchResult'),
+        meta: { requiresAuth: true }
+    },
 
     ////////////////// privileged module /////////////////////
     {

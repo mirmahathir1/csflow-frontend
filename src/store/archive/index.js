@@ -493,6 +493,24 @@ const actions = {
                 commit('unsetLoaderFlag', 'projectTags');
             });
     },
+    searchProjects({commit}, text) {
+        commit('setLoaderFlag', 'projectsSearch');
+        commit('setProjectsSearchResult', null);
+        csflowAPI.get('/archive/project/search?text=' + text)
+            .then(response => {
+                let  projects= {};
+                 projects.text = text;
+                 projects.payload = response.data.payload;
+
+                commit('setProjectsSearchResult', projects);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'projectsSearch');
+            });
+    },
 };
 
 export default {

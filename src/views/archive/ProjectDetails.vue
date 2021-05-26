@@ -1,6 +1,9 @@
 <template>
   <padded-container>
-    <page-header :back-button="!getLoaderFlag('projectDetails')" :back-route="backRoute">Project Details</page-header>
+    <page-header
+        :back-button="!getLoaderFlag('projectDetails')"
+        :back-route="backRoute"
+    >Project Details</page-header>
 
     <v-card
         color="white"
@@ -43,6 +46,14 @@
           </v-col>
         </v-row>
       </v-container>
+
+      <v-card-text class="mt-2 text-body-1 black--text">
+        Tags:
+      </v-card-text>
+      <v-chip v-for="topic in details['tags']" class="mx-1">
+        {{ topic }}
+      </v-chip>
+
       <v-row v-if="isOwner" class="justify-end my-2">
         <icon-button
             @click.native="onEditClicked"
@@ -140,11 +151,15 @@ export default {
       return false;
     },
     backRoute() {
-      if (this.getProjectDetails) {
-        return '/archive/project/batch/' + this.details['batch'] + '/' + this.details['course_no'].replace(' ', '-');
+      if (this.$route.params.type !== 'search') {
+        if (this.getProjectDetails) {
+          return '/archive/project/batch/' + this.details['batch'] + '/' + this.details['course_no'].replace(' ', '-');
+        }
+
+        return '/archive/project';
       }
 
-      return '/archive/project';
+      return '/archive/project/search/' + this.$route.params.searchText;
     }
   },
   methods: {

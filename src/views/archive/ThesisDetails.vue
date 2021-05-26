@@ -1,7 +1,7 @@
 <template>
   <padded-container>
     <page-header
-        :back-button="this.$route.params.type !== 'search' && !getLoaderFlag('thesisDetails')"
+        :back-button="!getLoaderFlag('thesisDetails')"
         :back-route="backRoute"
     >Thesis Details</page-header>
 
@@ -157,11 +157,15 @@ export default {
       return false;
     },
     backRoute() {
-      if (this.getThesisDetails) {
-        return '/archive/thesis/batch/' + this.details['batch'];
+      if (this.$route.params.type !== 'search') {
+        if (this.getThesisDetails) {
+          return '/archive/thesis/batch/' + this.details['batch'];
+        }
+
+        return '/archive/thesis';
       }
 
-      return '/archive/thesis';
+      return '/archive/thesis/search/' + this.$route.params.searchText;
     }
   },
   methods: {
