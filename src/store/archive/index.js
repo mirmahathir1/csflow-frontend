@@ -11,6 +11,8 @@ const state = {
     thesisSubmitMessage: null,
     isThesisDeleteError: false,
     thesisDeleteMessage: null,
+    thesisTags: null,
+    thesesSearchResult: null,
 
     projectCourses: null,
     projects: null,
@@ -19,6 +21,8 @@ const state = {
     projectSubmitMessage: null,
     isProjectDeleteError: false,
     projectDeleteMessage: null,
+    projectTags: null,
+    projectsSearchResult: null,
 
     loaderFlags: {
         'batches': true,
@@ -27,11 +31,15 @@ const state = {
         'thesisDetails': true,
         'thesisSubmission': false,
         'thesisDeletion': false,
+        'thesisTags': true,
+        'thesesSearch': true,
         'projectCourses': true,
         'projects': true,
         'projectDetails': true,
         'projectSubmission': false,
         'projectDeletion': false,
+        'projectTags': true,
+        'projectsSearch': true,
     },
 };
 
@@ -67,6 +75,12 @@ const getters = {
     getThesisDeleteMessage: state => {
         return state.thesisDeleteMessage;
     },
+    getThesisTags: state => {
+        return state.thesisTags;
+    },
+    getThesesSearchResult: state => {
+        return state.thesesSearchResult;
+    },
     getProjectCourses: state => {
         return state.projectCourses;
     },
@@ -87,6 +101,12 @@ const getters = {
     },
     getProjectDeleteMessage: state => {
         return state.projectDeleteMessage;
+    },
+    getProjectTags: state => {
+        return state.projectTags;
+    },
+    getProjectsSearchResult: state => {
+        return state.projectsSearchResult;
     },
 };
 
@@ -125,6 +145,12 @@ const mutations = {
         state.isThesisDeleteError = false;
         state.thesisDeleteMessage = null;
     },
+    setThesisTags(state, payload) {
+        state.thesisTags = payload;
+    },
+    setThesesSearchResult(state, payload) {
+        state.thesesSearchResult = payload;
+    },
     setProjectCourses(state, payload) {
         state.projectCourses = payload;
     },
@@ -149,6 +175,12 @@ const mutations = {
     unsetProjectDeleteMessage(state) {
         state.isProjectDeleteError = false;
         state.projectDeleteMessage = null;
+    },
+    setProjectTags(state, payload) {
+        state.projectTags = payload;
+    },
+    setProjectsSearchResult(state, payload) {
+        state.projectsSearchResult = payload;
     },
 };
 
@@ -290,6 +322,42 @@ const actions = {
                 });
         });
     },
+    loadThesisTags({commit, state}, force) {
+        if (state.thesisTags && !force) {
+            return;
+        }
+
+        commit('setLoaderFlag', 'thesisTags');
+        commit('setThesisTags', null);
+        csflowAPI.get('/archive/thesis/topics')
+            .then(response => {
+                commit('setThesisTags', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'thesisTags');
+            });
+    },
+    searchTheses({commit}, text) {
+        commit('setLoaderFlag', 'thesesSearch');
+        commit('setThesesSearchResult', null);
+        csflowAPI.get('/archive/thesis/search?text=' + text)
+            .then(response => {
+                let theses = {};
+                theses.text = text;
+                theses.payload = response.data.payload;
+
+                commit('setThesesSearchResult', theses);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'thesesSearch');
+            });
+    },
     loadProjectCourses({commit}, batch) {
         commit('setProjectCourses', null);
         commit('setLoaderFlag', 'projectCourses');
@@ -406,6 +474,24 @@ const actions = {
                     commit('unsetLoaderFlag', 'projectDeletion');
                 });
         });
+    },
+    loadProjectTags({commit, state}, force) {
+        if (state.projectTags && !force) {
+            return;
+        }
+
+        commit('setLoaderFlag', 'projectTags');
+        commit('setProjectTags', null);
+        csflowAPI.get('/archive/project/topics')
+            .then(response => {
+                commit('setProjectTags', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'projectTags');
+            });
     },
 };
 

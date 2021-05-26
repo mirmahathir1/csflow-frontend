@@ -138,6 +138,12 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path: '/archive/thesis/search/:topic',
+        name: 'ThesesSearchResult',
+        component: () => import('../views/archive/ThesesSearchResult'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/archive/project',
         name: 'Projects',
         component: () => import('../views/archive/Projects'),

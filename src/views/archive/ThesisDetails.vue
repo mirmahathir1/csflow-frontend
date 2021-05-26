@@ -1,6 +1,9 @@
 <template>
   <padded-container>
-    <page-header :back-button="!getLoaderFlag('thesisDetails')" :back-route="backRoute">Thesis Details</page-header>
+    <page-header
+        :back-button="this.$route.params.type !== 'search' && !getLoaderFlag('thesisDetails')"
+        :back-route="backRoute"
+    >Thesis Details</page-header>
 
     <v-card
         color="white"
@@ -38,6 +41,14 @@
           </v-col>
         </v-row>
       </v-container>
+
+      <v-card-text class="mt-2 text-body-1 black--text">
+        Tags:
+      </v-card-text>
+      <v-chip v-for="topic in details['tags']" class="mx-1">
+        {{ topic }}
+      </v-chip>
+
       <v-row v-if="isOwner" class="justify-end my-2">
         <icon-button
             @click.native="onEditClicked"
