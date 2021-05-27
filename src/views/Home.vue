@@ -114,8 +114,7 @@ export default {
       users() {
         let ret = [];
         if (this.getUsers) {
-          ret = this.getUsers;
-          ret.sort((a, b) => a['karma'] < b['karma'] ? -1 : 1);
+          ret = this.getUsers.sort((a, b) => Number(a['karma']) < Number(b['karma']) ? 1 : -1);
           ret = [...ret];
         }
         return ret;
