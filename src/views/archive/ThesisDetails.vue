@@ -45,9 +45,11 @@
       <v-card-text class="mt-2 text-body-1 black--text">
         Tags:
       </v-card-text>
-      <v-chip v-for="topic in details['tags']" class="mx-1">
-        {{ topic }}
-      </v-chip>
+      <div class="pl-3">
+        <v-chip v-for="topic in details['tags']" class="mx-1 my-1">
+          {{ topic }}
+        </v-chip>
+      </div>
 
       <v-row v-if="isOwner" class="justify-end my-2">
         <icon-button

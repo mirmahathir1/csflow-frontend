@@ -459,7 +459,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('archive', ['createThesis', 'updateThesis', 'loadThesisTags']),
+    ...mapActions('archive', ['createThesis', 'updateThesis']),
     ...mapActions('user', ['getProfile']),
     removeAuthor(index) {
       this.authors.splice(index, 1);

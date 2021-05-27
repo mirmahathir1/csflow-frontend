@@ -13,6 +13,7 @@
         :prevOwners="owners"
         :prevUserIndex="userIndex"
         :batchID="batchID"
+        :tagAutocompleteItems="topics"
     ></project-form>
     <details-loader v-else></details-loader>
   </padded-container>
@@ -43,6 +44,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('archive', ['getProjectTags']),
     ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
     batchID() {
       if (this.getLoadedUser) {
@@ -51,13 +53,27 @@ export default {
 
       return 0;
     },
+    topics() {
+      if (this.getProjectTags) {
+        let ret = [];
+        this.getProjectTags.forEach(course => {
+          ret.push(course['courseTitle']);
+        });
+
+        return ret;
+      }
+
+      return [];
+    },
   },
   methods: {
+    ...mapActions('archive', ['loadProjectTags']),
     ...mapActions('user', ['getProfile']),
   },
   components: {DetailsLoader, PageHeader, PaddedContainer, ProjectForm},
   async mounted() {
     await this.getProfile('me');
+    await this.getProjectTags(false);
     this.owners.push({id: this.getLoadedUser['id'].toString()});
 
     this.loadForm = true;

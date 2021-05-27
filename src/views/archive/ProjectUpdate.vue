@@ -11,6 +11,8 @@
         :prevYoutubeLink="youtubeLink"
         :prevGitLink="gitLink"
         :prevOwners="owners"
+        :prevTags="tags"
+        :tagAutocompleteItems="topics"
         :prevUserIndex="userIndex"
         :batchID="batchID"
         :projectID="projectID"
@@ -46,6 +48,7 @@ export default {
       youtubeLink: '',
       gitLink: '',
       owners: [],
+      tags: [],
       userIndex: 0,
       authorized: true,
       error: false,
@@ -54,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('archive', ['getLoaderFlag', 'getProjectDetails']),
+    ...mapGetters('archive', ['getLoaderFlag', 'getProjectDetails', 'getProjectTags']),
     ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
     batchID() {
       if (this.getLoadedUser) {
@@ -70,9 +73,21 @@ export default {
 
       return -1;
     },
+    topics() {
+      if (this.getProjectTags) {
+        let ret = [];
+        this.getProjectTags.forEach(course => {
+          ret.push(course['courseTitle']);
+        });
+
+        return ret;
+      }
+
+      return [];
+    },
   },
   methods: {
-    ...mapActions('archive', ['loadProjectDetails']),
+    ...mapActions('archive', ['loadProjectDetails', 'loadProjectTags']),
     ...mapActions('user', ['getProfile']),
     async updateProps() {
       this.loadForm = false;
@@ -81,6 +96,7 @@ export default {
       this.userIndex = -1;
 
       await this.getProfile('me');
+      await this.loadProjectTags(false);
       this.loadProjectDetails({id: this.projectID, force: false})
           .then(response => {
             const details = this.getProjectDetails.payload;
@@ -99,6 +115,12 @@ export default {
                 this.userIndex = details['owners'].indexOf(owner);
               }
             });
+
+            this.tags = [];
+            details['tags'].forEach(tag => {
+              this.tags.push({name: tag});
+            });
+
 
             if (this.userIndex === -1) {
               this.authorized = false;
