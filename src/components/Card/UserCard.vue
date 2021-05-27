@@ -13,7 +13,20 @@
             tile
             :size="avatarSize"
             color="grey"
-        ><img :src="image" alt=""></v-list-item-avatar>
+            v-if="image !== ''"
+        >
+          <img :src="image" alt="">
+        </v-list-item-avatar>
+        <v-list-item-avatar
+            v-else
+            :size="avatarSize"
+        >
+          <v-icon
+              color="green"
+              dark
+              x-large
+          >mdi-account-circle</v-icon>
+        </v-list-item-avatar>
 
         <v-list-item-content class="pb-0">
           <v-card-text
