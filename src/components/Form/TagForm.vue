@@ -201,7 +201,7 @@ export default {
       }
 
       const payload = {};
-      payload.name = this.tagText.replace("'", "''");
+      payload.name = this.$replaceFirstQuote(this.tagText);
       payload.type = this.tagType.toLowerCase();
       payload.courseId = this.course;
 

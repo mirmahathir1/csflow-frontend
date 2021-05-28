@@ -200,8 +200,8 @@
                 class="rounded-lg"
                 dense
                 v-model="tags[index].name"
-                :items="tagAutocompleteItems"
                 @input.native="tags[index].name = $event.target.value"
+                :items="tagAutocompleteItems"
                 @blur="$v.tags.$each[index].name.$touch()"
                 :error-messages="tagErrors[index]"
             >
@@ -222,9 +222,8 @@
                 outlined
                 class="rounded-lg"
                 dense
-                v-model="newTag"
+                :search-input.sync="newTag"
                 :items="tagAutocompleteItems"
-                @input.native="newTag = $event.target.value"
             >
               <template v-slot:append-outer>
                 <v-btn
@@ -492,13 +491,13 @@ export default {
       }
 
       const payload = {};
-      payload.title = this.title;
-      payload.description = this.description;
+      payload.title = this.$replaceFirstQuote(this.title);
+      payload.description = this.$replaceFirstQuote(this.description);
       payload.link = this.link;
 
       payload.writers = [];
       this.authors.forEach(element => {
-        payload.writers.push(element.name);
+        payload.writers.push(this.$replaceFirstQuote(element.name));
       });
 
       payload.owners = [];
@@ -508,7 +507,7 @@ export default {
 
       payload.tags = [];
       this.tags.forEach(tag => {
-        payload.tags.push(tag.name);
+        payload.tags.push(this.$replaceFirstQuote(tag.name));
       });
 
       if (this.type === 'create') {

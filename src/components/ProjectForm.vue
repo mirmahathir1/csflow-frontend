@@ -200,9 +200,8 @@
                 outlined
                 class="rounded-lg"
                 dense
-                v-model="newTag"
+                :search-input.sync="newTag"
                 :items="tagAutocompleteItems"
-                @input.native="newTag = $event.target.value"
             >
               <template v-slot:append-outer>
                 <v-btn
@@ -491,11 +490,11 @@ export default {
       }
 
       const payload = {};
-      payload.title = this.title;
-      payload.description = this.description;
+      payload.title = this.$replaceFirstQuote(this.title);
+      payload.description = this.$replaceFirstQuote(this.description);
       payload.youtube = this.youtubeLink;
       payload.github = this.gitLink;
-      payload.course = this.course;
+      payload.course = this.$replaceFirstQuote(this.course);
 
       payload.owners = [];
       this.owners.forEach(element => {
@@ -504,7 +503,7 @@ export default {
 
       payload.tags = [];
       this.tags.forEach(tag => {
-        payload.tags.push(tag.name);
+        payload.tags.push(this.$replaceFirstQuote(tag.name));
       });
 
       if (this.type === 'create') {

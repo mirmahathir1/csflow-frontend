@@ -12,6 +12,11 @@ export default {
                 return text.charAt(0).toUpperCase() + text.slice(1);
             return '';
         },
+        $replaceFirstQuote(text) {
+            if (text || text !== undefined)
+                return text.replaceAll("'", "''");
+            return '';
+        }
     },
     filters: {
         shorten: value => {
