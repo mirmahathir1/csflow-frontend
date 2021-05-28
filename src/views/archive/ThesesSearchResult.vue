@@ -66,7 +66,7 @@ export default {
   watch: {
     '$route'(to, from) {
       this.topic = to.params.topic;
-      this.searchTheses(this.topic);
+      this.searchTheses(this.$replaceFirstQuote(this.topic));
     }
   },
   computed: {
@@ -83,7 +83,7 @@ export default {
     ...mapActions('archive', ['searchTheses']),
   },
   mounted() {
-    this.searchTheses(this.topic);
+    this.searchTheses(this.$replaceFirstQuote(this.topic));
   },
 }
 </script>

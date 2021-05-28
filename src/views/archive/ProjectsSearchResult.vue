@@ -79,11 +79,11 @@ export default {
   watch: {
     '$route'(to, from) {
       this.topic = to.params.topic;
-      this.searchProjects(this.topic);
+      this.searchProjects(this.$replaceFirstQuote(this.topic));
     }
   },
   mounted() {
-    this.searchProjects(this.topic);
+    this.searchProjects(this.$replaceFirstQuote(this.topic));
   }
 }
 </script>
