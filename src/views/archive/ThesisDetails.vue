@@ -33,11 +33,18 @@
               v-for="owner in details['owners']"
               :key="owner['ID']"
           >
-            <v-card elevation="1" color="blue lighten-4">
-              <v-card-text class="black--text">
-                {{ owner['ID'] }}
-              </v-card-text>
-            </v-card>
+            <v-hover v-slot:default="{ hover }">
+              <v-card
+                  color="blue lighten-4"
+                  :elevation="hover ? 3 : 1"
+                  :class="{ 'my-hover': hover }"
+                  @click="$router.push('/user/' + owner['ID'])"
+              >
+                <v-card-text class="black--text">
+                  {{ owner['ID'] }}
+                </v-card-text>
+              </v-card>
+            </v-hover>
           </v-col>
         </v-row>
       </v-container>
