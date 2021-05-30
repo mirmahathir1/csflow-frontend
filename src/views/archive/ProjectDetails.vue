@@ -58,7 +58,7 @@
         Tags:
       </v-card-text>
       <div class="pl-3">
-        <v-chip v-for="topic in details['tags']" class="mx-1 my-1">
+        <v-chip v-for="topic in details['tags']" :key="topic" class="mx-1 my-1">
           {{ topic }}
         </v-chip>
       </div>
