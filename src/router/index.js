@@ -93,7 +93,7 @@ const routes = [
         path:'/post/create',
         name:'CreatePost',
         component: () => import('../views/post/CreatePost'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: false }
     },
 
     ////////////////// archive module /////////////////////

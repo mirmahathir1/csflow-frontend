@@ -20,7 +20,7 @@
                     class="mx-auto mt-2"
                     >
                         <img
-                        v-if="this.getLoadedUserForProfile.profilePic!=''"
+                        v-if="this.getLoadedUserForProfile.profilePic!=null"
                             alt="Avatar"
                             :src="this.getLoadedUserForProfile.profilePic"
                         >

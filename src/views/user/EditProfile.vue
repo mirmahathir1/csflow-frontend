@@ -283,17 +283,18 @@ export default {
       }
       this.loading = false;
     },
-    deleteProfile() {
+    async deleteProfile() {
       this.deleteClicked = true;
-      this.deleteUser()
-        .then(response => {
-          this.logoutAll()
-          this.$router.push('/')
-        })
-        .catch(e => {})
-        .finally(() => {
-          this.deleteClicked = false;
-        });
+      try{
+        let response=await this.deleteUser()   
+        await this.logoutAll()
+        this.$router.push('/')
+        
+      }catch(e){
+
+      }finally{
+        this.deleteClicked = false;
+      }
     }
   },
   // watch:{
