@@ -73,7 +73,7 @@ export default {
   components: {DetailsLoader, PageHeader, PaddedContainer, ProjectForm},
   async mounted() {
     await this.getProfile('me');
-    await this.getProjectTags(false);
+    await this.loadProjectTags(false);
     this.owners.push({id: this.getLoadedUser['id'].toString()});
 
     this.loadForm = true;
