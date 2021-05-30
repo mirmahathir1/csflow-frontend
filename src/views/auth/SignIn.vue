@@ -143,7 +143,7 @@ export default {
 
           this.login({email: this.email, password: this.password})
             .then(response => {
-              this.$router.push('/search/relevant');
+              this.$router.push('/home');
             })
             .catch(e => {
               console.log(e.response);

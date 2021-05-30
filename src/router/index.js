@@ -24,6 +24,12 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path: '/search',
+        name: 'Search',
+        component: () => import('../views/search/SearchPage.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path:  '/postdetails',
         name: 'PostDetails',
         component:()=>import('../views/post/PostDetails.vue'),
@@ -250,7 +256,7 @@ router.beforeEach(async (to, from, next) => {
                 // check if privilege is needed
                 if (to.matched.some(record => record.meta.requiresPrivilege)) {
                     if (!store.getters['auth/getIsCR']) {
-                        next('/search/relevant');
+                        next('/home');
                     } else {
                         next();
                     }
