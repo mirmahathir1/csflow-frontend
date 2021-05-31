@@ -1,6 +1,14 @@
 <template>
   <PaddedContainer>
-    <v-card :height="$isMobile() ?'100px':'100px'" class></v-card>
+    <v-card :height="$isMobile() ?'100px':'100px'" class>
+      <v-row class="pa-5 mt-2">
+          <v-card-text class="">
+              <p class="text-center font-weight-normal text-h6 black--text">
+                Sign Up Completion
+              </p>
+        </v-card-text>
+      </v-row>
+    </v-card>
     <v-card height="100px" class="mb-4 mt-4 mx-auto"
       :max-width="$isMobile()?'30vw':'30vw'"
       :min-width="$isMobile()?'30vw':'30vw'">
