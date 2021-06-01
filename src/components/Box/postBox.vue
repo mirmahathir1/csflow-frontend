@@ -102,6 +102,23 @@ export default {
             }
         }
     },
+    // props:{
+    //   post:{
+    //     type:Object,
+    //     default:{
+          
+    //       post:{
+    //       'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
+    //       'date':'21 August 2020,2.20AM',
+    //       'type':'Question',
+    //       'totalAnswer':9,
+    //       'votes':5678,
+    //       'tags':['CSE 300','AI','Networking'],
+    //       'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
+    //       }
+    //     }
+    //   }
+    // },
     components:{
       PaddedContainer,
       UserCard

@@ -12,6 +12,11 @@
                       this page for resetting your password
                     </p>
                 </v-card-text>
+                <v-card-text class="" v-else>
+                    <p class="text-center font-weight-normal text-h6 black--text">
+                        Password Recover
+                    </p>
+                </v-card-text>
             </v-row>
         </v-card>
         <v-sheet

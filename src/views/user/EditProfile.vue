@@ -167,7 +167,7 @@
                   <v-spacer></v-spacer>
                   <v-btn
                     color="primary"
-                    
+                    :loading="deleteClicked"
                     @click="deleteProfile"
                   >
                     I accept

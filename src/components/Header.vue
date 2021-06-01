@@ -423,7 +423,7 @@ export default {
                 {
                     title: 'Search',
                     icon: 'mdi-magnify',
-                    link: '/about'
+                    link: '/search'
                 },
                 {
                     title: 'Create Post',

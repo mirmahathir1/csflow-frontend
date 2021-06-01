@@ -1,25 +1,7 @@
 <template>
-            <!-- <v-col
-                cols="12"
-                sm="8"
-            >
-                <v-sheet
-                    min-height="70vh"
-                    rounded="lg"
-                    class="pa-6"
-                >
-                    <v-alert
-                        dense
-                        text
-                        type="success"
-                    >
-                        Successfully signed in
-                    </v-alert>
-                </v-sheet>
-            </v-col> -->
     <PaddedContainer>
         <PageHeader>
-            Relevant Posts
+            Search results
         </PageHeader>
         <v-row
             v-for="(post,idx) in posts" :key="idx"
@@ -32,20 +14,22 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import PaddedContainer from "@/components/PaddedContainerWithoutLeft"
 import PageHeader from "@/components/PageHeader"
 import PostBox from "@/components/Box/postBox.vue"
 export default {
-  name: 'Home',
-  components: {
-      PaddedContainer,
-      PageHeader,
-      PostBox
-  },
-  data(){
-      return{
-          posts:[
+    name:"serach",
+    title(){
+        return 'Search'
+    },
+    components:{
+        PaddedContainer,
+        PageHeader,
+        PostBox
+    },
+    data(){
+        return{
+            posts:[
             {
                 'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
                 'date':'21 August 2020,2.20AM',
@@ -74,7 +58,11 @@ export default {
                 'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
             },
           ]
-      };
-  }
+        };
+    }
 }
 </script>
+
+<style>
+
+</style>

@@ -6,6 +6,13 @@
             :height="$isMobile() ?'100px':'100px'"
             class=""
         >
+            <v-row class="pa-5 mt-2">
+                <v-card-text class="">
+                    <p class="text-center font-weight-normal text-h6 black--text">
+                        Password Reset
+                    </p>
+                </v-card-text>
+            </v-row>
         </v-card>
         <v-sheet
             :max-width="$isMobile()?'80vw':'30vw'"
@@ -15,9 +22,9 @@
             v-if="!isEmailSent"
         >
            
-            <v-toolbar-title class="mx-auto text-center">
+            <!-- <v-toolbar-title class="mx-auto text-center">
                 Password Reset
-            </v-toolbar-title>
+            </v-toolbar-title> -->
             <v-form
                 ref="form"
             >
