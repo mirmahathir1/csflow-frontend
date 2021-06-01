@@ -54,7 +54,7 @@
               rounded
               min-height="100"
           >
-            <template v-for="item in tags">
+            <template v-for="item in tagsCurrentPage">
               <v-list-item :key="item.id" :class="'mx-' + margins + ' pb-0'">
                 <v-list-item-content class="text-left py-0 mr-3">
                   <v-card-text :class="'ml-' + margins + ' py-0 text-body-1'">
@@ -80,6 +80,19 @@
               </v-list-item>
               <v-divider :class="'mx-' + margins + ' my-0'"></v-divider>
             </template>
+
+            <v-row>
+              <v-col cols="12" class="px-0">
+                <div class="mx-auto mb-3 mt-5">
+                  <v-pagination
+                      v-model="page"
+                      :length="tagPages"
+                      circle
+                      :total-visible="$isMobile() ? 5 : 7"
+                  ></v-pagination>
+                </div>
+              </v-col>
+            </v-row>
 
 <!--            Update Form Dialog-->
             <v-dialog
@@ -188,6 +201,8 @@ export default {
       createCounter: 0,
       deleteDialog: false,
       deleteItem: null,
+      page: 1,
+      pageSize: 12,
     };
   },
   computed: {
@@ -227,6 +242,14 @@ export default {
     },
     margins() {
       return this.$vuetify.breakpoint.mdAndUp ? '10' : '1';
+    },
+    tagPages() {
+      return Math.ceil(this.tags.length/this.pageSize);
+    },
+    tagsCurrentPage() {
+      this.page = Math.min(this.page, this.tagPages);
+
+      return this.tags.slice((this.page-1)*this.pageSize, this.page*this.pageSize);
     },
   },
   methods: {
