@@ -225,6 +225,12 @@ const routes = [
         component: () => import('../views/privileged/ReportManagerComment'),
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
+    {
+        path: '/privileged/archive/resource',
+        name: 'Resource Manager',
+        component: () => import('../views/privileged/ResourceManager'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    },
 ]
 
 const router = new VueRouter({

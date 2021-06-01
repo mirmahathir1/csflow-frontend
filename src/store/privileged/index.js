@@ -21,6 +21,9 @@ const state = {
     isReportDeleteError: false,
     reportDeleteMessage: null,
 
+    resourceSubmitMessage: null,
+    isResourceSubmitError: false,
+
     loaderFlags: {
         'users': true,
         'tags': true,
@@ -31,6 +34,8 @@ const state = {
         'reportedComments': true,
         'reportResolution': false,
         'reportDeletion': false,
+        'resourceSubmission': false,
+        'resourceDeletion': false,
     }
 };
 
@@ -79,6 +84,12 @@ const getters = {
     },
     getReportDeleteMessage: state => {
         return state.reportDeleteMessage;
+    },
+    getResourceSubmitError: state => {
+        return state.isResourceSubmitError;
+    },
+    getResourceSubmitMessage: state => {
+        return state.resourceSubmitMessage;
     },
 };
 
@@ -138,6 +149,14 @@ const mutations = {
     unsetReportDeleteMessage(state) {
         state.isReportDeleteError = false;
         state.reportDeleteMessage = null;
+    },
+    setResourceSubmitMessage(state, payload) {
+        state.isResourceSubmitError = true;
+        state.resourceSubmitMessage = payload;
+    },
+    unsetResourceSubmitMessage(state) {
+        state.isResourceSubmitError = false;
+        state.resourceSubmitMessage = null;
     },
 };
 
@@ -391,6 +410,40 @@ const actions = {
                 .finally(() => {
                     commit('unsetLoaderFlag', 'reportDeletion');
                 });
+        });
+    },
+    createResource({commit}, payload) {
+        commit('setLoaderFlag', 'resourceSubmission');
+        commit('unsetResourceSubmitMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.post('/privileged/archive/resource', payload)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setResourceSubmitMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'resourceSubmission');
+                });
+        });
+    },
+    deleteResource({commit}, id) {
+        commit('setLoaderFlag', 'resourceDeletion');
+
+        return new Promise((resolve, reject) => {
+           csflowAPI.delete('/privileged/archive/resource/' + id)
+               .then(response => {
+                   resolve(response);
+               })
+               .catch(e => {
+                   reject(e);
+               })
+               .finally(() => {
+                   commit('unsetLoaderFlag', 'resourceDeletion');
+               });
         });
     },
 };
