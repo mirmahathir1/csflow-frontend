@@ -69,6 +69,9 @@ import ResourceForm from "@/components/Form/ResourceForm";
 import RegularLoader from "@/components/Loader/RegularLoader";
 export default {
   name: "ResourceManager",
+  title() {
+    return 'Resource Manager';
+  },
   components: {RegularLoader, ResourceForm, FoldersLoader, ResourceCard, PageHeader, PaddedContainer},
   data() {
     return {

@@ -220,6 +220,18 @@ const routes = [
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
     {
+        path: '/privileged/report/post',
+        name: 'Report Manager Post',
+        component: () => import('../views/privileged/ReportManagerPost'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    },
+    {
+        path: '/privileged/report/answer',
+        name: 'Report Manager Answer',
+        component: () => import('../views/privileged/ReportManagerAnswer'),
+        meta: { requiresAuth: true, requiresPrivilege: true }
+    },
+    {
         path: '/privileged/report/comment',
         name: 'Report Manager Comment',
         component: () => import('../views/privileged/ReportManagerComment'),

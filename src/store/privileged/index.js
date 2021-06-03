@@ -14,6 +14,8 @@ const state = {
     tagDeleteMessage: null,
     isTagDeleteError: false,
 
+    reportedPosts: null,
+    reportedAnswers: null,
     reportedComments: null,
 
     isReportResolveError: false,
@@ -31,6 +33,8 @@ const state = {
         'tagSubmission': false,
         'tagDeletion': false,
         'requestedTags': true,
+        'reportedPosts': true,
+        'reportedAnswers': true,
         'reportedComments': true,
         'reportResolution': false,
         'reportDeletion': false,
@@ -69,6 +73,12 @@ const getters = {
     },
     getTagCourses: state => {
         return state.tagCourses;
+    },
+    getReportedPosts: state => {
+        return state.reportedPosts;
+    },
+    getReportedAnswers: state => {
+        return state.reportedAnswers;
     },
     getReportedComments: state => {
         return state.reportedComments;
@@ -130,6 +140,12 @@ const mutations = {
     },
     setTagCourses(state, payload) {
         state.tagCourses = payload;
+    },
+    setReportedPosts(state, payload) {
+        state.reportedPosts = payload;
+    },
+    setReportedAnswers(state, payload) {
+        state.reportedAnswers = payload;
     },
     setReportedComments(state, payload) {
         state.reportedComments = payload;
@@ -359,6 +375,36 @@ const actions = {
             })
             .finally(() => {
                 commit('unsetLoaderFlag', 'tagCourses');
+            });
+    },
+    loadReportedPosts({commit}) {
+        commit('setLoaderFlag', 'reportedPosts');
+        commit('setReportedPosts', null);
+
+        csflowAPI.get('/privileged/report/post')
+            .then(response => {
+                commit('setReportedPosts', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'reportedPosts');
+            });
+    },
+    loadReportedAnswers({commit}) {
+        commit('setLoaderFlag', 'reportedAnswers');
+        commit('setReportedAnswers', null);
+
+        csflowAPI.get('/privileged/report/answer')
+            .then(response => {
+                commit('setReportedAnswers', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'reportedAnswers');
             });
     },
     loadReportedComments({commit}) {
