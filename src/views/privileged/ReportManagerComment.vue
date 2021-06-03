@@ -17,7 +17,7 @@
           <v-col cols="12">
             <v-card :class="margin + ' py-6 pl-3 rounded-lg'" min-height="120">
               <v-row>
-                <v-col cols="12" md="6" class="py-0">
+                <v-col cols="12" md="8" class="py-0">
                   <v-chip color="blue lighten-5 primary--text text-darken-1">
                     {{ formatDate(report['createdAt']) }}
                   </v-chip>
@@ -35,7 +35,7 @@
                     >See Less</span>
                   </v-card-text>
                 </v-col>
-                <v-col cols="12" md="6" class="py-0">
+                <v-col cols="12" md="4" class="py-0">
                   <user-card
                       class="mx-auto mb-3"
                       :name="report['owner']['name']"
@@ -181,7 +181,7 @@ export default {
       deleteDialog: false,
       deleteItem: -1,
       submitted: false,
-      maxLength: 220,
+      maxLength: 230,
       showFull: {},
     };
   },
