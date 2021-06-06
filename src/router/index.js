@@ -7,6 +7,12 @@ Vue.use(VueRouter)
 
 const routes = [
     {
+        path: '/test',
+        name: 'Test',
+        component: () => import('../components/Post/answerSection.vue'),
+        meta: { requiresAuth: false }
+    },
+    {
         path: '/',
         name: 'Index',
         component: () => import('../views/Index')
@@ -22,6 +28,12 @@ const routes = [
         name: 'Relevant',
         component: () => import('../views/search/Relevant.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/search/advanced',
+        name: 'AdvancedSearch',
+        component: () => import('../views/search/AdvancedSearch.vue'),
+        meta: { requiresAuth: false }
     },
     {
         path: '/search',
@@ -87,12 +99,6 @@ const routes = [
         path: '/about',
         name: 'About',
         component: () => import('../views/About.vue'),
-        meta: {requiresAuth: true}
-    },
-    {
-        path:'/box',
-        name:'Box',
-        component: () => import('../components/Box/postBox'),
         meta: {requiresAuth: true}
     },
     {

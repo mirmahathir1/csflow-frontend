@@ -87,7 +87,7 @@ import PaddedContainer from "../components/PaddedContainerWithoutLeft"
 import PageHeader from "@/components/PageHeader"
 import UserCard from "@/components/Card/UserCardForContributor"
 import PostCard from "@/components/Card/PostCard.vue"
-import PostBox from "@/components/Box/postBox.vue"
+import PostBox from "@/components/Post/postBox.vue"
 import DetailsLoader from "@/components/DetailsLoader"
 import { mapGetters, mapActions } from 'vuex'
 export default {

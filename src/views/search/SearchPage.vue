@@ -16,7 +16,7 @@
 <script>
 import PaddedContainer from "@/components/PaddedContainerWithoutLeft"
 import PageHeader from "@/components/PageHeader"
-import PostBox from "@/components/Box/postBox.vue"
+import PostBox from "@/components/Post/postBox.vue"
 export default {
     name:"serach",
     title(){
