@@ -33,23 +33,18 @@
         <v-card-text class="black--text text-body-1">Owners:</v-card-text>
         <v-row class="px-3">
           <v-col
-              :cols="$isMobile() ? 8 : 6"
-              :md="$isMobile() ? 8 : 4"
+              :cols="$isMobile() ? 12 : 6"
+              :md="$isMobile() ? 12 : 4"
               v-for="owner in details['owners']"
               :key="owner['ID']"
           >
-            <v-hover v-slot:default="{ hover }">
-              <v-card
-                  color="blue lighten-4"
-                  :elevation="hover ? 3 : 1"
-                  :class="{ 'my-hover': hover }"
-                  @click="$router.push('/user/' + owner['ID'])"
-              >
-                <v-card-text class="black--text">
-                  {{ owner['ID'] }}
-                </v-card-text>
-              </v-card>
-            </v-hover>
+            <user-card
+                :name="owner['Name']"
+                :ID="owner['ID']"
+                :karma="parseInt(owner['Karma'])"
+                :image="owner['ProfilePic']"
+                @click.native="$router.push('/user/' + owner['ID'])"
+            ></user-card>
           </v-col>
         </v-row>
       </v-container>
@@ -129,13 +124,14 @@ import DetailsLoader from "@/components/DetailsLoader";
 import PaddedContainer from "@/components/PaddedContainer";
 import IconButton from "@/components/IconButton";
 import ErrorCard from "@/components/ErrorCard";
+import UserCard from "@/components/Card/UserCard";
 
 export default {
   name: "ProjectDetails",
   title() {
     return 'Project Details';
   },
-  components: {ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
+  components: {UserCard, ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
   data() {
     return {
       id: this.$route.params.id,

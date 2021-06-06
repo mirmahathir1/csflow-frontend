@@ -8,6 +8,7 @@ const state = {
     isSignedIn: false,
     isCR: false,
     id:null,
+    me: null,
 
     signInMessage: null,
     isSignInError: false,
@@ -60,12 +61,14 @@ const getters = {
         return state.drawerSidebar
     },
     getIsCR: state => {
-        // return state.isCR;
-        return false;
+        return state.isCR;
     },
     getID: state =>{
         return state.id
-    }
+    },
+    getMe: state => {
+        return state.me;
+    },
 };
 const mutations = {
     setToken(state,payload) {
@@ -154,7 +157,10 @@ const mutations = {
     },
     setID(state, payload){
         state.id = payload;
-    }
+    },
+    setMe(state, payload) {
+        state.me = payload;
+    },
 };
 const actions = {
     async logout({ getters, commit }) {
@@ -201,7 +207,8 @@ const actions = {
                 })
                 .then(me => {
                     commit('setIsCR', me['isCR']);
-                    commit('setID',me['id']);
+                    commit('setID', me['id']);
+                    commit('setMe', me);
                     commit('setIsSignedIn');
                     commit('setSideBarItems');
                     resolve(true);
@@ -236,7 +243,8 @@ const actions = {
                 })
                 .then(me => {
                     commit('setIsCR', me['isCR']);
-                    commit('setID',me['id']);
+                    commit('setID', me['id']);
+                    commit('setMe', me);
                     resolve(true);
                 })
                 .catch(e => {
