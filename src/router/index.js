@@ -33,7 +33,7 @@ const routes = [
         path: '/search/advanced',
         name: 'AdvancedSearch',
         component: () => import('../views/search/AdvancedSearch.vue'),
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: true }
     },
     {
         path: '/search',
