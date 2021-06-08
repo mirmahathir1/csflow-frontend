@@ -81,7 +81,7 @@
                           </v-btn> -->
                           <v-file-input
                             multiple
-                            
+
                             small-chips
                           ></v-file-input>
                         </v-app-tooltip-btn>
@@ -175,13 +175,13 @@
                       <v-col
                         class="d-flex"
                         cols="12"
-                        
+
                       >
                       </v-col>
                       <v-col
                         class="d-flex mt-n5"
                         cols="12"
-                        
+
                       >
                         <v-select
                           :items="books"
@@ -193,7 +193,7 @@
                       <v-col
                         class="d-flex mt-n9"
                         cols="12"
-                        
+
                       >
                         <v-select
                           :items="years"
@@ -226,7 +226,7 @@
                         v-model="tags[index].tag"
                         @blur="$v.tags.$each[index].tag.$touch()"
                         :error-messages="tagErrors[index]"
-                        
+
                     >
                       <template v-slot:append-outer>
                         <v-btn
@@ -234,7 +234,7 @@
                             color="red lighten-1"
                             @click="removeTag(index)"
                             small
-                            
+
                         >
                           <v-icon>
                             mdi-minus-circle
@@ -354,7 +354,7 @@
             </v-sheet>
           </template>
       </PaddedContainerWithoutLeft>
-      
+
   </div>
 </template>
 
@@ -415,9 +415,14 @@ export default {
       },
       submit(){
         this.clicked=true
+
+          let tags = [];
+        this.tags.forEach((tag)=>{
+            tags.push(tag.tag);
+        })
         this.submitPost({
           'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-          'topic':this.topic,'book':this.book,'termFinal':this.term,'customTag':this.tags
+          'topic':'Microcontroller','book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
         })
         .then(response=>{
           this.clicked=false
@@ -497,7 +502,7 @@ export default {
           }
         }
       },
-    
+
   },
   mounted(){
       this.loadCourses()
