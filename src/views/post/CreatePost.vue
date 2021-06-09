@@ -8,6 +8,7 @@
           color="white"
           elevation="2"
           class="rounded-lg px-5 pt-8 pb-4 mt-6"
+          v-if="!getLoaderFlag('courseLoader')"
         >
           <v-container>
             <v-form ref="form">
@@ -80,7 +81,7 @@
                           </v-btn> -->
                           <v-file-input
                             multiple
-                            
+
                             small-chips
                           ></v-file-input>
                         </v-app-tooltip-btn>
@@ -100,6 +101,7 @@
                         no-resize
                         rows="5"
                         value=""
+                        v-model="description"
                       ></v-textarea>
                     </v-sheet>
                   </v-col>
@@ -114,7 +116,7 @@
                     <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Post Type:</v-card-text>
                       <v-select
                         v-model="course"
-                        :items="courses"
+                        :items="getCourses"
                         label="Select course"
                         outlined
                         dense
@@ -147,52 +149,39 @@
                     <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Additional info</v-card-text>
                   </v-col>
                   <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
-                  <!-- <v-col md="3"></v-col> -->
-                  <!-- <v-col cols="1" md="3"></v-col> -->
-                  <!-- <v-spacer></v-spacer>
-                </v-row>
-                <v-row>
-                  <v-spacer></v-spacer> -->
                   <v-col md="3"></v-col>
                   <v-col cols="6" md="3" class="mt-n7">
-                      <!-- <v-radio-group
-                        v-model="additional"
-                        mandatory
-                        class=""
-                        column
-                      > -->
-                        <v-checkbox
-                            label="None"
-                            value="none"
-                            v-model="selected"
-                        >
-                        </v-checkbox>
-                        <v-checkbox
-                            label="Book"
-                            value="book"
-                            v-model="selected"
-                            :disabled="selected.includes('none')"
-                        ></v-checkbox>
-                        <v-checkbox
-                            label="Term Q/A"
-                            value="term"
-                            v-model="selected"
-                            :disabled="selected.includes('none')"
-                        ></v-checkbox>
-                    <!-- </v-radio-group> -->
+                      <v-checkbox
+                          label="None"
+                          value="none"
+                          v-model="selected"
+                      >
+                      </v-checkbox>
+                      <v-checkbox
+                          label="Book"
+                          value="book"
+                          v-model="selected"
+                          :disabled="selected.includes('none')"
+                      ></v-checkbox>
+                      <v-checkbox
+                          label="Term Q/A"
+                          value="term"
+                          v-model="selected"
+                          :disabled="selected.includes('none')"
+                      ></v-checkbox>
                   </v-col>
                   <v-col cols="6" class="d-flex">
                     <v-row align="center">
                       <v-col
                         class="d-flex"
                         cols="12"
-                        
+
                       >
                       </v-col>
                       <v-col
                         class="d-flex mt-n5"
                         cols="12"
-                        
+
                       >
                         <v-select
                           :items="books"
@@ -204,13 +193,14 @@
                       <v-col
                         class="d-flex mt-n9"
                         cols="12"
-                        
+
                       >
                         <v-select
                           :items="years"
                           label="Standard"
                           :disabled="!selected.includes('term')"
                           dense
+                          v-model="term"
                         ></v-select>
                       </v-col>
                     </v-row>
@@ -236,7 +226,7 @@
                         v-model="tags[index].tag"
                         @blur="$v.tags.$each[index].tag.$touch()"
                         :error-messages="tagErrors[index]"
-                        
+
                     >
                       <template v-slot:append-outer>
                         <v-btn
@@ -244,7 +234,7 @@
                             color="red lighten-1"
                             @click="removeTag(index)"
                             small
-                            
+
                         >
                           <v-icon>
                             mdi-minus-circle
@@ -299,58 +289,81 @@
             </v-form>
           </v-container>
         </v-card>
+        <RegularLoader v-else></RegularLoader>
 
         <!-- right part -->
-          <template v-slot:right>
+          <template v-slot:right v-if="!getLoaderFlag('courseLoader')">
             <v-sheet
                 rounded="lg"
                 class="pa-8 mx-auto"
             >
-            <v-row align="center">Request New Tag</v-row>
-            <hr>
-            <v-row>
-                <!-- <v-subheader v-text="'Tag Type'" class="mr-auto"></v-subheader> -->
-                Tag Type
-                <v-select
-                    :items="tagTypes"
-                    label="Select tag type"
-                    outlined
-                    dense
-                    class="mt-2"
-                ></v-select>
-            </v-row>
-            <v-row>
-                Tag Text
-                <v-textarea
-                    outlined
-                    :rows="$isMobile()?2:1"
-                    dense
-                >
+              <v-row align="center">Request New Tag</v-row>
+              <hr>
+              <v-row>
+                  <!-- <v-subheader v-text="'Tag Type'" class="mr-auto"></v-subheader> -->
+                  Tag Type
+                  <v-select
+                      :items="tagTypes"
+                      label="Select tag type"
+                      outlined
+                      dense
+                      class="mt-2"
+                      v-model="newTagType"
+                  ></v-select>
+              </v-row>
+              <v-row>
+                  Tag Text
+                  <v-textarea
+                      outlined
+                      :rows="$isMobile()?2:1"
+                      dense
+                      v-model="newTagText"
+                  >
 
-                </v-textarea>
-            </v-row>
-            <v-row>
-                Related Course
-                <v-select
-                    :items="courses"
-                    label="Select course"
-                    outlined
-                    dense
-                    class="mt-2"
-                ></v-select>
-            </v-row>
-            <v-btn block color="primary">Request</v-btn>
+                  </v-textarea>
+              </v-row>
+              <v-row>
+                  Related Course
+                  <v-select
+                      :items="getCourses"
+                      label="Select course"
+                      outlined
+                      dense
+                      class="mt-2"
+                      v-model="newTagCourse"
+                  ></v-select>
+              </v-row>
+              <v-row align="center">
+                <v-alert
+                  class="mx-auto text-center"
+                  type="error"
+                  outlined
+                  dense
+                  v-if="getError('requestNewTag')"
+                >
+                  {{ getMessage('requestNewTag') }}
+                </v-alert>
+              </v-row>
+              <v-btn
+                block
+                color="primary"
+                :loading="getLoaderFlag('requestNewTag')"
+                :disabled="getLoaderFlag('requestNewTag')||!readyToRequest"
+                @click="requestNewTag"
+              >Request</v-btn>
             </v-sheet>
           </template>
       </PaddedContainerWithoutLeft>
-      
+
   </div>
 </template>
 
 <script>
+import {mapGetters,mapActions} from 'vuex'
 import { required, minLength } from 'vuelidate/lib/validators'
 import PaddedContainerWithoutLeft from "../../components/PaddedContainerWithoutLeft"
 import PageHeader from "../../components/PageHeader"
+import RegularLoader from "../../components/Loader/RegularLoader"
 export default {
     name:"CreatePost",
     title(){
@@ -358,18 +371,21 @@ export default {
     },
     components:{
         PageHeader,
-        PaddedContainerWithoutLeft
+        PaddedContainerWithoutLeft,
+        RegularLoader
     },
     data(){
       return{
         type:null,
         title:null,
-        tagTypes:['Book','Course'],
-        courses:['CSE 313','CSE 314'],
+        description:null,
+        tagTypes:['Book','Topic'],
+        // courses:['CSE 313','CSE 314'],
         topics:['Markov model','HMM'],
         topic:null,
         course:null,
         additional:null,
+        term:null,
         tags:[],
         newTag:'',
         userIndex:0,
@@ -378,10 +394,14 @@ export default {
         clicked:false,
         selected:[],
         books:['Schaums','Sadiq'],
-        years:['2016-17','2017-18','2018-19']
+        years:['2016-17','2017-18','2018-19'],
+        newTagText:null,
+        newTagType:null,
+        newTagCourse:null,
       };
     },
     methods: {
+      ...mapActions('post',['requestTag','loadCourses','loadBooks','loadTopics','submitPost']),
       removeTag(index) {
         this.tags.splice(index, 1);
 
@@ -394,10 +414,45 @@ export default {
         this.newTag = '';
       },
       submit(){
-        console.log('here')
+        this.clicked=true
+
+          let tags = [];
+        this.tags.forEach((tag)=>{
+            tags.push(tag.tag);
+        })
+        this.submitPost({
+          'type':this.type,'title':this.title,'description':this.description,'course':this.course,
+          'topic':'Microcontroller','book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
+        })
+        .then(response=>{
+          this.clicked=false
+          this.errorMessage=''
+          this.anyError=false
+
+        })
+        .catch(e=>{
+          this.anyError=true
+          this.errorMessage=e.response.data.message
+        })
+        .finally(()=>{
+          this.clicked=false
+        })
+      },
+      requestNewTag(){
+        this.requestTag({'name':this.newTagText,'type':this.newTagType,'course':this.newTagCourse})
+          .then(response=>{
+
+          })
+          .catch(e=>{
+
+          })
+          .finally(()=>{
+
+          })
       }
     },
     computed:{
+      ...mapGetters('post',['getLoaderFlag','getError','getMessage','getCourses','getBooks']),
       tagErrors(){
         const errors = [];
 
@@ -415,7 +470,14 @@ export default {
         }
 
         return errors;
-      }
+      },
+      readyToRequest(){
+        if(this.newTagText!=null&&this.newTagType!=null&&this.newTagCourse!=null){
+          return true
+        }
+        return false
+
+      },
     },
     validations:{
       title:{
@@ -439,10 +501,12 @@ export default {
             // }
           }
         }
-    },
-    
-    
-  }
+      },
+
+  },
+  mounted(){
+      this.loadCourses()
+    }
 }
 </script>
 

@@ -13,7 +13,7 @@
             tile
             :size="avatarSize"
             color="grey"
-            v-if="image!=''"
+            v-if="image!=''||image!=null"
         ><img :src="image" alt=""></v-list-item-avatar>
         <v-list-item-avatar v-else>
           <v-icon
