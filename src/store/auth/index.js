@@ -69,6 +69,9 @@ const getters = {
     getMe: state => {
         return state.me;
     },
+    getIsAdmin: state => {
+        return true;
+    },
 };
 const mutations = {
     setToken(state,payload) {

@@ -184,6 +184,19 @@
                     <v-list-item-title>Privileged Dash</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
+                <v-list-item
+                    v-if="getIsAdmin"
+                    @click="setAdminDash"
+                    style="text-decoration:none"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-account-cowboy-hat</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Admin Dash</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
               </template>
 
 <!--              Privileged Dash-->
@@ -255,6 +268,76 @@
                   </v-list-group>
                 </template>
               </template>
+
+<!--              Admin Dash-->
+              <template v-if="getAdminDash">
+                <v-list-item class="text-center">
+                  <v-card-text class="text-body-1 grey--text text--darken-2">
+                    Admin Dash
+                  </v-card-text>
+                </v-list-item>
+
+                <v-list-item
+                    @click="unsetAdminDash"
+                    style="text-decoration:none"
+                    class="grey lighten-4 my-3"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-arrow-left</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Back</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <template v-for="(item,index) in adminItems">
+                  <v-list-item
+                      v-if="!item.hasChildren"
+                      :to="item.link"
+                      :key="index"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-group
+                      v-if="item.hasChildren"
+                      :value="false"
+                      :prepend-icon="item.icon"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3 pb-1"
+                  >
+                    <template v-slot:activator>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </template>
+
+                    <v-list-item
+                        v-for="child in item.children"
+                        :key="child.title"
+                        :to="child.link"
+                        style="text-decoration:none"
+                        class="my-3 ml-5 grey lighten-3"
+                    >
+                      <v-list-item-icon>
+                        <v-icon>{{ child.icon }}</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-content>
+                        <v-list-item-title>{{ child.title }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                  </v-list-group>
+                </template>
+              </template>
             </v-list>
         </v-navigation-drawer>
 
@@ -293,6 +376,19 @@
 
                     <v-list-item-content>
                       <v-list-item-title>Privileged Dash</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item
+                      v-if="getIsAdmin"
+                      @click="setAdminDash"
+                      style="text-decoration:none"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>mdi-account-cowboy-hat</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                      <v-list-item-title>Admin Dash</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
               </template>
@@ -366,6 +462,76 @@
                   </v-list-group>
                 </template>
               </template>
+
+<!--              Admin Dash-->
+              <template v-if="getAdminDash">
+                <v-list-item class="text-center">
+                  <v-card-text class="text-body-1 grey--text text--darken-2">
+                    Admin Dash
+                  </v-card-text>
+                </v-list-item>
+
+                <v-list-item
+                    @click="unsetAdminDash"
+                    style="text-decoration:none"
+                    class="grey lighten-4 my-3"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-arrow-left</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Back</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <template v-for="(item,index) in adminItems">
+                  <v-list-item
+                      v-if="!item.hasChildren"
+                      :to="item.link"
+                      :key="index"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-group
+                      v-if="item.hasChildren"
+                      :value="false"
+                      :prepend-icon="item.icon"
+                      style="text-decoration:none"
+                      class="grey lighten-4 my-3 pb-1"
+                  >
+                    <template v-slot:activator>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </template>
+
+                    <v-list-item
+                        v-for="child in item.children"
+                        :key="child.title"
+                        :to="child.link"
+                        style="text-decoration:none"
+                        class="my-3 ml-5 grey lighten-3"
+                    >
+                      <v-list-item-icon>
+                        <v-icon>{{ child.icon }}</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-content>
+                        <v-list-item-title>{{ child.title }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                  </v-list-group>
+                </template>
+              </template>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -378,8 +544,8 @@ import Button from '../components/Button'
 export default {
     name: "Header",
     computed: {
-        ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn", "getIsCR"]),
-        ...mapGetters('others',['getDrawer', 'getPrivilegedDash', 'getMainDash']),
+        ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn", "getIsCR", "getIsAdmin"]),
+        ...mapGetters('others',['getDrawer', 'getPrivilegedDash', 'getMainDash', 'getAdminDash']),
         drawer:{
             get: function () {
                 return this.getDrawer
@@ -391,7 +557,8 @@ export default {
     },
     methods: {
         ...mapActions("auth", ["logoutAll", "logout", "setDrawerSideBar"]),
-        ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer', 'setPrivilegedDash', 'unsetPrivilegedDash']),
+        ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer', 'setPrivilegedDash',
+                                'unsetPrivilegedDash', 'setAdminDash', 'unsetAdminDash']),
         async signOut() {
             await this.logout();
             await this.unsetDrawer();
@@ -507,6 +674,45 @@ export default {
                     link: '/privileged/archive/resource',
                   },
                 ]
+              },
+            ],
+            adminItems: [
+              {
+                title: 'User Manager',
+                icon: 'mdi-account',
+                link: '/admin/user'
+              },
+              {
+                title: 'Guest Manager',
+                icon: 'mdi-account-outline',
+                link: '/privileged/guest'
+              },
+              {
+                title: 'SQL Interface',
+                icon: 'mdi-database-search',
+                link: '/privileged/sqlInterface'
+              },
+              {
+                title: 'Archive Manager',
+                icon: 'mdi-share-variant',
+                hasChildren: true,
+                children: [
+                  {
+                    title: 'Theses',
+                    icon: 'mdi-school',
+                    link: '/admin/archive/thesis',
+                  },
+                  {
+                    title: 'Projects',
+                    icon: 'mdi-file-code',
+                    link: '/admin/archive/project',
+                  },
+                ],
+              },
+              {
+                title: 'Course Manager',
+                icon: 'mdi-teach',
+                link: '/admin/course',
               },
             ],
         }
