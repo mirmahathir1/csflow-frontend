@@ -16,6 +16,10 @@ export default {
             if (text || text !== undefined)
                 return text.replaceAll("'", "''");
             return '';
+        },
+        $navigateToPost(postID) {
+            let routeData = this.$router.resolve({name: 'PostDetails'});
+            window.open(routeData.href, '_blank');
         }
     },
     filters: {
