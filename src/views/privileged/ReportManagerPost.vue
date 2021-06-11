@@ -14,79 +14,87 @@
             :key="post['postId']"
         >
           <v-col cols="12">
-            <v-card :class="margin + ' py-6 pl-3 rounded-lg'" min-height="120">
-              <v-row>
-                <v-col cols="12" md="8" class="py-0">
-                  <v-row>
-                    <v-col cols="2" class="py-0 pr-0">
-                      <vote-card-inactive
-                          :small="$isMobile()"
-                          :votes="post['vote']"
-                          class="mt-6"
-                      ></vote-card-inactive>
-                    </v-col>
-                    <v-col cols="10" class="py-0 pl-0">
-                      <v-card-text class="black--text">
-                        {{ truncate(post['title'], post['postId']) }}
-                        <span
-                            v-if="post['title'].length > maxLength && !showFull[post['postId']]"
-                            class="primary--text my-hover font-weight-bold text-caption"
-                            @click="setFull(post['postId'])"
-                        >See More</span>
-                        <span
-                            v-if="post['title'].length > maxLength && showFull[post['postId']]"
-                            class="primary--text my-hover font-weight-bold text-caption"
-                            @click="showFull = {}"
-                        >See Less</span>
-                      </v-card-text>
-                    </v-col>
-                  </v-row>
-                  <v-row class="pt-6 pb-1">
-                    <v-chip
-                        color="blue lighten-5 primary--text text-darken-1"
-                        :class="'ml-2 my-1'"
-                    >{{ formatDate(post['createdAt']) }}</v-chip>
-                    <v-chip
-                        v-if="post['type'].toLowerCase() === 'question'"
-                        color="blue lighten-5 primary--text text-darken-1"
-                        :class="'ml-2 my-1'"
-                    >{{ post['answerCount'] }} Answer{{ post['answerCount'] === 1 ? '' : 's' }}</v-chip>
-                    <v-chip
-                        color="blue lighten-5 primary--text text-darken-1"
-                        :class="'ml-2 my-1'"
-                    >{{ $capitalizeFirstLetter(post['type'].toLowerCase()) }} Thread</v-chip>
-                  </v-row>
-                  <v-row :class="chipMargin">
-                    <v-chip
-                        v-if="post['book'] !== ''"
-                        class="ml-2 my-1"
-                        color="blue lighten-5 primary--text text-darken-1"
-                    >{{ post['book'] }}</v-chip>
-                    <v-chip
-                        v-if="post['topic'] !== ''"
-                        class="ml-2 my-1"
-                        color="blue lighten-5 primary--text text-darken-1"
-                    >{{ post['topic'] }}</v-chip>
-                    <v-chip
-                        v-for="(tag, idx) in post['customTag']" :key="idx"
-                        class="ml-2 my-1"
-                        color="blue lighten-5 primary--text text-darken-1"
-                    >{{ tag }}</v-chip>
-                  </v-row>
-                </v-col>
-                <v-col cols="12" md="4" class="py-0">
-                  <user-card
-                      class="mx-auto mb-3"
-                      :name="post['owner']['name']"
-                      :ID="post['owner']['studentId']"
-                      :karma="parseInt(post['owner']['karma'])"
-                      :image="post['owner']['profilePic']"
-                      :width="250"
-                      @click.native="$router.push('/user/' + post['owner']['studentId'])"
-                  ></user-card>
-                </v-col>
-              </v-row>
-            </v-card>
+            <v-hover v-slot:default="{ hover }">
+              <v-card
+                  :class="{'my-hover': hover, 'py-6 pl-3 rounded-lg': true,
+                  'mx-5': $vuetify.breakpoint.mdAndUp, 'mx-1': !$vuetify.breakpoint.mdAndUp}"
+                  min-height="120"
+                  :elevation="hover ? 3 : 2"
+                  @click="$navigateToPost(post['postId'])"
+              >
+                <v-row>
+                  <v-col cols="12" md="8" class="py-0">
+                    <v-row>
+                      <v-col cols="2" class="py-0 pr-0">
+                        <vote-card-inactive
+                            :small="$isMobile()"
+                            :votes="post['vote']"
+                            class="mt-6"
+                        ></vote-card-inactive>
+                      </v-col>
+                      <v-col cols="10" class="py-0 pl-0">
+                        <v-card-text class="black--text">
+                          {{ truncate(post['title'], post['postId']) }}
+                          <span
+                              v-if="post['title'].length > maxLength && !showFull[post['postId']]"
+                              class="primary--text my-hover font-weight-bold text-caption"
+                              @click.stop="setFull(post['postId'])"
+                          >See More</span>
+                          <span
+                              v-if="post['title'].length > maxLength && showFull[post['postId']]"
+                              class="primary--text my-hover font-weight-bold text-caption"
+                              @click.stop="showFull = {}"
+                          >See Less</span>
+                        </v-card-text>
+                      </v-col>
+                    </v-row>
+                    <v-row class="pt-6 pb-1">
+                      <v-chip
+                          color="blue lighten-5 primary--text text-darken-1"
+                          :class="'ml-2 my-1'"
+                      >{{ formatDate(post['createdAt']) }}</v-chip>
+                      <v-chip
+                          v-if="post['type'].toLowerCase() === 'question'"
+                          color="blue lighten-5 primary--text text-darken-1"
+                          :class="'ml-2 my-1'"
+                      >{{ post['answerCount'] }} Answer{{ post['answerCount'] === 1 ? '' : 's' }}</v-chip>
+                      <v-chip
+                          color="blue lighten-5 primary--text text-darken-1"
+                          :class="'ml-2 my-1'"
+                      >{{ $capitalizeFirstLetter(post['type'].toLowerCase()) }} Thread</v-chip>
+                    </v-row>
+                    <v-row :class="chipMargin">
+                      <v-chip
+                          v-if="post['book'] !== ''"
+                          class="ml-2 my-1"
+                          color="blue lighten-5 primary--text text-darken-1"
+                      >{{ post['book'] }}</v-chip>
+                      <v-chip
+                          v-if="post['topic'] !== ''"
+                          class="ml-2 my-1"
+                          color="blue lighten-5 primary--text text-darken-1"
+                      >{{ post['topic'] }}</v-chip>
+                      <v-chip
+                          v-for="(tag, idx) in post['customTag']" :key="idx"
+                          class="ml-2 my-1"
+                          color="blue lighten-5 primary--text text-darken-1"
+                      >{{ tag }}</v-chip>
+                    </v-row>
+                  </v-col>
+                  <v-col cols="12" md="4" class="py-0">
+                    <user-card
+                        class="mx-auto mb-3"
+                        :name="post['owner']['name']"
+                        :ID="post['owner']['studentId']"
+                        :karma="parseInt(post['owner']['karma'])"
+                        :image="post['owner']['profilePic']"
+                        :width="250"
+                        @click.native="$router.push('/user/' + post['owner']['studentId'])"
+                    ></user-card>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-hover>
           </v-col>
           <v-col cols="12" class="text-center">
             <v-row class="justify-center">

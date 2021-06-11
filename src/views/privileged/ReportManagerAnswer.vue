@@ -14,57 +14,65 @@
             :key="answer['answerId']"
         >
           <v-col cols="12">
-            <v-card :class="margin + ' py-6 pl-3 rounded-lg'" min-height="120">
-              <v-row>
-                <v-col cols="12" md="8" class="py-0">
-                  <v-row>
-                    <v-col cols="2" class="py-0 pr-0">
-                      <vote-card-inactive
-                          :small="$isMobile()"
-                          :votes="answer['vote']"
-                          class="mt-6"
-                      ></vote-card-inactive>
-                    </v-col>
-                    <v-col cols="10" class="py-0 pl-0">
-                      <v-card-text class="black--text">
-                        {{ truncate(answer['description'], answer['answerId']) }}
-                        <span
-                            v-if="answer['description'].length > maxLength && !showFull[answer['answerId']]"
-                            class="primary--text my-hover font-weight-bold text-caption"
-                            @click="setFull(answer['answerId'])"
-                        >See More</span>
-                        <span
-                            v-if="answer['description'].length > maxLength && showFull[answer['answerId']]"
-                            class="primary--text my-hover font-weight-bold text-caption"
-                            @click="showFull = {}"
-                        >See Less</span>
-                      </v-card-text>
-                    </v-col>
-                  </v-row>
-                  <v-row class="pt-6 pb-1">
-                    <v-chip
-                        color="blue lighten-5 primary--text text-darken-1"
-                        :class="'ml-2 my-1'"
-                    >{{ formatDate(answer['createdAt']) }}</v-chip>
-                    <v-chip
-                        color="blue lighten-5 primary--text text-darken-1"
-                        :class="'ml-2 ' + chipMargin"
-                    >{{ answer['commentCount'] }} Comment{{ answer['commentCount'] === 1 ? '' : 's' }}</v-chip>
-                  </v-row>
-                </v-col>
-                <v-col cols="12" md="4" class="py-0">
-                  <user-card
-                      class="mx-auto mb-3"
-                      :name="answer['owner']['name']"
-                      :ID="answer['owner']['studentId']"
-                      :karma="parseInt(answer['owner']['karma'])"
-                      :image="answer['owner']['profilePic']"
-                      :width="250"
-                      @click.native="$router.push('/user/' + answer['owner']['studentId'])"
-                  ></user-card>
-                </v-col>
-              </v-row>
-            </v-card>
+            <v-hover v-slot:default="{ hover }">
+              <v-card
+                  :class="{'my-hover': hover, 'py-6 pl-3 rounded-lg': true,
+                  'mx-5': $vuetify.breakpoint.mdAndUp, 'mx-1': !$vuetify.breakpoint.mdAndUp}"
+                  :elevation="hover ? 3 : 2"
+                  min-height="120"
+                  @click="$navigateToPost(answer['postId'])"
+              >
+                <v-row>
+                  <v-col cols="12" md="8" class="py-0">
+                    <v-row>
+                      <v-col cols="2" class="py-0 pr-0">
+                        <vote-card-inactive
+                            :small="$isMobile()"
+                            :votes="answer['vote']"
+                            class="mt-6"
+                        ></vote-card-inactive>
+                      </v-col>
+                      <v-col cols="10" class="py-0 pl-0">
+                        <v-card-text class="black--text">
+                          {{ truncate(answer['description'], answer['answerId']) }}
+                          <span
+                              v-if="answer['description'].length > maxLength && !showFull[answer['answerId']]"
+                              class="primary--text my-hover font-weight-bold text-caption"
+                              @click.stop="setFull(answer['answerId'])"
+                          >See More</span>
+                          <span
+                              v-if="answer['description'].length > maxLength && showFull[answer['answerId']]"
+                              class="primary--text my-hover font-weight-bold text-caption"
+                              @click.stop="showFull = {}"
+                          >See Less</span>
+                        </v-card-text>
+                      </v-col>
+                    </v-row>
+                    <v-row class="pt-6 pb-1">
+                      <v-chip
+                          color="blue lighten-5 primary--text text-darken-1"
+                          :class="'ml-2 my-1'"
+                      >{{ formatDate(answer['createdAt']) }}</v-chip>
+                      <v-chip
+                          color="blue lighten-5 primary--text text-darken-1"
+                          :class="'ml-2 ' + chipMargin"
+                      >{{ answer['commentCount'] }} Comment{{ answer['commentCount'] === 1 ? '' : 's' }}</v-chip>
+                    </v-row>
+                  </v-col>
+                  <v-col cols="12" md="4" class="py-0">
+                    <user-card
+                        class="mx-auto mb-3"
+                        :name="answer['owner']['name']"
+                        :ID="answer['owner']['studentId']"
+                        :karma="parseInt(answer['owner']['karma'])"
+                        :image="answer['owner']['profilePic']"
+                        :width="250"
+                        @click.native="$router.push('/user/' + answer['owner']['studentId'])"
+                    ></user-card>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-hover>
           </v-col>
           <v-col cols="12" class="text-center">
             <v-row class="justify-center">

@@ -15,39 +15,47 @@
             :key="report['commentId']"
         >
           <v-col cols="12">
-            <v-card :class="margin + ' py-6 pl-3 rounded-lg'" min-height="120">
-              <v-row>
-                <v-col cols="12" md="8" class="py-0">
-                  <v-chip color="blue lighten-5 primary--text text-darken-1">
-                    {{ formatDate(report['createdAt']) }}
-                  </v-chip>
-                  <v-card-text>
-                    {{ truncate(report['description'], report['commentId']) }}
-                    <span
-                        v-if="report['description'].length > maxLength && !showFull[report['commentId']]"
-                        class="primary--text my-hover font-weight-bold text-caption"
-                        @click="setFull(report['commentId'])"
-                    >See More</span>
-                    <span
-                        v-if="report['description'].length > maxLength && showFull[report['commentId']]"
-                        class="primary--text my-hover font-weight-bold text-caption"
-                        @click="showFull = {}"
-                    >See Less</span>
-                  </v-card-text>
-                </v-col>
-                <v-col cols="12" md="4" class="py-0">
-                  <user-card
-                      class="mx-auto mb-3"
-                      :name="report['owner']['name']"
-                      :ID="report['owner']['studentId']"
-                      :karma="parseInt(report['owner']['karma'])"
-                      :image="report['owner']['profilePic']"
-                      :width="250"
-                      @click.native="$router.push('/user/' + report['owner']['studentId'])"
-                  ></user-card>
-                </v-col>
-              </v-row>
-            </v-card>
+            <v-hover v-slot:default="{ hover }">
+              <v-card
+                  :class="{'my-hover': hover, 'py-6 pl-3 rounded-lg': true,
+                  'mx-5': $vuetify.breakpoint.mdAndUp, 'mx-1': !$vuetify.breakpoint.mdAndUp}"
+                  :elevation="hover ? 3 : 2"
+                  min-height="120"
+                  @click="$navigateToPost(report['postId'])"
+              >
+                <v-row>
+                  <v-col cols="12" md="8" class="py-0">
+                    <v-chip color="blue lighten-5 primary--text text-darken-1">
+                      {{ formatDate(report['createdAt']) }}
+                    </v-chip>
+                    <v-card-text>
+                      {{ truncate(report['description'], report['commentId']) }}
+                      <span
+                          v-if="report['description'].length > maxLength && !showFull[report['commentId']]"
+                          class="primary--text my-hover font-weight-bold text-caption"
+                          @click.stop="setFull(report['commentId'])"
+                      >See More</span>
+                      <span
+                          v-if="report['description'].length > maxLength && showFull[report['commentId']]"
+                          class="primary--text my-hover font-weight-bold text-caption"
+                          @click.stop="showFull = {}"
+                      >See Less</span>
+                    </v-card-text>
+                  </v-col>
+                  <v-col cols="12" md="4" class="py-0">
+                    <user-card
+                        class="mx-auto mb-3"
+                        :name="report['owner']['name']"
+                        :ID="report['owner']['studentId']"
+                        :karma="parseInt(report['owner']['karma'])"
+                        :image="report['owner']['profilePic']"
+                        :width="250"
+                        @click.native="$router.push('/user/' + report['owner']['studentId'])"
+                    ></user-card>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-hover>
           </v-col>
           <v-col cols="12" class="text-center">
             <v-row class="justify-center">

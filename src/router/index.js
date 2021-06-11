@@ -255,6 +255,19 @@ const routes = [
         component: () => import('../views/privileged/ResourceManager'),
         meta: { requiresAuth: true, requiresPrivilege: true }
     },
+    ////////////////// admin module /////////////////////
+    {
+        path: '/admin/user',
+        name: 'UserManager',
+        component: () => import('../views/admin/UserManager'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+        path: '/admin/user/batch/:batch',
+        name: 'UserManagerBatch',
+        component: () => import('../views/admin/UserManagerBatch'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
 ]
 
 const router = new VueRouter({
@@ -271,8 +284,10 @@ router.beforeEach(async (to, from, next) => {
             attemptedAutoLogin = true;
             await store.dispatch('auth/autoLogin');
 
-            // turn on privileged sidebar if needed
-            if (to.matched.some(record => record.meta.requiresPrivilege)) {
+            // turn on admin / privileged sidebar if needed
+            if (to.matched.some(record => record.meta.requiresAdmin)) {
+                await store.dispatch('others/setAdminDash');
+            } else if (to.matched.some(record => record.meta.requiresPrivilege)) {
                 await store.dispatch('others/setPrivilegedDash');
             }
         }
@@ -286,6 +301,12 @@ router.beforeEach(async (to, from, next) => {
                 // check if privilege is needed
                 if (to.matched.some(record => record.meta.requiresPrivilege)) {
                     if (!store.getters['auth/getIsCR']) {
+                        next('/home');
+                    } else {
+                        next();
+                    }
+                } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+                    if (!store.getters['auth/getIsAdmin']) {
                         next('/home');
                     } else {
                         next();

@@ -1,6 +1,7 @@
 const state = {
     drawer: false,
     privilegedDash: false,
+    adminDash: false,
 };
 
 const getters = {
@@ -8,10 +9,13 @@ const getters = {
         return state.drawer;
     },
     getMainDash(state, getters) {
-      return !getters.getPrivilegedDash;
+      return !getters.getPrivilegedDash && !getters.getAdminDash;
     },
     getPrivilegedDash(state, getters, rootState, rootGetters) {
         return rootGetters['auth/getIsCR'] && state.privilegedDash;
+    },
+    getAdminDash(state, getters, rootState, rootGetters) {
+        return rootGetters['auth/getIsAdmin'] && state.adminDash;
     },
 };
 const mutations = {
@@ -26,9 +30,17 @@ const mutations = {
     },
     setPrivilegedDash(state) {
         state.privilegedDash = true;
+        state.adminDash = false;
     },
     unsetPrivilegedDash(state) {
         state.privilegedDash = false;
+    },
+    setAdminDash(state) {
+        state.adminDash = true;
+        state.privilegedDash = false;
+    },
+    unsetAdminDash(state) {
+        state.adminDash = false;
     },
 };
 
@@ -54,6 +66,12 @@ const actions = {
     },
     unsetPrivilegedDash({commit}) {
         commit('unsetPrivilegedDash');
+    },
+    setAdminDash({commit}) {
+        commit('setAdminDash');
+    },
+    unsetAdminDash({commit}) {
+        commit('unsetAdminDash');
     },
 };
 
