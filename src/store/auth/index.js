@@ -70,7 +70,7 @@ const getters = {
         return state.me;
     },
     getIsAdmin: state => {
-        return true;
+        return state.me['isAdmin'];
     },
 };
 const mutations = {

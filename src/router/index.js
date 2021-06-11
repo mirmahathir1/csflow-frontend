@@ -254,13 +254,13 @@ const routes = [
         path: '/admin/user',
         name: 'UserManager',
         component: () => import('../views/admin/UserManager'),
-        meta: { requiresAuth: true, requiresPrivilege: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
         path: '/admin/user/batch/:batch',
         name: 'UserManagerBatch',
         component: () => import('../views/admin/UserManagerBatch'),
-        meta: { requiresAuth: true, requiresPrivilege: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true }
     },
 ]
 
@@ -295,6 +295,12 @@ router.beforeEach(async (to, from, next) => {
                 // check if privilege is needed
                 if (to.matched.some(record => record.meta.requiresPrivilege)) {
                     if (!store.getters['auth/getIsCR']) {
+                        next('/home');
+                    } else {
+                        next();
+                    }
+                } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+                    if (!store.getters['auth/getIsAdmin']) {
                         next('/home');
                     } else {
                         next();

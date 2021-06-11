@@ -3,8 +3,8 @@
     <page-header :back-button="true" back-route="/admin/user/">User Manager</page-header>
     <page-subheader>Batch {{ batch }}</page-subheader>
 
-    <CRForm class="mt-6 mx-4" :batch="Number(batch)" @appointed="onAppointed" :key="batch"></CRForm>
-    <level-term-form class="mt-4 mx-4" :batch="Number(batch)" :key="batch"></level-term-form>
+    <CRForm class="mt-6 mx-4" :batch="Number(batch)" @appointed="onAppointed" :key="'crFrom'+batch"></CRForm>
+    <level-term-form class="mt-4 mx-4" :batch="Number(batch)" :key="'ltForm'+batch"></level-term-form>
 
 <!--    CR List-->
     <CRCard ref="crs" class="mt-4 mx-4" :batch="Number(batch)" :key="batch + flag"></CRCard>
