@@ -1,7 +1,7 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <v-card outlined :elevation="hover ? '2' : '1'" :class="{'my-hover': hover}">
-      <v-icon :class="{'grey--text text--darken-2': hover, 'black--text': !hover}" :size="size">
+    <v-card outlined :elevation="hover ? '2' : '1'" :class="{'my-hover': hover}" :width="size">
+      <v-icon :class="{'grey--text text--darken-2': hover, 'black--text': !hover}" :size="size-2">
         <slot></slot>
       </v-icon>
     </v-card>

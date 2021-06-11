@@ -38,12 +38,12 @@
                           <span
                               v-if="answer['description'].length > maxLength && !showFull[answer['answerId']]"
                               class="primary--text my-hover font-weight-bold text-caption"
-                              @click="setFull(answer['answerId'])"
+                              @click.stop="setFull(answer['answerId'])"
                           >See More</span>
                           <span
                               v-if="answer['description'].length > maxLength && showFull[answer['answerId']]"
                               class="primary--text my-hover font-weight-bold text-caption"
-                              @click="showFull = {}"
+                              @click.stop="showFull = {}"
                           >See Less</span>
                         </v-card-text>
                       </v-col>

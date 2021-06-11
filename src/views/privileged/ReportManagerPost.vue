@@ -38,12 +38,12 @@
                           <span
                               v-if="post['title'].length > maxLength && !showFull[post['postId']]"
                               class="primary--text my-hover font-weight-bold text-caption"
-                              @click="setFull(post['postId'])"
+                              @click.stop="setFull(post['postId'])"
                           >See More</span>
                           <span
                               v-if="post['title'].length > maxLength && showFull[post['postId']]"
                               class="primary--text my-hover font-weight-bold text-caption"
-                              @click="showFull = {}"
+                              @click.stop="showFull = {}"
                           >See Less</span>
                         </v-card-text>
                       </v-col>

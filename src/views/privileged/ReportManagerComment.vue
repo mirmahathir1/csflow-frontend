@@ -33,12 +33,12 @@
                       <span
                           v-if="report['description'].length > maxLength && !showFull[report['commentId']]"
                           class="primary--text my-hover font-weight-bold text-caption"
-                          @click="setFull(report['commentId'])"
+                          @click.stop="setFull(report['commentId'])"
                       >See More</span>
                       <span
                           v-if="report['description'].length > maxLength && showFull[report['commentId']]"
                           class="primary--text my-hover font-weight-bold text-caption"
-                          @click="showFull = {}"
+                          @click.stop="showFull = {}"
                       >See Less</span>
                     </v-card-text>
                   </v-col>
