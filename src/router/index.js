@@ -42,9 +42,15 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-        path:  '/postdetails',
+        path:  '/postdetails/:postID',
         name: 'PostDetails',
         component:()=>import('../views/post/PostDetails.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path:  '/post/edit/:postID',
+        name: 'EditPost',
+        component:()=>import('../views/post/EditPost.vue'),
         meta: { requiresAuth: true }
     },
     {

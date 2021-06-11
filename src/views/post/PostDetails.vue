@@ -1,29 +1,51 @@
 <template>
   <PaddedContainerWithoutLeft>
       <PageHeader>{{type}} Details</PageHeader>
-      <v-card rounded="lg" class="mt-6">
+      <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')">
         <div class="pt-4 pb-4">
-            <PostBox></PostBox>
+            <PostBox
+                :post="postBoxData"
+            ></PostBox>
         </div>
         <div class="pb-4">
             <div class="mt-2 mx-3">
-                <Details></Details>
+                <Details
+                    :text="this.getPost.description"
+                    :files="this.getPost.files"
+                    :isOwner="this.getPost.owner.ID==this.getID"
+                    :contentType="'post'"
+                    :contentId="parseInt(this.$route.params.postID)"
+                    :isReorted="this.getPost.isReported"
+                    :isFollowing="this.getPost.isFollowing"
+                ></Details>
             </div>
-            <CommentSection></CommentSection>
+            <CommentSection
+                :comments="commentData"
+                :contentId="parseInt(this.$route.params.postID)"
+            ></CommentSection>
         </div>
       </v-card>
+      <DetailsLoader v-else></DetailsLoader>
       <PageHeader class="pt-5">Answers</PageHeader>
-      <v-card rounded="lg" class="mt-6">
-          <AnswerSection></AnswerSection>
-      </v-card>
-      <div class="mt-4">
+      <div v-if="!getLoaderFlag('postAnswerLoader')">
+        <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
+            <AnswerSection
+                :answers="answer"
+            ></AnswerSection>
+        </v-card>
+      </div>
+      <DetailsLoader v-else></DetailsLoader>
+      <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
         <v-card rounded="lg" class="pa-8 ml-2 mb-4">
             <v-row class="pb-8">Write your reply:</v-row>
-            <v-textarea outlined></v-textarea>
+            <v-textarea outlined v-model="newAnswer"></v-textarea>
             <v-row>
                 <v-btn
                     color="primary"
                     class="ml-auto"
+                    :disabled="newAnswer==null||answerClicked"
+                    :loading="answerClicked"
+                    @click="doAnswer()"
                 >
                     Submit
                 </v-btn>
@@ -34,28 +56,149 @@
 </template>
 
 <script>
+import {mapGetters,mapActions} from 'vuex'
 import PaddedContainerWithoutLeft from "../../components/PaddedContainerWithoutLeft"
 import PageHeader from "../../components/PageHeader"
 import PostBox from "../../components/Post/postBox"
 import Details from "../../components/Post/details"
 import AnswerSection from "../../components/Post/answerSection"
+import DetailsLoader from "../../components/DetailsLoader"
+import CommentSection from "../../components/Post/commentSection"
 export default {
     title(){
-        return type+" Details"
+        return this.type+" Details"
     },
     name:'PostDetails',
+    data(){
+        return{
+            newAnswer:null,
+            answerClicked:false
+        };
+    },
     components:{
         PageHeader,
         PaddedContainerWithoutLeft,
         PostBox,
         AnswerSection,
-        Details
+        Details,
+        DetailsLoader,
+        CommentSection
     },
     props:{
-        type:{
-            type:String,
-            default:'Question'
+        // type:{
+        //     type:String,
+        //     default:'Question'
+        // }
+    },
+    computed:{
+        ...mapGetters('post',['getLoaderFlag','getMessage','getError','getPost','getPostAnswer']),
+        ...mapGetters('auth',['getID']),
+        type(){
+            return 'Question'
+            // if(this.getLoaderFlag('postLoader')){
+            //     return 'Question'
+            // }
+            // else return this.getPost.type
+        },
+        postBoxData(){
+            let postData={
+                'title':this.getPost.title,
+                'date':this.convertToDate(this.getPost.createdAt),
+                'type':this.getPost.type,
+                'accenptedAnswer':this.getPost.accenptedAnswer==null?0:this.getPost.accenptedAnswer,
+                'vote':this.getPost.vote==null?0:this.getPost.vote,
+                'tags':this.getTags(),
+                'owner':{
+                    'name':this.getPost.owner.Name,
+                    'studentId':this.getPost.owner.ID,
+                    'profilePic':this.getPost.owner.ProfilePic,
+                    'karma':this.getPost.owner.Karma
+                }
+            }
+            return postData
+        },
+        commentData(){
+            let comments=[]
+            this.getPost.comments.forEach(comment => {
+                comments.push({
+                    'name':comment.owner.Name,
+                    'id':comment.owner.ID,
+                    'text':comment.description,
+                    'date':this.convertToDate(comment.createdAt),
+                    'contentId':comment.commentId,
+                    'isReported':comment.isReported
+                })
+            });
+            return comments
+        },
+        answerData(){
+            // console.log(this.getPostAnswer.length)
+            let answers=[]
+            let comments=[]
+            this.getPostAnswer.forEach(answer=>{
+                comments=[]
+                answer.comments.forEach(comment => {
+                    comments.push({
+                        'name':comment.name,
+                        'id':comment.owner,
+                        'date':this.convertToDate(comment.createdAt),
+                        'text':comment.description
+                    })
+                })
+                answers.push({
+                    'votes':answer.UpvoteCount-answer.DownvoteCount,
+                    'name':answer.owner.Name,
+                    'id':answer.owner.ID,
+                    'karma':parseInt(answer.owner.Karma),
+                    'imgSrc':answer.owner.ProfilePic,
+                    'date':this.convertToDate(answer.createdAt),
+                    'totalComments':answer.comments.length,
+                    'value':answer.answerId==this.getPost.accenptedAnswer?1:0,
+                    'isOwner':parseInt(answer.owner.ID) ==this.getID?true:false,
+                    'description':answer.Description,
+                    'files':answer.files,
+                    'answerId':answer.answerId,
+                    'comments':comments,
+                    'isReported':answer.isReported,
+                    'isFollowing':answer.isFollowing
+                })
+            })
+            return answers
         }
+    },
+    methods:{
+        ...mapActions('post',['loadPost','loadPostAnswer','makeAnswer']),
+        convertToDate (timestamp) {
+            const milliseconds = timestamp * 1000
+            const dateObject = new Date(milliseconds)
+            return dateObject.toLocaleString()
+        },
+        getTags(){
+            let tags=[]
+            tags.push(this.getPost.course)
+            tags.push(this.getPost.topic)
+            tags.push(this.getPost.book)
+            this.getPost.customTag.forEach(tag => {
+                tags.push(tag)
+            });
+            return tags
+        },
+        async doAnswer(){
+            this.answerClicked=true
+            // console.log(this.$route.params.postID)
+            let id=this.$route.params.postID
+            try{
+                let response=await this.makeAnswer({'id':id,'answer':this.newAnswer,'files':[]})
+                this.answerClicked=false;
+                this.newAnswer=null
+            }catch(e){
+
+            }
+        }
+    },
+    async mounted(){
+        await this.loadPost(this.$route.params.postID)
+        this.loadPostAnswer(this.$route.params.postID)
     }
 }
 </script>

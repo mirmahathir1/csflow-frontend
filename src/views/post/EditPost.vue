@@ -1,14 +1,13 @@
 <template>
-  <div>
-      <PaddedContainerWithoutLeft>
+  <PaddedContainerWithoutLeft>
         <PageHeader>
-            Create Post
+            Edit Post
         </PageHeader>
         <v-card
           color="white"
           elevation="2"
           class="rounded-lg px-5 pt-8 pb-4 mt-6"
-          v-if="!getLoaderFlag('courseLoader')"
+          v-if="!getLoaderFlag('bookLoader')"
         >
           <v-container>
             <v-form ref="form">
@@ -68,17 +67,6 @@
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
                         <v-app-tooltip-btn class="d-inline-block">
-                          <!-- <v-btn
-                            class="mx-2"
-                            fab
-                            dark
-                            small
-                            color="pink"
-                          >
-                            <v-icon dark>
-                              mdi-heart
-                            </v-icon>
-                          </v-btn> -->
                           <v-file-input
                             multiple
 
@@ -199,8 +187,8 @@
                       >
                         <v-select
                           :items="years"
-                          item-text="text"
-                          item-value="value"
+                          item-text="years.text"
+                          item-value="years.value"
                           label="Select Level/Term"
                           :disabled="!selected.includes('term')"
                           dense
@@ -294,72 +282,7 @@
           </v-container>
         </v-card>
         <RegularLoader v-else></RegularLoader>
-
-        <!-- right part -->
-          <template v-slot:right v-if="!getLoaderFlag('courseLoader')">
-            <v-sheet
-                rounded="lg"
-                class="pa-8 mx-auto"
-            >
-              <v-row align="center">Request New Tag</v-row>
-              <hr>
-              <v-row>
-                  <!-- <v-subheader v-text="'Tag Type'" class="mr-auto"></v-subheader> -->
-                  Tag Type
-                  <v-select
-                      :items="tagTypes"
-                      label="Select tag type"
-                      outlined
-                      dense
-                      class="mt-2"
-                      v-model="newTagType"
-                  ></v-select>
-              </v-row>
-              <v-row>
-                  Tag Text
-                  <v-textarea
-                      outlined
-                      :rows="$isMobile()?2:1"
-                      dense
-                      v-model="newTagText"
-                  >
-
-                  </v-textarea>
-              </v-row>
-              <v-row>
-                  Related Course
-                  <v-select
-                      :items="getCourses"
-                      label="Select course"
-                      outlined
-                      dense
-                      class="mt-2"
-                      v-model="newTagCourse"
-                  ></v-select>
-              </v-row>
-              <v-row align="center">
-                <v-alert
-                  class="mx-auto text-center"
-                  type="error"
-                  outlined
-                  dense
-                  v-if="getError('requestNewTag')"
-                >
-                  {{ getMessage('requestNewTag') }}
-                </v-alert>
-              </v-row>
-              <v-btn
-                block
-                color="primary"
-                :loading="getLoaderFlag('requestNewTag')"
-                :disabled="getLoaderFlag('requestNewTag')||!readyToRequest"
-                @click="requestNewTag"
-              >Request</v-btn>
-            </v-sheet>
-          </template>
-      </PaddedContainerWithoutLeft>
-
-  </div>
+  </PaddedContainerWithoutLeft>
 </template>
 
 <script>
@@ -369,9 +292,9 @@ import PaddedContainerWithoutLeft from "../../components/PaddedContainerWithoutL
 import PageHeader from "../../components/PageHeader"
 import RegularLoader from "../../components/Loader/RegularLoader"
 export default {
-    name:"CreatePost",
+    name:"EditPost",
     title(){
-        return "Create Post"
+        return "Edit Post"
     },
     components:{
         PageHeader,
@@ -411,7 +334,7 @@ export default {
       };
     },
     methods: {
-      ...mapActions('post',['requestTag','loadCourses','loadBooks','loadTopics','submitPost']),
+      ...mapActions('post',['loadCourses','loadBooks','loadTopics','editPost','loadPost']),
       removeTag(index) {
         this.tags.splice(index, 1);
 
@@ -434,7 +357,7 @@ export default {
         let l=this.term.split(',')
         this.submitPost({
           'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-          'topic':this.topic,'book':this.book,'termFinal':{level: parseInt(l[0]), term: parseInt(l[1])},'customTag':tags, 'resources':[],
+          'topic':this.topic,'book':this.book,'termFinal':{level: l[0], term: l[1]},'customTag':tags, 'resources':[],
         })
         .then(response=>{
           this.clicked=false
@@ -521,20 +444,25 @@ export default {
             unique(val) {
               return this.tags.filter(element => element.tag === val).length < 2;
             },
-            // len(val) {
-            //   return val.length === 7;
-            // },
-            // integer,
-            // positive(val) {
-            //   return val[0] !== '-';
-            // }
           }
         }
       },
 
   },
   mounted(){
-    this.loadCourses()
+    // await this.loadPost(this.$route.params.postID)
+    // this.course=this.getPost.course
+    // this.getPost.customTag.forEach((tag)=>{
+    //     this.tags.push({'tag':tag})
+    // })
+    // this.title=this.getPost.title
+    // this.description=this.getPost.description
+    // this.type=this.getPost.type
+    // this.topic=this.getPost.topic
+    // this.book=this.getPost.book
+    // await this.loadCourses()
+    // await this.loadTopics(this.course)
+    // await this.loadBooks(this.course)
   }
 }
 </script>

@@ -1,13 +1,34 @@
 <template>
   <v-card class="px-3 py-3">
       <div>
-          <AnswerTop></AnswerTop>
+          <AnswerTop
+            :votes=answers.votes
+            :name=answers.name
+            :id=answers.id
+            :karma=answers.karma
+            :imgSrc=answers.imgSrc
+            :date=answers.date
+            :totalComments=answers.totalComments
+            :value=answers.value
+            :isOwner=answers.isOwner
+          ></AnswerTop>
       </div>
       <div class="pt-4">
-          <Detail></Detail>
+          <Detail
+            :text=answers.description
+            :files=answers.files
+            :isOwner=answers.isOwner
+            :contentType="'answer'"
+            :contentId="answers.answerId"
+            :isReported="answers.isReported"
+            :isFollowing="answers.isFollowing"
+          ></Detail>
       </div>
       <div>
-          <CommentSection></CommentSection>
+          <CommentSection
+            :comments="answers.comments"
+            :contentId="answers.answerId"
+          ></CommentSection>
       </div>
   </v-card>
 </template>
@@ -21,6 +42,30 @@ export default {
         AnswerTop,
         Detail,
         CommentSection
+    },
+    props:{
+        answers:{
+          type:Object,
+          default:function(){
+            return{
+              'votes':567,
+              'name':'Ashraful',
+              'id':1605001,
+              'karma':67,
+              'imgSrc':null,
+              'date':'1 January,2021 11.11AM',
+              'totalComments':0,
+              'value':0,
+              'isOwner':false,
+              'description':"What is your name?",
+              'files':[],
+              'answerId':1,
+              'comments':[],
+              'isReported':false,
+              'isFollowing':false
+            }
+          }
+        }
     }
 }
 </script>
