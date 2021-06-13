@@ -2,8 +2,8 @@ import axios from "axios";
 import store from '../store';
 
 const csflowAPI = axios.create({
-    // baseURL: 'https://csflow-backend.herokuapp.com',
-    baseURL: 'http://localhost:3000'
+    baseURL: 'https://csflow-backend.herokuapp.com',
+    // baseURL: 'http://localhost:3000'
 });
 
 
