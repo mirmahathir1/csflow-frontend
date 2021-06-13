@@ -3,13 +3,13 @@
         <PageHeader>
             Search results
         </PageHeader>
-        <v-row
+        <!-- <v-row
             v-for="(post,idx) in posts" :key="idx"
             class="my-2"
         >
             <post-box :post=post>
             </post-box>
-        </v-row>
+        </v-row> -->
     </PaddedContainer>
 </template>
 
@@ -17,6 +17,7 @@
 import PaddedContainer from "@/components/PaddedContainerWithoutLeft"
 import PageHeader from "@/components/PageHeader"
 import PostBox from "@/components/Post/postBox.vue"
+import {mapGetters,mapActions} from 'vuex'
 export default {
     name:"serach",
     title(){

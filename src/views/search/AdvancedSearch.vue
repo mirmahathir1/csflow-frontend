@@ -17,12 +17,11 @@
             </v-col>
             <v-col cols="12" md="5">
                <v-textarea
-                 solo
-                 name="input-7-4"
-                 label=""
+                 clearable
+                 clear-icon="mdi-close-circle"
+                 label="Enter text"
                  outlined
                  v-model="text"
-                 @blur="$v.text.$touch()"
                ></v-textarea>
             </v-col>
             <v-spacer></v-spacer>
@@ -44,7 +43,8 @@
                 :items="courses" 
                 label="Select course" 
                 outlined 
-                dense>
+                dense
+              >
               </v-select>
             </v-col>
             <v-spacer></v-spacer>
@@ -116,20 +116,9 @@
                           label="Select book"
                           :disabled="!selected.includes('book')"
                           dense
+                          v-model="book"
                         ></v-select>
                     </v-col>
-                    <!-- <v-col
-                        class="d-flex mt-n9"
-                        cols="12"
-                        
-                    >
-                        <v-select
-                          :items="numbers"
-                          label="Select number"
-                          :disabled="!selected.includes('term')"
-                          dense
-                        ></v-select>
-                    </v-col> -->
                     <v-col
                         class="d-flex mt-n9"
                         cols="12"
@@ -137,9 +126,12 @@
                     >
                         <v-select
                           :items="years"
-                          label="Select session"
+                          item-text="text"
+                          item-value="value"
+                          label="Select Level/Term"
                           :disabled="!selected.includes('term')"
                           dense
+                          v-model="term"
                         ></v-select>
                     </v-col>
                 </v-row>
@@ -183,6 +175,7 @@
 import PaddedContainer from "@/components/PaddedContainerWithoutLeft";
 import PageHeader from "@/components/PageHeader";
 import { required, minLength } from 'vuelidate/lib/validators'
+import {mapGetters,mapActions} from 'vuex'
 export default {
   name: "AdvancedSearch",
   title() {
@@ -199,18 +192,58 @@ export default {
         topics:['Markov model','HMM'],
         topic:null,
         course:null,
+        book:null,
+        term:null,
         selected:[],
         books:['Schaums','Sadiq'],
         numbers:['1','2','3','4','5','6','7','8'],
-        years:['2016-17','2017-18','2018-19'],
+        years:[{text:'L-1/T-1',value:'1,1'},
+               {text:'L-1/T-2',value:'1,2'},
+               {text:'L-2/T-1',value:'2,1'},
+               {text:'L-2/T-2',value:'2,2'},
+               {text:'L-3/T-1',value:'3,1'},
+               {text:'L-3/T-2',value:'3,2'},
+               {text:'L-4/T-1',value:'4,1'},
+               {text:'L-4/T-2',value:'4,2'}
+              ],
         clicked:false,
         anyError:false,
         errorMessage:'',
       }
   },
   methods:{
+    ...mapActions('post',['searchPost']),
       search(){
           this.clicked=true
+          let l;
+          l=this.selected.includes('term')?this.term.split(','):[null,null]
+          if(l[0]!=null) l[0]=parseInt(l[0])
+          if(l[1]!=null) l[1]=parseInt(l[1])
+          let data={
+            'payload':{
+              'text':this.text,
+              'courseId':this.course,
+              'book':this.book,
+              'topic':this.topic,
+              'level':l[0],
+              'term':l[1]
+            },
+            'params':{
+              'skip':0,
+              'limit':10
+            }
+          }
+          this.searchPost(data)
+          .then(response=>{
+            this.$router.push('/search')
+          })
+          .catch(e=>{
+            this.anyError=true
+            this.errorMessage=e.response.data.message
+          })
+          .finally(()=>{
+            this.clicked=false
+          })
       }
   },
   validations:{

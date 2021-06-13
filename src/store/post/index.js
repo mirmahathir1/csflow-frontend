@@ -21,7 +21,8 @@ const state={
     books:null,
     topics:null,
     post:null,
-    postAnswer:null
+    postAnswer:null,
+    searchResults:[]
 }
 
 const getters={
@@ -49,6 +50,9 @@ const getters={
     getPostAnswer:state=>{
         return state.postAnswer
     },
+    getSearchResults:state=>{
+        return state.searchResults
+    }
 };
 
 const mutations={
@@ -85,6 +89,9 @@ const mutations={
     setPostAnswer(state,data){
         state.postAnswer=data
     },
+    setSearchResults(state,data){
+        state.searchResults=data
+    }
 };
 
 const actions={
@@ -309,6 +316,22 @@ const actions={
     },
     async editPost({commit},payload){
 
+    },
+    searchPost({commit},data){
+        let params={
+            'skip':data.params.skip,
+            'limit':data.params.limit
+        }
+        return new Promise((resolve,reject)=>{
+            csflowAPI.get('/search',{'params':params},data.payload,)
+            .then(response=>{
+                commit('setSearchResults',response.data.payload)
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+        })
     }
 };
 

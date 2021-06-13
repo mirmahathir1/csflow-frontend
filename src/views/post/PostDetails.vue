@@ -168,10 +168,14 @@ export default {
     },
     methods:{
         ...mapActions('post',['loadPost','loadPostAnswer','makeAnswer']),
-        convertToDate (timestamp) {
-            const milliseconds = timestamp * 1000
-            const dateObject = new Date(milliseconds)
-            return dateObject.toLocaleString()
+        convertToDate (date) {
+            return new Date(date).toLocaleString('en-US', {
+                day: 'numeric',
+                year: 'numeric',
+                month: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+            });
         },
         getTags(){
             let tags=[]
