@@ -126,7 +126,7 @@ const actions={
                 console.log(e.response)
             })
             .finally(()=>{
-                
+
             })
     },
     loadBooks({commit},courseId){
@@ -153,7 +153,7 @@ const actions={
             // reject(e)
         })
         .finally(()=>{
-            
+
         })
     },
     submitPost({commit},payload){
@@ -166,7 +166,7 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
@@ -320,10 +320,12 @@ const actions={
     searchPost({commit},data){
         let params={
             'skip':data.params.skip,
-            'limit':data.params.limit
+            'limit':data.params.limit,
+            ...data.payload,
         }
         return new Promise((resolve,reject)=>{
-            csflowAPI.get('/search',{'params':params},data.payload,)
+            console.log("payload for search: ",data.payload);
+            csflowAPI.get('/search',{'params':params})
             .then(response=>{
                 commit('setSearchResults',response.data.payload)
                 resolve(response)
