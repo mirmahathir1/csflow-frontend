@@ -268,6 +268,12 @@ const routes = [
         component: () => import('../views/admin/UserManagerBatch'),
         meta: { requiresAuth: true, requiresAdmin: true }
     },
+    {
+        path: '/admin/course',
+        name: 'CourseManager',
+        component: () => import('../views/admin/CourseManager'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
 ]
 
 const router = new VueRouter({

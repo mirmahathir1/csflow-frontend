@@ -5,9 +5,12 @@ const state = {
     crSubmitMessage: null,
     isCRSubmitError: false,
 
+    courses: null,
+
     loaderFlags: {
         'crs': true,
         'crSubmission': false,
+        'courses': true,
     },
 };
 
@@ -23,6 +26,9 @@ const getters = {
     },
     getCRSubmitMessage: state => {
         return state.crSubmitMessage;
+    },
+    getCourses: state => {
+        return state.courses;
     },
 };
 
@@ -43,6 +49,9 @@ const mutations = {
     unsetCRSubmitMessage(state) {
         state.isCRSubmitError = false;
         state.crSubmitMessage = null;
+    },
+    setCourses(state, payload) {
+        state.courses = payload;
     },
 };
 
@@ -78,6 +87,21 @@ const actions = {
                     commit('unsetLoaderFlag', 'crSubmission');
                 });
         });
+    },
+    loadCourses({commit}) {
+        commit('setLoaderFlag', 'courses');
+        commit('setCourses', null);
+
+        csflowAPI.get('/admin/course')
+            .then(response => {
+                commit('setCourses', response.data.payload);
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+            .finally(() => {
+                commit('unsetLoaderFlag', 'courses');
+            });
     }
 };
 
