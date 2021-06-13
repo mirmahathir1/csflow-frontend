@@ -18,7 +18,7 @@ export default {
             return '';
         },
         $navigateToPost(postID) {
-            let routeData = this.$router.resolve({name: 'PostDetails'});
+            let routeData = this.$router.resolve({name: 'PostDetails', params: {postID: postID}});
             window.open(routeData.href, '_blank');
         }
     },
