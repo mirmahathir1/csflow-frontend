@@ -40,10 +40,11 @@
               >Post Type:</v-card-text> -->
               <v-select 
                 v-model="course" 
-                :items="courses" 
+                :items="getCourses" 
                 label="Select course" 
                 outlined 
                 dense
+                @change="courseChanged()"
               >
               </v-select>
             </v-col>
@@ -63,7 +64,7 @@
               >Post Type:</v-card-text> -->
               <v-select 
                 v-model="topic" 
-                :items="topics" 
+                :items="getTopics" 
                 label="Select topic" 
                 outlined 
                 dense>
@@ -112,7 +113,7 @@
                         
                     >
                         <v-select
-                          :items="books"
+                          :items="getBooks"
                           label="Select book"
                           :disabled="!selected.includes('book')"
                           dense
@@ -188,14 +189,14 @@ export default {
   data(){
       return{
         text:null,
-        courses:['CSE 313','CSE 314'],
-        topics:['Markov model','HMM'],
+        // courses:['CSE 313','CSE 314'],
+        // topics:['Markov model','HMM'],
         topic:null,
         course:null,
         book:null,
         term:null,
         selected:[],
-        books:['Schaums','Sadiq'],
+        // books:['Schaums','Sadiq'],
         numbers:['1','2','3','4','5','6','7','8'],
         years:[{text:'L-1/T-1',value:'1,1'},
                {text:'L-1/T-2',value:'1,2'},
@@ -212,7 +213,7 @@ export default {
       }
   },
   methods:{
-    ...mapActions('post',['searchPost']),
+    ...mapActions('post',['searchPost','loadCourses','loadTopics','loadBooks']),
       search(){
           this.clicked=true
           let l;
@@ -244,12 +245,20 @@ export default {
           .finally(()=>{
             this.clicked=false
           })
+      },
+      courseChanged(){
+        // console.log(this.course)
+        this.loadTopics(this.course)
+        this.loadBooks(this.course)
       }
   },
   validations:{
     text:{
       required
     }
+  },
+  computed:{
+    ...mapGetters('post',['getCourses','getTopics','getBooks'])
   }
 };
 </script>
