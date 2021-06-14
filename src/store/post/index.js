@@ -170,7 +170,7 @@ const actions={
             })
         })
     },
-    loadPost({commit},id){
+    loadPost({commit,getters},id){
         commit('setLoaderFlag','postLoader')
         commit('unsetMessage','postMessage')
         commit('unsetError','postError')
@@ -178,6 +178,8 @@ const actions={
             csflowAPI.get('/post/'+id)
             .then(response=>{
                 commit('setPost',response.data.payload)
+                // console.log("This is from store",response.data.payload)
+                // console.log("from getters",getters.getPost)
                 resolve(response)
             })
             .catch(e=>{

@@ -67,18 +67,7 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <v-app-tooltip-btn class="d-inline-block">
-                          <!-- <v-btn
-                            class="mx-2"
-                            fab
-                            dark
-                            small
-                            color="pink"
-                          >
-                            <v-icon dark>
-                              mdi-heart
-                            </v-icon>
-                          </v-btn> -->
+                        <!-- <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
 
@@ -91,7 +80,7 @@
                             hide-input
                             prepend-icon="mdi-camera"
                           ></v-file-input>
-                        </v-app-tooltip-btn>
+                        </v-app-tooltip-btn> -->
                       </div>
                       <v-divider></v-divider>
                       <v-textarea
@@ -431,7 +420,7 @@ export default {
             tags.push(tag.tag);
         })
 
-        let l=selected.includes('term')?this.term.split(','):[null,null]
+        let l=this.selected.includes('term')?this.term.split(','):[null,null]
         if(l[0]!=null) l[0]=parseInt(l[0])
         if(l[1]!=null) l[1]=parseInt(l[1])
         this.submitPost({
