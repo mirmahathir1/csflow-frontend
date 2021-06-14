@@ -425,9 +425,9 @@ export default {
         if(l[1]!=null) l[1]=parseInt(l[1])
         let data={
           'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-          'topic':this.topic,'book':this.book,'termFinal':{level: l[0], term: l[1]},'customTag':tags, 'resources':[],
+          'topic':this.topic,'book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
         }
-        if(!this.selected.includes('term')) delete data.termFinal
+        // if(!this.selected.includes('term')) delete data.termFinal
         this.submitPost(data)
         .then(response=>{
           this.clicked=false
