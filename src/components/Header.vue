@@ -682,33 +682,33 @@ export default {
                 icon: 'mdi-account',
                 link: '/admin/user'
               },
-              {
-                title: 'Guest Manager',
-                icon: 'mdi-account-outline',
-                link: '/privileged/guest'
-              },
-              {
-                title: 'SQL Interface',
-                icon: 'mdi-database-search',
-                link: '/privileged/sqlInterface'
-              },
-              {
-                title: 'Archive Manager',
-                icon: 'mdi-share-variant',
-                hasChildren: true,
-                children: [
-                  {
-                    title: 'Theses',
-                    icon: 'mdi-school',
-                    link: '/admin/archive/thesis',
-                  },
-                  {
-                    title: 'Projects',
-                    icon: 'mdi-file-code',
-                    link: '/admin/archive/project',
-                  },
-                ],
-              },
+              // {
+              //   title: 'Guest Manager',
+              //   icon: 'mdi-account-outline',
+              //   link: '/privileged/guest'
+              // },
+              // {
+              //   title: 'SQL Interface',
+              //   icon: 'mdi-database-search',
+              //   link: '/privileged/sqlInterface'
+              // },
+              // {
+              //   title: 'Archive Manager',
+              //   icon: 'mdi-share-variant',
+              //   hasChildren: true,
+              //   children: [
+              //     {
+              //       title: 'Theses',
+              //       icon: 'mdi-school',
+              //       link: '/admin/archive/thesis',
+              //     },
+              //     {
+              //       title: 'Projects',
+              //       icon: 'mdi-file-code',
+              //       link: '/admin/archive/project',
+              //     },
+              //   ],
+              // },
               {
                 title: 'Course Manager',
                 icon: 'mdi-teach',
