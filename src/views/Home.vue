@@ -133,9 +133,15 @@ export default {
     },
     methods: {
       ...mapActions('privileged', ['loadUsers']),
+      ...mapActions('search',['loadTopPost','loadRelevantPost','loadTopUser','loadUnansweredPost','loadUserPost'])
     },
     mounted() {
       this.loadUsers();
+      // this.loadTopPost({'skip':0,'limit':10})
+      // this.loadRelevantPost({'skip':0,'limit':10})
+      // this.loadTopUser({'skip':0,'limit':10})
+      // this.loadUnansweredPost({'skip':0,'limit':10})
+      // this.loadUserPost(1605011)
     },
 }
 </script>

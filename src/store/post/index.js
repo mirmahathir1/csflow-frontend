@@ -21,7 +21,8 @@ const state={
     books:null,
     topics:null,
     post:null,
-    postAnswer:null
+    postAnswer:null,
+    searchResults:[]
 }
 
 const getters={
@@ -49,6 +50,9 @@ const getters={
     getPostAnswer:state=>{
         return state.postAnswer
     },
+    getSearchResults:state=>{
+        return state.searchResults
+    }
 };
 
 const mutations={
@@ -85,6 +89,9 @@ const mutations={
     setPostAnswer(state,data){
         state.postAnswer=data
     },
+    setSearchResults(state,data){
+        state.searchResults=data
+    }
 };
 
 const actions={
@@ -119,7 +126,7 @@ const actions={
                 console.log(e.response)
             })
             .finally(()=>{
-                
+
             })
     },
     loadBooks({commit},courseId){
@@ -146,7 +153,7 @@ const actions={
             // reject(e)
         })
         .finally(()=>{
-            
+
         })
     },
     submitPost({commit},payload){
@@ -159,7 +166,7 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
@@ -309,6 +316,24 @@ const actions={
     },
     async editPost({commit},payload){
 
+    },
+    searchPost({commit},data){
+        let params={
+            'skip':data.params.skip,
+            'limit':data.params.limit,
+            ...data.payload,
+        }
+        return new Promise((resolve,reject)=>{
+            console.log("payload for search: ",data.payload);
+            csflowAPI.get('/search',{'params':params})
+            .then(response=>{
+                commit('setSearchResults',response.data.payload)
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+        })
     }
 };
 

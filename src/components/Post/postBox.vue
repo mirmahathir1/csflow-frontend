@@ -40,7 +40,17 @@
                   tile
                   size="50"
                   color="grey"
+                  v-if="post.owner.profilePic!=''"
                 ><img :src="post.owner.profilePic" alt=""></v-list-item-avatar>
+                <v-list-item-avatar
+                  v-else
+                >
+                  <v-icon
+                      color="green"
+                      dark
+                      x-large
+                  >mdi-account-circle</v-icon>
+                </v-list-item-avatar>
               </v-list-item>
             </v-card>
             <!-- <div style="padding-right:5px">
@@ -116,6 +126,10 @@ export default {
             'owner':{'name':"Abser uddin",'studentId':1605026,'profilePic':'','karma':67}
           }
         }
+      },
+      postID:{
+        type: Number,
+        default: -1
       }
     },
     components:{

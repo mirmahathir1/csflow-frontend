@@ -431,10 +431,12 @@ export default {
             tags.push(tag.tag);
         })
 
-        let l=this.term.split(',')
+        let l=selected.includes('term')?this.term.split(','):[null,null]
+        if(l[0]!=null) l[0]=parseInt(l[0])
+        if(l[1]!=null) l[1]=parseInt(l[1])
         this.submitPost({
           'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-          'topic':this.topic,'book':this.book,'termFinal':{level: parseInt(l[0]), term: parseInt(l[1])},'customTag':tags, 'resources':[],
+          'topic':this.topic,'book':this.book,'termFinal':{level: l[0], term: l[1]},'customTag':tags, 'resources':[],
         })
         .then(response=>{
           this.clicked=false
@@ -513,7 +515,7 @@ export default {
         required
       },
       tags: {
-        required,
+        // required,
         minLength: minLength(1),
         $each: {
           tag: {

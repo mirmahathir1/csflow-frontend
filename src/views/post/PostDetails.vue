@@ -168,16 +168,20 @@ export default {
     },
     methods:{
         ...mapActions('post',['loadPost','loadPostAnswer','makeAnswer']),
-        convertToDate (timestamp) {
-            const milliseconds = timestamp * 1000
-            const dateObject = new Date(milliseconds)
-            return dateObject.toLocaleString()
+        convertToDate (date) {
+            return new Date(date).toLocaleString('en-US', {
+                day: 'numeric',
+                year: 'numeric',
+                month: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+            });
         },
         getTags(){
             let tags=[]
-            tags.push(this.getPost.course)
-            tags.push(this.getPost.topic)
-            tags.push(this.getPost.book)
+            if(this.getPost.course!=null) tags.push(this.getPost.course)
+            if(this.getPost.topic!=null) tags.push(this.getPost.topic)
+            if(this.getPost.book!=null) tags.push(this.getPost.book)
             this.getPost.customTag.forEach(tag => {
                 tags.push(tag)
             });

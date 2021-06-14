@@ -449,20 +449,24 @@ export default {
       },
 
   },
-  mounted(){
-    // await this.loadPost(this.$route.params.postID)
-    // this.course=this.getPost.course
-    // this.getPost.customTag.forEach((tag)=>{
-    //     this.tags.push({'tag':tag})
-    // })
-    // this.title=this.getPost.title
-    // this.description=this.getPost.description
-    // this.type=this.getPost.type
-    // this.topic=this.getPost.topic
-    // this.book=this.getPost.book
-    // await this.loadCourses()
-    // await this.loadTopics(this.course)
-    // await this.loadBooks(this.course)
+  async mounted(){
+    await this.loadPost(this.$route.params.postID)
+    while(this.getPost==null){
+
+    }
+    this.course=this.getPost.course
+    this.getPost.customTag.forEach((tag)=>{
+        this.tags.push({'tag':tag})
+    })
+    this.title=this.getPost.title
+    this.description=this.getPost.description
+    this.type=this.getPost.type
+    this.topic=this.getPost.topic
+    this.book=this.getPost.book
+    if(this.book!=null) this.selected.push('book')
+    await this.loadCourses()
+    await this.loadTopics(this.course)
+    await this.loadBooks(this.course)
   }
 }
 </script>
