@@ -5,6 +5,7 @@
       color="white"
       elevation="2" 
       class="rounded-lg px-5 pt-8 pb-4 mt-6"
+      v-if="!getLoaderFlag('courseLoader')"
     >
       <v-container>
         <v-form ref="form">
@@ -64,7 +65,7 @@
               >Post Type:</v-card-text> -->
               <v-select 
                 v-model="topic" 
-                :items="getTopics" 
+                :items="topics" 
                 label="Select topic" 
                 outlined 
                 dense>
@@ -113,7 +114,7 @@
                         
                     >
                         <v-select
-                          :items="getBooks"
+                          :items="books"
                           label="Select book"
                           :disabled="!selected.includes('book')"
                           dense
@@ -164,6 +165,7 @@
         </v-form>
       </v-container>
     </v-card>
+    <DetailsLoader v-else></DetailsLoader>
     <template v-slot:right>
         <PageHeader>
             Popular Searches
@@ -175,6 +177,7 @@
 <script>
 import PaddedContainer from "@/components/PaddedContainerWithoutLeft";
 import PageHeader from "@/components/PageHeader";
+import DetailsLoader from "@/components/DetailsLoader"
 import { required, minLength } from 'vuelidate/lib/validators'
 import {mapGetters,mapActions} from 'vuex'
 export default {
@@ -184,7 +187,8 @@ export default {
   },
   components: {
     PaddedContainer,
-    PageHeader
+    PageHeader,
+    DetailsLoader
   },
   data(){
       return{
@@ -258,7 +262,22 @@ export default {
     }
   },
   computed:{
-    ...mapGetters('post',['getCourses','getTopics','getBooks'])
+    ...mapGetters('post',['getCourses','getTopics','getBooks','getLoaderFlag']),
+    topics(){
+      if(this.getTopics!=null){
+        return this.getTopics
+      }
+      return []
+    },
+    books(){
+      if(this.getBooks!=null){
+        return this.getBooks
+      }
+      return []
+    }
+  },
+  mounted(){
+    this.loadCourses()
   }
 };
 </script>

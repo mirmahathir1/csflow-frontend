@@ -179,9 +179,9 @@ export default {
         },
         getTags(){
             let tags=[]
-            tags.push(this.getPost.course)
-            tags.push(this.getPost.topic)
-            tags.push(this.getPost.book)
+            if(this.getPost.course!=null) tags.push(this.getPost.course)
+            if(this.getPost.topic!=null) tags.push(this.getPost.topic)
+            if(this.getPost.book!=null) tags.push(this.getPost.book)
             this.getPost.customTag.forEach(tag => {
                 tags.push(tag)
             });

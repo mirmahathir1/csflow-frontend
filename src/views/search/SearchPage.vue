@@ -3,13 +3,18 @@
         <PageHeader>
             Search results
         </PageHeader>
-        <!-- <v-row
-            v-for="(post,idx) in posts" :key="idx"
+        <v-row
+            v-for="(post,idx) in getSearchResults" :key="idx"
             class="my-2"
         >
-            <post-box :post=post>
+            <v-col cols="12">
+            <post-box
+                :post=postBoxData[idx]
+                @click.native="$router.push('/postdetails/'+getSearchResults[idx].ID)"
+            >
             </post-box>
-        </v-row> -->
+            </v-col>
+        </v-row>
     </PaddedContainer>
 </template>
 
@@ -58,8 +63,54 @@ export default {
                 'tags':['CSE 300','AI','Networking'],
                 'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
             },
-          ]
+          ],
+          i:0
         };
+    },
+    computed:{
+        ...mapGetters('post',['getSearchResults']),
+        postBoxData(){
+            let postData=[]
+            for (let idx = 0; idx < this.getSearchResults.length; idx++) {
+                postData[idx]={
+                    'title':this.getSearchResults[idx].title,
+                    'date':this.convertToDate(this.getSearchResults[idx].createdAt),
+                    'type':this.getSearchResults[idx].type,
+                    'accenptedAnswer':this.getSearchResults[idx].accenptedAnswer==null?0:this.getSearchResults[idx].accenptedAnswer,
+                    'vote':this.getSearchResults[idx].vote==null?0:this.getSearchResults[idx].vote,
+                    'tags':this.getTags(idx),
+                    'owner':{
+                        'name':this.getSearchResults[idx].owner.Name,
+                        'studentId':this.getSearchResults[idx].owner.ID,
+                        'profilePic':this.getSearchResults[idx].owner.ProfilePic,
+                        'karma':this.getSearchResults[idx].owner.Karma
+                    }
+                }
+                
+            }
+            return postData
+        }
+    },
+    methods:{
+        getTags(idx){
+            let tags=[]
+            if(this.getSearchResults[idx].course!=null) tags.push(this.getSearchResults[idx].course)
+            if(this.getSearchResults[idx].topic!=null) tags.push(this.getSearchResults[idx].topic)
+            if(this.getSearchResults[idx].book!=null) tags.push(this.getSearchResults[idx].book)
+            this.getSearchResults[idx].customTag.forEach(tag => {
+                tags.push(tag)
+            });
+            return tags
+        },
+        convertToDate (date) {
+            return new Date(date).toLocaleString('en-US', {
+                day: 'numeric',
+                year: 'numeric',
+                month: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+            });
+        },
     }
 }
 </script>
