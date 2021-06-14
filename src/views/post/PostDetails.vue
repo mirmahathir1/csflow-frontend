@@ -26,7 +26,7 @@
         </div>
       </v-card>
       <DetailsLoader v-else></DetailsLoader>
-      <!--<PageHeader class="pt-5">Answers</PageHeader>
+      <PageHeader class="pt-5">Answers</PageHeader>
       <div v-if="!getLoaderFlag('postAnswerLoader')">
         <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
             <AnswerSection
@@ -51,7 +51,7 @@
                 </v-btn>
             </v-row>
         </v-card>
-      </div>-->
+      </div>
   </PaddedContainerWithoutLeft>
 </template>
 
@@ -104,7 +104,7 @@ export default {
             let postData={
                 'title':this.getPost.title,
                 'date':this.convertToDate(this.getPost.createdAt),
-                'type':this.getPost.type,
+                'type':this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1),
                 'accenptedAnswer':this.getPost.accenptedAnswer==null?0:this.getPost.accenptedAnswer,
                 'vote':this.getPost.vote==null?0:this.getPost.vote,
                 'tags':this.getTags(),
