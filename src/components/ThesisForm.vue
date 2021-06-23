@@ -383,7 +383,10 @@ export default {
         name: {
           required,
           unique(val) {
-            return this.tags.filter(element => element.name.toLowerCase() === val.toLowerCase()).length < 2;
+            if (val) {
+              return this.tags.filter(element => element.name.toLowerCase() === val.toLowerCase()).length < 2;
+            }
+            return true;
           },
         }
       }
