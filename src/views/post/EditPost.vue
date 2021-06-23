@@ -66,7 +66,7 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <v-app-tooltip-btn class="d-inline-block">
+                        <!-- <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
 
@@ -79,7 +79,7 @@
                             hide-input
                             prepend-icon="mdi-camera"
                           ></v-file-input>
-                        </v-app-tooltip-btn>
+                        </v-app-tooltip-btn> -->
                       </div>
                       <v-divider></v-divider>
                       <v-textarea
@@ -103,6 +103,7 @@
                   <v-col cols="12" md="5">
                     <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Post Type:</v-card-text>
                       <v-select
+                      v-if="getCourses"
                         v-model="course"
                         :items="getCourses"
                         label="Select course"
@@ -197,8 +198,6 @@
                       </v-col>
                     </v-row>
                   </v-col>
-                  <!-- <v-col cols="12" md="5" v-if="!$isMobile()"></v-col>
-                  <v-col cols="1" md="3"></v-col> -->
                   <v-spacer></v-spacer>
                 </v-row>
                 <v-row class="mt-0">
@@ -392,7 +391,7 @@ export default {
       }
     },
     computed:{
-      ...mapGetters('post',['getLoaderFlag','getError','getMessage','getCourses','getBooks','getTopics']),
+      ...mapGetters('post',['getPost','getLoaderFlag','getError','getMessage','getCourses','getBooks','getTopics']),
       tagErrors(){
         const errors = [];
 
@@ -451,9 +450,10 @@ export default {
   },
   async mounted(){
     await this.loadPost(this.$route.params.postID)
-    while(this.getPost==null){
+    console.log(this.getPost)
+    // while(this.getPost==null){
 
-    }
+    // }
     this.course=this.getPost.course
     this.getPost.customTag.forEach((tag)=>{
         this.tags.push({'tag':tag})

@@ -67,18 +67,7 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <v-app-tooltip-btn class="d-inline-block">
-                          <!-- <v-btn
-                            class="mx-2"
-                            fab
-                            dark
-                            small
-                            color="pink"
-                          >
-                            <v-icon dark>
-                              mdi-heart
-                            </v-icon>
-                          </v-btn> -->
+                        <!-- <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
 
@@ -91,7 +80,7 @@
                             hide-input
                             prepend-icon="mdi-camera"
                           ></v-file-input>
-                        </v-app-tooltip-btn>
+                        </v-app-tooltip-btn> -->
                       </div>
                       <v-divider></v-divider>
                       <v-textarea
@@ -431,13 +420,15 @@ export default {
             tags.push(tag.tag);
         })
 
-        let l=selected.includes('term')?this.term.split(','):[null,null]
+        let l=this.selected.includes('term')?this.term.split(','):[0,0]
         if(l[0]!=null) l[0]=parseInt(l[0])
         if(l[1]!=null) l[1]=parseInt(l[1])
-        this.submitPost({
+        let data={
           'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-          'topic':this.topic,'book':this.book,'termFinal':{level: l[0], term: l[1]},'customTag':tags, 'resources':[],
-        })
+          'topic':this.topic,'book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
+        }
+        // if(!this.selected.includes('term')) delete data.termFinal
+        this.submitPost(data)
         .then(response=>{
           this.clicked=false
           this.errorMessage=''
@@ -466,6 +457,7 @@ export default {
       },
       courseChanged(){
         // console.log(this.course)
+        this.topic=null
         this.loadTopics(this.course)
         this.loadBooks(this.course)
       }
@@ -533,6 +525,12 @@ export default {
           }
         }
       },
+      topic:{
+        required
+      },
+      course:{
+        required
+      }
 
   },
   mounted(){

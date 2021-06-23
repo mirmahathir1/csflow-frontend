@@ -104,7 +104,7 @@ export default {
             let postData={
                 'title':this.getPost.title,
                 'date':this.convertToDate(this.getPost.createdAt),
-                'type':this.getPost.type,
+                'type':this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1),
                 'accenptedAnswer':this.getPost.accenptedAnswer==null?0:this.getPost.accenptedAnswer,
                 'vote':this.getPost.vote==null?0:this.getPost.vote,
                 'tags':this.getTags(),
@@ -200,9 +200,12 @@ export default {
             }
         }
     },
-    async mounted(){
+    async created(){
         await this.loadPost(this.$route.params.postID)
-        this.loadPostAnswer(this.$route.params.postID)
+        await this.loadPostAnswer(this.$route.params.postID)
+        while(this.getPost==null || this.getPostAnswer==null){
+            
+        }
     }
 }
 </script>
