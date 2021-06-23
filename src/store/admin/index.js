@@ -11,12 +11,19 @@ const state = {
     courseDeleteMessage: null,
     isCourseDeleteError: false,
 
+    isThesisDeleteError: false,
+    thesisDeleteMessage: null,
+    isProjectDeleteError: false,
+    projectDeleteMessage: null,
+
     loaderFlags: {
         'crs': true,
         'crSubmission': false,
         'courses': true,
         'courseSubmission': false,
         'courseDeletion': false,
+        'thesisDeletion': false,
+        'projectDeletion': false,
     },
 };
 
@@ -47,6 +54,18 @@ const getters = {
     },
     getCourseDeleteMessage: state => {
         return state.courseDeleteMessage;
+    },
+    getThesisDeleteError: state => {
+        return state.isThesisDeleteError;
+    },
+    getThesisDeleteMessage: state => {
+        return state.thesisDeleteMessage;
+    },
+    getProjectDeleteError: state => {
+        return state.isProjectDeleteError;
+    },
+    getProjectDeleteMessage: state => {
+        return state.projectDeleteMessage;
     },
 };
 
@@ -86,6 +105,22 @@ const mutations = {
     unsetCourseDeleteMessage(state) {
         state.isCourseDeleteError = false;
         state.courseDeleteMessage = null;
+    },
+    setThesisDeleteMessage(state, payload) {
+        state.isThesisDeleteError = true;
+        state.thesisDeleteMessage = payload;
+    },
+    unsetThesisDeleteMessage(state) {
+        state.isThesisDeleteError = false;
+        state.thesisDeleteMessage = null;
+    },
+    setProjectDeleteMessage(state, payload) {
+        state.isProjectDeleteError = true;
+        state.projectDeleteMessage = payload;
+    },
+    unsetProjectDeleteMessage(state) {
+        state.isProjectDeleteError = false;
+        state.projectDeleteMessage = null;
     },
 };
 
@@ -188,6 +223,42 @@ const actions = {
                 })
                 .finally(() => {
                     commit('unsetLoaderFlag', 'courseDeletion');
+                });
+        });
+    },
+    deleteThesisAdmin({commit}, thesisID) {
+        commit('setLoaderFlag', 'thesisDeletion');
+        commit('unsetThesisDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/admin/thesis/' + thesisID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setThesisDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisDeletion');
+                });
+        });
+    },
+    deleteProjectAdmin({commit}, projectID) {
+        commit('setLoaderFlag', 'projectDeletion');
+        commit('unsetProjectDeleteMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/admin/project/' + projectID)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectDeleteMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectDeletion');
                 });
         });
     },

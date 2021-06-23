@@ -5,6 +5,61 @@
         :back-route="backRoute"
     >Project Details</page-header>
 
+    <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="getIsAdmin">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
+        <v-card-text class="text-center text-body-2">Delete Thesis</v-card-text>
+        <div class="mx-6">
+          <hr class="my-divider">
+        </div>
+        <v-card-actions class="mx-2">
+          <v-btn block color="red darken-1 white--text" small @click="adminDeleteDialog = true">
+            Delete
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+
+    <!--    Delete Dialog-->
+    <v-dialog
+        v-model="adminDeleteDialog"
+        max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Delete this project?
+        </v-card-title>
+        <v-card-text>Are you sure you want to delete this project? Deleted projects cannot be recovered.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="green darken-1"
+              text
+              @click="adminDeleteDialog = false"
+          >
+            No
+          </v-btn>
+          <v-btn
+              color="red darken-1"
+              text
+              @click="onDeleteConfirmedAdmin"
+              :loading="adminProjectDeleteLoader"
+              :disabled="adminProjectDeleteLoader"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+        <v-row class="justify-center" v-if="getProjectDeleteError">
+          <v-alert
+              type="error"
+              outlined
+              dense
+          >
+            {{ getProjectDeleteMessage }}
+          </v-alert>
+        </v-row>
+      </v-card>
+    </v-dialog>
+
     <v-card
         color="white"
         elevation="2"
@@ -136,11 +191,17 @@ export default {
     return {
       id: this.$route.params.id,
       dialog: false,
+      adminDeleteDialog: false,
     }
   },
   computed: {
     ...mapGetters('archive', ['getProjectDetails', 'getLoaderFlag']),
     ...mapGetters('user', ['getUserLoaderFlag', 'getLoadedUser']),
+    ...mapGetters('auth', ['getIsAdmin']),
+    ...mapGetters('admin', ['getProjectDeleteError', 'getProjectDeleteMessage']),
+    adminProjectDeleteLoader() {
+      return this.$store.getters["admin/getLoaderFlag"]("projectDeletion");
+    },
     details() {
       if (this.getProjectDetails) {
         return this.getProjectDetails.payload;
@@ -170,6 +231,7 @@ export default {
   methods: {
     ...mapActions('archive', ['loadProjectDetails', 'deleteProject']),
     ...mapActions('user', ['getProfile']),
+    ...mapActions('admin', ['deleteProjectAdmin']),
     onEditClicked() {
       this.$router.push('/archive/project/' + this.getProjectDetails.id + '/edit');
     },
@@ -183,6 +245,19 @@ export default {
           })
           .finally(() => {
             this.dialog = false;
+          });
+    },
+    onDeleteConfirmedAdmin() {
+      this.deleteProjectAdmin(this.id)
+          .then(response => {
+            this.adminDeleteDialog = false;
+            this.$router.push('/archive/project/batch/' + this.details['batch'] + '/' + this.details['course_no'].replace(' ', '-'));
+          })
+          .catch(e => {
+            console.log(e.response);
+          })
+          .finally(() => {
+
           });
     }
   },
