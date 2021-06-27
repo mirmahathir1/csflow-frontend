@@ -4,7 +4,7 @@
     <page-subheader>Batch {{ batch }}</page-subheader>
 
     <CRForm class="mt-6 mx-4" :batch="Number(batch)" @appointed="onAppointed" :key="'crFrom'+batch"></CRForm>
-    <level-term-form class="mt-4 mx-4" :batch="Number(batch)" :key="'ltForm'+batch"></level-term-form>
+<!--    <level-term-form class="mt-4 mx-4" :batch="Number(batch)" :key="'ltForm'+batch"></level-term-form>-->
 
 <!--    CR List-->
     <CRCard ref="crs" class="mt-4 mx-4" :batch="Number(batch)" :key="batch + flag"></CRCard>
