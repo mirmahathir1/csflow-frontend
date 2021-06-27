@@ -90,7 +90,7 @@ export default {
       if (this.getUsers) {
         ret = this.getUsers;
         ret.sort((a, b) => a['studentId'] < b['studentId'] ? -1 : 1);
-        ret = [...ret, ...ret, ...ret, ...ret,];
+        // ret = [...ret, ...ret, ...ret, ...ret,];
       }
       return ret;
     },
