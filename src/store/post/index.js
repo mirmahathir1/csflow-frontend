@@ -1,4 +1,5 @@
 import {csflowAPI} from '../../api'
+import main from '../../main'
 const state={
     messages:{
         'requestNewTag':null,
@@ -101,11 +102,13 @@ const actions={
         return new Promise((resolve,reject)=>{
             csflowAPI.post('/tag',payload)
             .then(response=>{
+                main.$notification.success('New Tag request has been placed successfully')
                 resolve(response)
             })
             .catch(e=>{
                 commit('setMessage','requestNewTag',e.response.data.message)
                 commit('setError','requestNewTag')
+                main.$notification.error('Tag request has been failed')
                 reject(e)
             })
             .finally(()=>{
@@ -316,8 +319,21 @@ const actions={
             })
         })
     },
-    async editPost({commit},payload){
+    async editPost({commit},data){
+        let payload=data.description
+        return new Promise((resolve,reject)=>{
+            csflowAPI.patch('/post/'+data.id,payload)
+            .then(response=>{
+                main.$notification.success("Post Edited successfully")
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+            .finally(()=>{
 
+            })
+        })
     },
     searchPost({commit},data){
         let params={
@@ -336,7 +352,67 @@ const actions={
                 reject(e)
             })
         })
-    }
+    },
+    async upvotePost({commit},id){
+        return new Promise((resolve,reject)=>{
+            csflowAPI.post('/post/'+id+'/upvote')
+            .then(response=>{
+                main.$notification.success("Upvoted successfully")
+                resolve(response)
+            })
+            .catch(e=>{
+                main.$notification.error(e.response.data.message)
+                reject(e)
+            })
+            .finally(()=>{
+                
+            })
+        })
+    },
+    async downvotePost({commit},id){
+        return new Promise((resolve,reject)=>{
+            csflowAPI.post('/post/'+id+'/downvote')
+            .then(response=>{
+                main.$notification.success("Downvoted successfully")
+                resolve(response)
+            })
+            .catch(e=>{
+                main.$notification.error(e.response.data.message)
+                reject(e)
+            })
+            .finally(()=>{
+                
+            })
+        })
+    },
+    async deleteDownvotePost({commit},id){
+        return new Promise((resolve,reject)=>{
+            csflowAPI.delete('/post/'+id+'/downvote')
+            .then(response=>{
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+            .finally(()=>{
+                
+            })
+        })
+    },
+    async deleteUpvotePost({commit},id){
+        return new Promise((resolve,reject)=>{
+            csflowAPI.delete('/post/'+id+'/upvote')
+            .then(response=>{
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+            .finally(()=>{
+                
+            })
+        })
+    },
 };
 
 export  default{

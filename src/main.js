@@ -20,9 +20,11 @@ Vue.mixin(Mixins);
 Vue.mixin(titleSetter)
 Vue.config.productionTip = false
 
-new Vue({
+const main=new Vue({
   router,
   store,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+
+export default main

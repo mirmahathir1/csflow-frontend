@@ -5,6 +5,8 @@
         <div class="pt-4 pb-4">
             <PostBox
                 :post="postBoxData"
+                :postID="parseInt(this.$route.params.postID)"
+                :voteStatus="parseInt(this.getPost.voteStatus)"
             ></PostBox>
         </div>
         <div class="pb-4">
@@ -26,17 +28,20 @@
         </div>
       </v-card>
       <DetailsLoader v-else></DetailsLoader>
-      <PageHeader class="pt-5">Answers</PageHeader>
+      <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
       <div v-if="!getLoaderFlag('postAnswerLoader')">
-        <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
-            <AnswerSection
-                :answers="answer"
-            ></AnswerSection>
-        </v-card>
+        <div v-if="this.getPost.type=='question'">
+            <PageHeader class="pt-5">Answers</PageHeader>
+            <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
+                <AnswerSection
+                    :answers="answer"
+                ></AnswerSection>
+            </v-card>
+        </div>
       </div>
       <DetailsLoader v-else></DetailsLoader>
       <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
-        <v-card rounded="lg" class="pa-8 ml-2 mb-4">
+        <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="this.getPost.type=='question'">
             <v-row class="pb-8">Write your reply:</v-row>
             <v-textarea outlined v-model="newAnswer"></v-textarea>
             <v-row>
@@ -135,6 +140,7 @@ export default {
             // console.log(this.getPostAnswer.length)
             let answers=[]
             let comments=[]
+            if(this.getPostAnswer==null) return []
             this.getPostAnswer.forEach(answer=>{
                 comments=[]
                 answer.comments.forEach(comment => {

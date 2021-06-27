@@ -188,8 +188,8 @@
                       >
                         <v-select
                           :items="years"
-                          item-text="years.text"
-                          item-value="years.value"
+                          item-text="text"
+                          item-value="value"
                           label="Select Level/Term"
                           :disabled="!selected.includes('term')"
                           dense
@@ -353,16 +353,24 @@ export default {
             tags.push(tag.tag);
         })
 
-        let l=this.term.split(',')
-        this.submitPost({
-          'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-          'topic':this.topic,'book':this.book,'termFinal':{level: l[0], term: l[1]},'customTag':tags, 'resources':[],
-        })
+        let l=this.selected.includes('term')?this.term.split(','):[0,0]
+        if(l[0]!=null) l[0]=parseInt(l[0])
+        if(l[1]!=null) l[1]=parseInt(l[1])
+
+        let data={
+          'id':this.$route.params.postID,
+          'description':{
+            'type':this.type,'title':this.title,'description':this.description,'course':this.course,
+            'topic':this.topic,'book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
+          }
+        }
+
+        this.editPost(data)
         .then(response=>{
           this.clicked=false
           this.errorMessage=''
           this.anyError=false
-
+          this.$router.push('/postdetails/'+this.$route.params.postID)
         })
         .catch(e=>{
           this.anyError=true
@@ -435,7 +443,7 @@ export default {
         required
       },
       tags: {
-        required,
+        // required,
         minLength: minLength(1),
         $each: {
           tag: {
