@@ -133,7 +133,7 @@ export default {
                     'id':comment.owner.ID,
                     'text':comment.description,
                     'date':this.convertToDate(comment.createdAt),
-                    'contentId':comment.commentId,
+                    'contentID':comment.commentId,
                     'isReported':comment.isReported
                 })
             });
