@@ -227,6 +227,8 @@ export default {
             let data={'description':this.newComment,'id':this.contentID}
             try{
                 let response=await this.editComment(data)
+                await this.loadPost(this.$route.params.postID)
+                await this.loadPostAnswer(this.$route.params.postID)
             }catch(e){
 
             }

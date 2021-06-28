@@ -60,9 +60,16 @@
                 v-if="getIsSignedIn"
                 class="ma-auto mt-2"
                 dense
-
+                v-model="searchText"
+                @click="search"
             >
-
+              <template v-slot:append-outer>
+                <v-slide-x-reverse-transition
+                  mode="out-in"
+                >
+                  <v-icon key="`icon-5" @click="search" v-text="'mdi-magnify'"></v-icon>
+                </v-slide-x-reverse-transition>
+              </template>
             </v-autocomplete>
             <div v-if="getIsSignedIn">
                 <div>
@@ -73,7 +80,43 @@
                     >
                     </v-text-field> -->
                 </div>
-
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-badge
+                      :content="messages"
+                      :value="messages"
+                      color=""
+                      overlap
+                      class="ml-2"
+                      
+                    >
+                      <v-btn
+                        class="mx-2"
+                        fab
+                        dark
+                        small
+                        color="primary"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        <v-icon>
+                          mdi-bell
+                        </v-icon>
+                      </v-btn>
+                    </v-badge>
+                  </template>
+                  <v-list>
+                    <v-list-item @click="$router.push('/user/me')">
+                        <v-list-item-title>My Profile</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="signOut">
+                        <v-list-item-title>Log out</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="signOutAll">
+                        <v-list-item-title>Log out from all devices</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
                 <v-menu left bottom>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn icon v-bind="attrs" v-on="on" :loading="getLogoutLoaderFlag">
@@ -96,59 +139,7 @@
             </div>
             <!-- </v-toolbar> -->
         </v-app-bar>
-        <!-- <div>
-        <v-app-bar id="inspire">
-          <v-layout row justify-center>
-            <v-toolbar dark color="blue-grey darken-1" class="hidden-xs-and-down">
-              <v-toolbar-title>CSFLOW</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-items>
-               <v-btn
-                 v-for="item in nav"
-                 :key="item.icon"
-                 to="#"
-                 :title="item.title"
-                 text
-               >{{ item.text }}</v-btn>
-              </v-toolbar-items>
-            </v-toolbar>
 
-            <v-toolbar text dark color="blue-grey darken-3" class="hidden-sm-and-up">
-              <v-toolbar-title>Mobile Menu</v-toolbar-title>
-              <v-spacer></v-spacer>
-
-              <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-                <v-toolbar-side-icon dark slot="activator"></v-toolbar-side-icon>
-                <v-card>
-                  <v-toolbar flat color="blue-grey darken-2">
-                    <v-toolbar-title>Mobile Menu</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn icon @click.native="dialog = false">
-                      <v-icon>close</v-icon>
-                    </v-btn>
-                  </v-toolbar>
-
-                  <v-list>
-                    <v-list-tile
-                      v-for="(item, index) in nav"
-                      :key="index"
-                      to="#"
-                    >
-                      <v-list-tile-action>
-                        <v-icon v-if="item.icon">{{item.icon}}</v-icon>
-                      </v-list-tile-action>
-                      <v-list-tile-content>
-                        <v-list-tile-title :title="item.title">{{ item.text }}</v-list-tile-title>
-                      </v-list-tile-content>
-                    </v-list-tile>
-                  </v-list>
-                </v-card>
-              </v-dialog>
-
-            </v-toolbar>
-          </v-layout>
-        </v-app-bar>
-      </div> -->
         <v-navigation-drawer app clipped v-model="drawer" v-if="getIsSignedIn && $isMobile()">
             <v-list
                 dense
@@ -559,6 +550,7 @@ export default {
         ...mapActions("auth", ["logoutAll", "logout", "setDrawerSideBar"]),
         ...mapActions('others',['setDrawer','unsetDrawer','defineDrawerFlag','toggleDrawer', 'setPrivilegedDash',
                                 'unsetPrivilegedDash', 'setAdminDash', 'unsetAdminDash']),
+        ...mapActions('post',['searchPost']),
         async signOut() {
             await this.logout();
             await this.unsetDrawer();
@@ -569,6 +561,33 @@ export default {
             await this.unsetDrawer();
             await this.$router.push("/auth/signIn");
         },
+        search(){
+          if(this.searchText!=null){
+            let data={
+              'payload':{
+                'text':this.searchText,
+                'courseId':null,
+                'book':null,
+                'topic':null,
+                'level':null,
+                'term':null
+              },
+              'params':{
+                'skip':0,
+                'limit':10
+              }
+            }
+            this.searchPost(data)
+            .then(response=>{
+              this.$router.push('/search')
+            })
+            .catch(e=>{
+
+            })
+          }else{
+            console.log('okkkkk')
+          }
+        }
 
     },
     components: {
@@ -581,6 +600,8 @@ export default {
         return {
             dialog: false,
             inPrivilegedDash: false,
+            searchText:null,
+            messages:99,
             items: [
                 {
                     title: 'Relevant',

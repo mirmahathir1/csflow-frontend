@@ -297,6 +297,8 @@ export default {
                 let response=await this.editAnswer(data)
                 this.editClicked=false
                 // this.text=this.newAnswer
+                await this.loadPost(this.$route.params.postID)
+                await this.loadPostAnswer(this.$route.params.postID)
             }catch(e){
 
             }finally{
