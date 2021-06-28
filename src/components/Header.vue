@@ -74,7 +74,7 @@
           v-model="searchText"
       >
       </v-text-field>
-      <v-btn small fab color="blue" rounded @click="search">
+      <v-btn v-if="getIsSignedIn" small fab color="blue" rounded @click="search">
         <v-icon>
           mdi-magnify
         </v-icon>
