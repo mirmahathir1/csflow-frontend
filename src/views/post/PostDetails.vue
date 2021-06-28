@@ -24,6 +24,7 @@
             <CommentSection
                 :comments="commentData"
                 :contentId="parseInt(this.$route.params.postID)"
+                :contentType="'post'"
             ></CommentSection>
         </div>
       </v-card>
@@ -158,6 +159,7 @@ export default {
                 })
                 answers.push({
                     'votes':answer.UpvoteCount-answer.DownvoteCount,
+                    'voteStatus':answer.voteStatus,
                     'name':answer.owner.Name,
                     'id':answer.owner.ID,
                     'karma':parseInt(answer.owner.Karma),

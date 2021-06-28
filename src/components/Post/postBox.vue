@@ -10,7 +10,7 @@
                 </v-icon>
               </v-row>
               <v-row class="mx-auto text-center">
-                <span class="mx-auto text-center">{{post.vote}}</span>
+                <span class="mx-auto text-center">{{count}}</span>
               </v-row>
               <v-row class="mx-auto text-center">
                 <v-icon class="mx-auto text-center" large color="red darken-2" @click="downvote">
@@ -102,15 +102,8 @@ import {mapGetters,mapActions} from 'vuex'
 export default {
     data(){
         return{
-            // post:{
-            //     'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
-            //     'date':'21 August 2020,2.20AM',
-            //     'type':'Question',
-            //     'totalAnswer':9,
-            //     'votes':5678,
-            //     'tags':['CSE 300','AI','Networking'],
-            //     'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
-            // }
+            status:null,
+            count:null
         }
     },
     props:{
@@ -145,14 +138,20 @@ export default {
       ...mapActions('post',['upvotePost','downvotePost','deleteDownvotePost','deleteUpvotePost']),
       async upvote(){
           try{
-            if(this.voteStatus==0){
-              let response=await this.upvotePost(this.postID)
+            if(this.status==0){
+              let response=await this.upvotePost({'id':this.postID,'type':'post'})
+              this.status=1
+              this.count=this.count+1
             }
             else if(this.voteStatus==1){
-              let response=await this.deleteUpvotePost(this.postID)
+              let response=await this.deleteUpvotePost({'id':this.postID,'type':'post'})
+              this.status=0
+              this.count=this.count-1
             }else if(this.voteStatus==-1){
-              this.deleteDownvotePost(this.postID)
-              let response=await this.upvotePost(this.postID)
+              this.deleteDownvotePost({'id':this.postID,'type':'post'})
+              let response=await this.upvotePost({'id':this.postID,'type':'post'})
+              this.status=1
+              this.count=this.count+2
             }
           }catch(e){
 
@@ -160,18 +159,28 @@ export default {
       },
       async downvote(){
           try{
-            if(this.voteStatus==0){
-              let response=await this.downvotePost(this.postID)
-            }else if(this.voteStatus==-1){
-              let response=await this.deleteDownvotePost(this.postID)
-            }else if(this.voteStatus==1){
-              this.deleteUpvotePost(this.postID)
-              let response=await this.downvotePost(this.postID)
+            if(this.status==0){
+              let response=await this.downvotePost({'id':this.postID,'type':'post'})
+              this.count=this.count-1
+              this.status=-1
+            }else if(this.status==-1){
+              let response=await this.deleteDownvotePost({'id':this.postID,'type':'post'})
+              this.count=this.count+1
+              this.status=0
+            }else if(this.status==1){
+              this.deleteUpvotePost({'id':this.postID,'type':'post'})
+              let response=await this.downvotePost({'id':this.postID,'type':'post'})
+              this.count=this.count-2
+              this.status=-1
             }
           }catch(e){
             
           }
       }
+    },
+    mounted(){
+      this.status=this.voteStatus
+      this.count=this.post.vote
     }
 }
 </script>

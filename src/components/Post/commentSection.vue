@@ -56,6 +56,10 @@ export default {
         contentId:{
             type:Number,
             default:0
+        },
+        contentType:{
+            type:String,
+            default:'post'
         }
     },
     data(){
@@ -75,7 +79,7 @@ export default {
         async doComment(){
             this.clicked=true
             try{
-                let response=await this.makeComment({'comment':this.newComment,'id':this.contentId})
+                let response=await this.makeComment({'comment':this.newComment,'id':this.contentId,'type':this.contentType})
 
             }catch(e){
 

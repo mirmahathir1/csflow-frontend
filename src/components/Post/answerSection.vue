@@ -11,6 +11,8 @@
             :totalComments=answers.totalComments
             :value=answers.value
             :isOwner=answers.isOwner
+            :voteStatus=answers.voteStatus
+            :answerId=answers.answerId
           ></AnswerTop>
       </div>
       <div class="pt-4">
@@ -28,6 +30,7 @@
           <CommentSection
             :comments="answers.comments"
             :contentId="answers.answerId"
+            :contentType="'answer'"
           ></CommentSection>
       </div>
   </v-card>
@@ -49,6 +52,7 @@ export default {
           default:function(){
             return{
               'votes':567,
+              'voteStatus':-2,
               'name':'Ashraful',
               'id':1605001,
               'karma':67,
@@ -59,7 +63,7 @@ export default {
               'isOwner':false,
               'description':"What is your name?",
               'files':[],
-              'answerId':1,
+              'answerId':-1,
               'comments':[],
               'isReported':false,
               'isFollowing':false

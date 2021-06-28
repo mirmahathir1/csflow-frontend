@@ -264,7 +264,7 @@ const actions={
     async makeComment({commit},data){
         let payload={"description":data.comment}
         return new Promise((resolve,reject)=>{
-            csflowAPI.post('/post/'+data.id+'/comment',payload)
+            csflowAPI.post('/'+data.type+'/'+data.id+'/comment',payload)
             .then(response=>{
                 resolve(response)
             })
@@ -353,9 +353,9 @@ const actions={
             })
         })
     },
-    async upvotePost({commit},id){
+    async upvotePost({commit},data){
         return new Promise((resolve,reject)=>{
-            csflowAPI.post('/post/'+id+'/upvote')
+            csflowAPI.post('/'+data.type+'/'+data.id+'/upvote')
             .then(response=>{
                 main.$notification.success("Upvoted successfully")
                 resolve(response)
@@ -369,9 +369,9 @@ const actions={
             })
         })
     },
-    async downvotePost({commit},id){
+    async downvotePost({commit},data){
         return new Promise((resolve,reject)=>{
-            csflowAPI.post('/post/'+id+'/downvote')
+            csflowAPI.post('/'+data.type+'/'+data.id+'/downvote')
             .then(response=>{
                 main.$notification.success("Downvoted successfully")
                 resolve(response)
@@ -385,9 +385,9 @@ const actions={
             })
         })
     },
-    async deleteDownvotePost({commit},id){
+    async deleteDownvotePost({commit},data){
         return new Promise((resolve,reject)=>{
-            csflowAPI.delete('/post/'+id+'/downvote')
+            csflowAPI.delete('/'+data.type+'/'+data.id+'/downvote')
             .then(response=>{
                 resolve(response)
             })
@@ -399,9 +399,9 @@ const actions={
             })
         })
     },
-    async deleteUpvotePost({commit},id){
+    async deleteUpvotePost({commit},data){
         return new Promise((resolve,reject)=>{
-            csflowAPI.delete('/post/'+id+'/upvote')
+            csflowAPI.delete('/'+data.type+'/'+data.id+'/upvote')
             .then(response=>{
                 resolve(response)
             })
