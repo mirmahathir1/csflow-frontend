@@ -99,7 +99,7 @@ const actions={
     },
     loadUserPost({commit},id){
         return new Promise((resolve,reject)=>{
-            csflowAPI.get('/post/'+id,)
+            csflowAPI.get('/post/user/'+id,)
             .then(response=>{
                 console.log(response.data.payload)
                 commit('setUserPost',response.data.payload)

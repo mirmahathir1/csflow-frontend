@@ -42,6 +42,12 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path:'/post/unanswered',
+        name:'unanswered',
+        component: () => import('../views/post/UnansweredPost.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path:  '/postdetails/:postID',
         name: 'PostDetails',
         component:()=>import('../views/post/PostDetails.vue'),

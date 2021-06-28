@@ -103,14 +103,6 @@
 
 
       <div v-if="getIsSignedIn">
-        <div>
-          <!-- <v-text-field
-            hide-details
-            single-line
-            prefend-icon="mdi-magnify"
-          >
-          </v-text-field> -->
-        </div>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-badge
@@ -136,16 +128,16 @@
               </v-btn>
             </v-badge>
           </template>
-          <v-list>
-            <v-list-item @click="$router.push('/user/me')">
-              <v-list-item-title>My Profile</v-list-item-title>
+          <v-list v-for="(item,idx) in notifications" :key="idx">
+            <v-list-item :href="item.link" style="text-decoration:none">
+              <v-list-item-title>{{item.text}}</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="signOut">
+            <!-- <v-list-item @click="signOut">
               <v-list-item-title>Log out</v-list-item-title>
             </v-list-item>
             <v-list-item @click="signOutAll">
               <v-list-item-title>Log out from all devices</v-list-item-title>
-            </v-list-item>
+            </v-list-item> -->
           </v-list>
         </v-menu>
         <v-menu left bottom>
@@ -630,6 +622,20 @@ export default {
       inPrivilegedDash: false,
       searchText: null,
       messages: 99,
+      notifications:[
+        {
+          text:'Ashraful commented on your post',
+          link:'https://csflow-buet.web.app/#/postdetails/6'
+        },
+        {
+          text:'Mahathir answered your question',
+          link:'https://csflow-buet.web.app/#/postdetails/6'
+        },
+        {
+          text:'Navid upvoted your post',
+          link:'https://csflow-buet.web.app/#/postdetails/6'
+        },
+      ],
       items: [
         {
           title: 'Relevant',
@@ -649,7 +655,7 @@ export default {
         {
           title: 'Unanswered',
           icon: 'mdi-help',
-          link: '/about'
+          link: '/post/unanswered'
         },
         {
           title: 'Resources',

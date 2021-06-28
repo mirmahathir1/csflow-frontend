@@ -20,7 +20,8 @@
                     class="mx-auto mt-2"
                     >
                         <img
-                        v-if="this.getLoadedUserForProfile.profilePic!=null"
+                            v-if="this.getLoadedUserForProfile.profilePic!=null
+                                    &&this.getLoadedUserForProfile.profilePic.length>1"
                             alt="Avatar"
                             :src="this.getLoadedUserForProfile.profilePic"
                         >
@@ -205,6 +206,22 @@
             </v-row>
         </v-card>
 
+        <div v-if="getLoadedUserForProfile!==null">
+            <v-row
+                v-for="(post,idx) in getUserPost" :key="idx"
+                class="my-2"
+            >
+                <v-col cols="12">
+                    <post-card
+                        :text="post.title"
+                        :votes="post.upvoteCount-post.downvoteCount"
+                        :small="$isMobile()?true:false"
+                        class="mx-auto"
+                        @click.native="$router.push('/postdetails/'+getUserPost[idx].ID)"
+                    ></post-card>
+                </v-col>
+            </v-row>
+        </div>
         <v-card
             height="100px"
             class="mt-12"
@@ -224,6 +241,8 @@
 <script>
 import {mapGetters,mapActions} from 'vuex';
 import PaddedContainer from "../../components/PaddedContainer"
+import PostCard from "../../components/Card/PostCard"
+import DetailsLoader from "@/components/DetailsLoader"
 export default {
     name: "User",
     title(){
@@ -232,37 +251,63 @@ export default {
     computed:{
         ...mapGetters('user',['getLoadedUserForProfile','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage']),
         ...mapGetters('auth',['getID']),
-
+        ...mapGetters('search',['getUserPost']),
+        userPostData(){
+            let postData=[]
+            this.getUserPost.forEach(post => {
+                let tags=[]
+                if(post.course!=null) tags.push(post.course)
+                if(post.topic!=null) tags.push(post.topic)
+                if(post.book!=null) tags.push(post.book)
+                post.customTag.forEach(tag => {
+                    tags.push(tag)
+                });
+                postData.push({
+                    'title':post.title,
+                    'date':this.convertToDate(post.createdAt),
+                    'type':post.type.charAt(0).toUpperCase()+post.type.slice(1),
+                    'accenptedAnswer':post.accenptedAnswer==null?0:post.accenptedAnswer,
+                    'vote':post.vote==null?0:post.vote,
+                    'tags':tags,
+                    'owner':{
+                        'name':post.owner.Name,
+                        'studentId':post.owner.ID,
+                        'profilePic':post.owner.ProfilePic,
+                        'karma':post.owner.Karma
+                    }
+                })
+            });
+            return postData;
+        }
     },
     methods:{
-        ...mapActions('user',['getProfile'])
+        ...mapActions('user',['getProfile']),
+        ...mapActions('search',['loadUserPost'])
     },
-    mounted() {
+    async mounted() {
         // console.log("here");
-        this.getProfile(this.$route.params.id);
+        await this.getProfile(this.$route.params.id);
+        if(this.$route.params.id=='me' || this.$route.params.id==this.getID) this.loadUserPost('me');
+        else this.loadUserPost(this.$route.params.id);
         // console.log(this.getLoadedUser);
     },
     data(){
         return{
-            // user:{'E-mail':'mirmahathir@gmail.com',
-            //       'discussion': 278,
-            //       'question': 15,
-            //       'answers' : 20,
-            //       'upvotes': 78,
-            //       'downvotes': 45,
-            //       'id':1605011,
-            //       'name':'Mir Mahathir Mohammad'
-            // }
             id:this.$route.params.id
         }
     },
     components:{
-        PaddedContainer
+        PaddedContainer,
+        PostCard,
+        DetailsLoader   
     },
     watch: {
         '$route'(to, from) {
             this.id=to.params.id;
             this.getProfile(this.id);
+            if(this.id=='me' || this.id==this.getID) this.loadUserPost('me');
+            else this.loadUserPost(this.id);
+            
         }
     }
 
