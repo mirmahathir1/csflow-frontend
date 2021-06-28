@@ -1,22 +1,4 @@
 <template>
-            <!-- <v-col
-                cols="12"
-                sm="8"
-            >
-                <v-sheet
-                    min-height="70vh"
-                    rounded="lg"
-                    class="pa-6"
-                >
-                    <v-alert
-                        dense
-                        text
-                        type="success"
-                    >
-                        Successfully signed in
-                    </v-alert>
-                </v-sheet>
-            </v-col> -->
     <PaddedContainer>
         <PageHeader>
             Relevant Posts
@@ -53,7 +35,7 @@ export default {
                 'totalAnswer':9,
                 'votes':5678,
                 'tags':['CSE 300','AI','Networking'],
-                'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
+                'owner':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
             },
             {
                 'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
@@ -62,7 +44,7 @@ export default {
                 'totalAnswer':9,
                 'votes':5678,
                 'tags':['CSE 300','AI','Networking'],
-                'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
+                'owner':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
             },
             {
                 'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
@@ -71,7 +53,7 @@ export default {
                 'totalAnswer':9,
                 'votes':5678,
                 'tags':['CSE 300','AI','Networking'],
-                'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
+                'owner':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
             },
           ]
       };

@@ -30,7 +30,7 @@
       <DetailsLoader v-else></DetailsLoader>
       <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
       <div v-if="!getLoaderFlag('postAnswerLoader')">
-        <div v-if="this.getPost.type=='question'">
+        <div v-if="isQuestion">
             <PageHeader class="pt-5">Answers</PageHeader>
             <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
                 <AnswerSection
@@ -41,7 +41,7 @@
       </div>
       <DetailsLoader v-else></DetailsLoader>
       <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
-        <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="this.getPost.type=='question'">
+        <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion">
             <v-row class="pb-8">Write your reply:</v-row>
             <v-textarea outlined v-model="newAnswer"></v-textarea>
             <v-row>
@@ -105,6 +105,9 @@ export default {
             // }
             // else return this.getPost.type
         },
+        isQuestion(){
+            return 'Question'==this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1)
+        },
         postBoxData(){
             let postData={
                 'title':this.getPost.title,
@@ -145,10 +148,12 @@ export default {
                 comments=[]
                 answer.comments.forEach(comment => {
                     comments.push({
-                        'name':comment.name,
-                        'id':comment.owner,
+                        'name':comment.owner.Name,
+                        'id':comment.owner.ID,
                         'date':this.convertToDate(comment.createdAt),
-                        'text':comment.description
+                        'text':comment.description,
+                        'contentID':comment.commentId,
+                        'isReported':comment.isReported
                     })
                 })
                 answers.push({
