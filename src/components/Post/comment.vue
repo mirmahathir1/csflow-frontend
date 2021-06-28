@@ -204,6 +204,7 @@ export default {
             let data={'type':'comment','id':this.contentID}
             try{
                 let response=await this.delete(data)
+                this.deleteClicked=false
                 // "await something" if you want to add anything
             }catch(e){
 
@@ -227,6 +228,7 @@ export default {
             let data={'description':this.newComment,'id':this.contentID}
             try{
                 let response=await this.editComment(data)
+                this.editCommentClicked=false
                 await this.loadPost(this.$route.params.postID)
                 await this.loadPostAnswer(this.$route.params.postID)
             }catch(e){
