@@ -67,7 +67,7 @@
                         :karma="parseInt(answer['owner']['karma'])"
                         :image="answer['owner']['profilePic']"
                         :width="250"
-                        @click.native="$router.push('/user/' + answer['owner']['studentId'])"
+                        @click.stop.native="$router.push('/user/' + answer['owner']['studentId'])"
                     ></user-card>
                   </v-col>
                 </v-row>
