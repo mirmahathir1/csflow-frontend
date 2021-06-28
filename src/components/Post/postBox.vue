@@ -5,16 +5,16 @@
         <v-col cols="2" md="1" class="my-auto">
             <p style="background-color:#f0f0f0">
               <v-row class="mx-auto text-center" >
-                <v-icon class="mx-auto text-center" large color="green darken-2">
-                  mdi-arrow-up-bold-outline
+                <v-icon class="mx-auto text-center" large color="green darken-2" @click="upvote">
+                  mdi-triangle
                 </v-icon>
               </v-row>
               <v-row class="mx-auto text-center">
                 <span class="mx-auto text-center">{{post.vote}}</span>
               </v-row>
               <v-row class="mx-auto text-center">
-                <v-icon class="mx-auto text-center" large color="red darken-2">
-                  mdi-arrow-down-bold-outline
+                <v-icon class="mx-auto text-center" large color="red darken-2" @click="downvote">
+                  mdi-triangle mdi-rotate-180
                 </v-icon>
               </v-row>
             </p>
@@ -98,6 +98,7 @@
 <script>
 import PaddedContainer from '../PaddedContainerWithoutLeft'
 import UserCard from '../Card/UserCard'
+import {mapGetters,mapActions} from 'vuex'
 export default {
     data(){
         return{
@@ -130,11 +131,47 @@ export default {
       postID:{
         type: Number,
         default: -1
+      },
+      voteStatus:{
+        type: Number,
+        default: -5
       }
     },
     components:{
       PaddedContainer,
       UserCard
+    },
+    methods:{
+      ...mapActions('post',['upvotePost','downvotePost','deleteDownvotePost','deleteUpvotePost']),
+      async upvote(){
+          try{
+            if(this.voteStatus==0){
+              let response=await this.upvotePost(this.postID)
+            }
+            else if(this.voteStatus==1){
+              let response=await this.deleteUpvotePost(this.postID)
+            }else if(this.voteStatus==-1){
+              this.deleteDownvotePost(this.postID)
+              let response=await this.upvotePost(this.postID)
+            }
+          }catch(e){
+
+          }
+      },
+      async downvote(){
+          try{
+            if(this.voteStatus==0){
+              let response=await this.downvotePost(this.postID)
+            }else if(this.voteStatus==-1){
+              let response=await this.deleteDownvotePost(this.postID)
+            }else if(this.voteStatus==1){
+              this.deleteUpvotePost(this.postID)
+              let response=await this.downvotePost(this.postID)
+            }
+          }catch(e){
+            
+          }
+      }
     }
 }
 </script>

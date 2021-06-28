@@ -433,7 +433,7 @@ export default {
           this.clicked=false
           this.errorMessage=''
           this.anyError=false
-
+          
         })
         .catch(e=>{
           this.anyError=true
@@ -446,7 +446,9 @@ export default {
       requestNewTag(){
         this.requestTag({'name':this.newTagText,'type':this.newTagType,'course':this.newTagCourse})
           .then(response=>{
-
+              this.newTagText=null
+              this.newTagType=null
+              this.newTagCourse=null
           })
           .catch(e=>{
 
