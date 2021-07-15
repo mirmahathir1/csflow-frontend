@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div v-for="(comment,idx) in comments" :key="idx" class="pt-2">
+      <div v-for="(comment,idx) in commentData" :key="idx" class="pt-2">
         <Comment 
             :name=comment.name
             :id=comment.id
@@ -65,7 +65,9 @@ export default {
     data(){
         return{
             clicked:false,
-            newComment:null
+            newComment:null,
+            isCommentAdded:false,
+            allComments:[]
             // comments:[
             //     {'name':'Abser','id':1605026,'date':'1 May,2020 11.43AM','text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?'},
             //     {'name':'Abser','id':1605026,'date':'1 May,2020 11.43AM','text':'What is your name?'},
@@ -76,17 +78,45 @@ export default {
     },
     methods:{
         ...mapActions('post',['makeComment']),
+        convertToDate (date) {
+            return new Date(date).toLocaleString('en-US', {
+                day: 'numeric',
+                year: 'numeric',
+                month: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+            });
+        },
         async doComment(){
             this.clicked=true
             try{
                 let response=await this.makeComment({'comment':this.newComment,'id':this.contentId,'type':this.contentType})
-
+        
+                this.isCommentAdded=true
+                this.allComments.push({
+                    'name':this.getMe['name'],
+                    'id':this.getID,
+                    'text':this.newComment,
+                    'date':this.convertToDate(new Date().getTime()),
+                    'contentID':response.data.payload.commentId,
+                    'isReported':false
+                })
+                
             }catch(e){
 
             }finally{
                 this.clicked=false
                 this.newComment=null
             }
+        }
+    },
+    computed:{
+        ...mapGetters('auth',['getID','getMe']),
+        commentData(){
+            if(!this.isCommentAdded){
+                this.allComments=this.comments
+            }
+            return this.allComments
         }
     }
 }

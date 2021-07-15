@@ -5,17 +5,25 @@
         <v-col cols="2" md="1" class="my-auto">
             <p style="background-color:#f0f0f0">
               <v-row class="mx-auto text-center" >
-                <v-icon class="mx-auto text-center" large color="green darken-2" @click="upvote">
-                  mdi-triangle
-                </v-icon>
+                <v-btn class="mx-auto text-center" :text="status==1" :plain="status!=1" 
+                       icon @click="upvote" :loading="upvoteLoading"
+                >
+                  <v-icon  large color="green darken-2" >
+                    mdi-triangle
+                  </v-icon>
+                </v-btn>
               </v-row>
               <v-row class="mx-auto text-center">
                 <span class="mx-auto text-center">{{count}}</span>
               </v-row>
               <v-row class="mx-auto text-center">
-                <v-icon class="mx-auto text-center" large color="red darken-2" @click="downvote">
-                  mdi-triangle mdi-rotate-180
-                </v-icon>
+                <v-btn class="mx-auto text-center" :text="status==-1" :plain="status!=-1" 
+                       icon @click="downvote" :loading="downvoteLoading"
+                >
+                  <v-icon large color="red darken-2">
+                    mdi-triangle mdi-rotate-180
+                  </v-icon>
+                </v-btn>
               </v-row>
             </p>
         </v-col>
@@ -103,7 +111,9 @@ export default {
     data(){
         return{
             status:null,
-            count:null
+            count:null,
+            downvoteLoading:false,
+            upvoteLoading:false
         }
     },
     props:{
@@ -137,17 +147,18 @@ export default {
     methods:{
       ...mapActions('post',['upvotePost','downvotePost','deleteDownvotePost','deleteUpvotePost']),
       async upvote(){
+          this.upvoteLoading=true
           try{
             if(this.status==0){
               let response=await this.upvotePost({'id':this.postID,'type':'post'})
               this.status=1
               this.count=this.count+1
             }
-            else if(this.voteStatus==1){
+            else if(this.status==1){
               let response=await this.deleteUpvotePost({'id':this.postID,'type':'post'})
               this.status=0
               this.count=this.count-1
-            }else if(this.voteStatus==-1){
+            }else if(this.status==-1){
               this.deleteDownvotePost({'id':this.postID,'type':'post'})
               let response=await this.upvotePost({'id':this.postID,'type':'post'})
               this.status=1
@@ -156,8 +167,10 @@ export default {
           }catch(e){
 
           }
+          this.upvoteLoading=false
       },
       async downvote(){
+          this.downvoteLoading=true
           try{
             if(this.status==0){
               let response=await this.downvotePost({'id':this.postID,'type':'post'})
@@ -176,6 +189,7 @@ export default {
           }catch(e){
             
           }
+          this.downvoteLoading=false
       }
     },
     mounted(){

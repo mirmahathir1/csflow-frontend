@@ -1,5 +1,5 @@
 <template>
-  <v-card class="px-3 py-3">
+  <v-card class="px-3 py-3" v-if="!isDeleted">
       <div>
           <AnswerTop
             :votes=answers.votes
@@ -24,6 +24,7 @@
             :contentId="answers.answerId"
             :isReported="answers.isReported"
             :isFollowing="answers.isFollowing"
+            @deleted="isDeleted=true"
           ></Detail>
       </div>
       <div>
@@ -71,6 +72,11 @@ export default {
           }
         }
     },
+    data(){
+      return{
+        isDeleted:false
+      }
+    }
 }
 </script>
 

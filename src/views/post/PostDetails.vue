@@ -1,64 +1,67 @@
 <template>
-  <PaddedContainerWithoutLeft>
-      <PageHeader>{{type}} Details</PageHeader>
-      <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')">
-        <div class="pt-4 pb-4">
-            <PostBox
-                :post="postBoxData"
-                :postID="parseInt(this.$route.params.postID)"
-                :voteStatus="parseInt(this.getPost.voteStatus)"
-            ></PostBox>
-        </div>
-        <div class="pb-4">
-            <div class="mt-2 mx-3">
-                <Details
-                    :text="this.getPost.description"
-                    :files="this.getPost.files"
-                    :isOwner="this.getPost.owner.ID==this.getID"
-                    :contentType="'post'"
-                    :contentId="parseInt(this.$route.params.postID)"
-                    :isReorted="this.getPost.isReported"
-                    :isFollowing="this.getPost.isFollowing"
-                ></Details>
+  <div>
+    <PaddedContainerWithoutLeft v-if="!isDeleted">
+        <PageHeader>{{type}} Details</PageHeader>
+        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')">
+            <div class="pt-4 pb-4">
+                <PostBox
+                    :post="postBoxData"
+                    :postID="parseInt(this.$route.params.postID)"
+                    :voteStatus="parseInt(this.getPost.voteStatus)"
+                ></PostBox>
             </div>
-            <CommentSection
-                :comments="commentData"
-                :contentId="parseInt(this.$route.params.postID)"
-                :contentType="'post'"
-            ></CommentSection>
+            <div class="pb-4">
+                <div class="mt-2 mx-3">
+                    <Details
+                        :text="this.getPost.description"
+                        :files="this.getPost.files"
+                        :isOwner="this.getPost.owner.ID==this.getID"
+                        :contentType="'post'"
+                        :contentId="parseInt(this.$route.params.postID)"
+                        :isReorted="this.getPost.isReported"
+                        :isFollowing="this.getPost.isFollowing"
+                        @deleted="isDeleted=true"
+                    ></Details>
+                </div>
+                <CommentSection
+                    :comments="commentData"
+                    :contentId="parseInt(this.$route.params.postID)"
+                    :contentType="'post'"
+                ></CommentSection>
+            </div>
+        </v-card>
+        <DetailsLoader v-else></DetailsLoader>
+        <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
+        <div v-if="!getLoaderFlag('postAnswerLoader')">
+            <div v-if="isQuestion">
+                <PageHeader class="pt-5">Answers</PageHeader>
+                <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
+                    <AnswerSection
+                        :answers="answer"
+                    ></AnswerSection>
+                </v-card>
+            </div>
         </div>
-      </v-card>
-      <DetailsLoader v-else></DetailsLoader>
-      <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
-      <div v-if="!getLoaderFlag('postAnswerLoader')">
-        <div v-if="isQuestion">
-            <PageHeader class="pt-5">Answers</PageHeader>
-            <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
-                <AnswerSection
-                    :answers="answer"
-                ></AnswerSection>
+        <DetailsLoader v-else></DetailsLoader>
+        <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
+            <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion">
+                <v-row class="pb-8">Write your reply:</v-row>
+                <v-textarea outlined v-model="newAnswer"></v-textarea>
+                <v-row>
+                    <v-btn
+                        color="primary"
+                        class="ml-auto"
+                        :disabled="newAnswer==null||answerClicked"
+                        :loading="answerClicked"
+                        @click="doAnswer()"
+                    >
+                        Submit
+                    </v-btn>
+                </v-row>
             </v-card>
         </div>
-      </div>
-      <DetailsLoader v-else></DetailsLoader>
-      <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
-        <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion">
-            <v-row class="pb-8">Write your reply:</v-row>
-            <v-textarea outlined v-model="newAnswer"></v-textarea>
-            <v-row>
-                <v-btn
-                    color="primary"
-                    class="ml-auto"
-                    :disabled="newAnswer==null||answerClicked"
-                    :loading="answerClicked"
-                    @click="doAnswer()"
-                >
-                    Submit
-                </v-btn>
-            </v-row>
-        </v-card>
-      </div>
-  </PaddedContainerWithoutLeft>
+    </PaddedContainerWithoutLeft>
+  </div>
 </template>
 
 <script>
@@ -78,7 +81,8 @@ export default {
     data(){
         return{
             newAnswer:null,
-            answerClicked:false
+            answerClicked:false,
+            isDeleted:false
         };
     },
     components:{
@@ -115,7 +119,7 @@ export default {
                 'date':this.convertToDate(this.getPost.createdAt),
                 'type':this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1),
                 'accenptedAnswer':this.getPost.accenptedAnswer==null?0:this.getPost.accenptedAnswer,
-                'vote':this.getPost.vote==null?0:this.getPost.vote,
+                'vote':this.getPost.UpvoteCount-this.getPost.DownvoteCount,
                 'tags':this.getTags(),
                 'owner':{
                     'name':this.getPost.owner.Name,
@@ -206,6 +210,23 @@ export default {
             let id=this.$route.params.postID
             try{
                 let response=await this.makeAnswer({'id':id,'answer':this.newAnswer,'files':[]})
+
+                this.getPostAnswer.push({
+                    'Description':this.newAnswer,
+                    'DownvoteCount':0,
+                    'PostID':id,
+                    'UpvoteCount':0,
+                    'answerId':response.data.payload.answerId,
+                    'comments':[],
+                    'createdAt':new Date().getTime(),
+                    'files':[],
+                    'isFollowing':false,
+                    'isReported':false,
+                    'owner':response.data.payload.owner,
+                    'voteStatus':0,
+                })
+
+                console.log(this.getPostAnswer.length)
                 this.answerClicked=false;
                 this.newAnswer=null
             }catch(e){
