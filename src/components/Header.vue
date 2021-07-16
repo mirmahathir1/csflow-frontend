@@ -672,6 +672,11 @@ export default {
           icon: 'mdi-file-code',
           link: '/archive/project'
         },
+        {
+          title: 'Question Bank',
+          icon: 'mdi-head-question',
+          link: '/question-bank'
+        },
       ],
       privilegedItems: [
         {

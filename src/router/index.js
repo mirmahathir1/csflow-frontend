@@ -218,6 +218,14 @@ const routes = [
         meta: { requiresAuth: true }
     },
 
+    ////////////////// question bank module /////////////////////
+    {
+        path: '/question-bank',
+        name: 'QuestionBank',
+        component: () => import('../views/questionBank/QuestionBank'),
+        meta: { requiresAuth: true }
+    },
+
     ////////////////// privileged module /////////////////////
     {
         path: '/privileged/user',
