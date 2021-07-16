@@ -52,7 +52,7 @@
                         background-color="red lighten-2"
                         color="primary"
                         :value=value
-                        :readonly="!(this.getPost.owner.ID==this.id)"
+                        :readonly="!(this.getPost.owner.ID==this.getID)"
                         @input="acceptAnswer"
                       ></v-rating>
                   </v-col>
@@ -198,6 +198,7 @@ export default {
     },
     computed:{
       ...mapGetters('post',['getPost']),
+      ...mapGetters('auth',['getID'])
     },
     mounted(){
       this.status=this.voteStatus

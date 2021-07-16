@@ -184,7 +184,6 @@ export default {
       this.loadRelevantPost({'skip':0,'limit':10})
       this.loadTopUser({'skip':0,'limit':10})
       this.loadUnansweredPost({'skip':0,'limit':10})
-      this.loadUserPost(1605011)
     },
 }
 </script>

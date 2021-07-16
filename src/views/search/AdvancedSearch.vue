@@ -41,7 +41,7 @@
               >Post Type:</v-card-text> -->
               <v-select 
                 v-model="course" 
-                :items="getCourses" 
+                :items="getCourseData" 
                 label="Select course" 
                 outlined 
                 dense
@@ -252,14 +252,13 @@ export default {
       },
       courseChanged(){
         // console.log(this.course)
-        this.loadTopics(this.course)
-        this.loadBooks(this.course)
+        let data=this.course.split(",")
+        this.loadTopics(data[0])
+        this.loadBooks(data[0])
       }
   },
   validations:{
-    text:{
-      required
-    }
+    
   },
   computed:{
     ...mapGetters('post',['getCourses','getTopics','getBooks','getLoaderFlag']),
@@ -274,6 +273,13 @@ export default {
         return this.getBooks
       }
       return []
+    },
+    getCourseData(){
+      let data=[]
+      this.getCourses.forEach(course => {
+        data.push(course.courseId+","+course.name)
+      });
+      return data
     }
   },
   mounted(){

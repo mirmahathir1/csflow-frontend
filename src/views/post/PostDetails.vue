@@ -44,7 +44,15 @@
         </div>
         <DetailsLoader v-else></DetailsLoader>
         <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
-            <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion">
+            <v-btn
+                class="ma-2"
+                color="info"
+                @click="showReplyBox=true"
+                v-if="isQuestion && !showReplyBox"
+            >
+                Write Reply
+            </v-btn>
+            <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion && showReplyBox">
                 <v-row class="pb-8">Write your reply:</v-row>
                 <v-textarea outlined v-model="newAnswer"></v-textarea>
                 <v-row>
@@ -56,6 +64,13 @@
                         @click="doAnswer()"
                     >
                         Submit
+                    </v-btn>
+                    <v-btn
+                        color="error"
+                        class="ml-2"
+                        @click="showReplyBox=false"
+                    >
+                        Cancel
                     </v-btn>
                 </v-row>
             </v-card>
@@ -82,7 +97,8 @@ export default {
         return{
             newAnswer:null,
             answerClicked:false,
-            isDeleted:false
+            isDeleted:false,
+            showReplyBox:false,
         };
     },
     components:{

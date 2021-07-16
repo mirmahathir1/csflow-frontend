@@ -67,10 +67,10 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <!-- <v-app-tooltip-btn class="d-inline-block">
+                        <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
-
+                            v-model="files"
                             small-chips
                           ></v-file-input>
                         </v-app-tooltip-btn>
@@ -78,9 +78,10 @@
                           <v-file-input
                             multiple
                             hide-input
+                            v-model="files"
                             prepend-icon="mdi-camera"
                           ></v-file-input>
-                        </v-app-tooltip-btn> -->
+                        </v-app-tooltip-btn>
                       </div>
                       <v-divider></v-divider>
                       <v-textarea
@@ -105,7 +106,7 @@
                     <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Post Type:</v-card-text>
                       <v-select
                         v-model="course"
-                        :items="getCourses"
+                        :items="getCourseData"
                         label="Select course"
                         outlined
                         dense
@@ -397,10 +398,12 @@ export default {
         newTagText:null,
         newTagType:null,
         newTagCourse:null,
+        files:[],
       };
     },
     methods: {
-      ...mapActions('post',['requestTag','loadCourses','loadBooks','loadTopics','submitPost']),
+      ...mapActions('post',['requestTag','loadCourses','loadBooks','loadTopics','submitPost','submitResources']),
+      
       removeTag(index) {
         this.tags.splice(index, 1);
 
@@ -415,6 +418,14 @@ export default {
       submit(){
         this.clicked=true
 
+        
+        if(this.files.length>0){
+          this.submitResources(this.files)
+          .then(response=>{
+            console.log(response)
+          })
+        }
+
         let tags = [];
         this.tags.forEach((tag)=>{
             tags.push(tag.tag);
@@ -423,8 +434,11 @@ export default {
         let l=this.selected.includes('term')?this.term.split(','):[0,0]
         if(l[0]!=null) l[0]=parseInt(l[0])
         if(l[1]!=null) l[1]=parseInt(l[1])
+
+        let c=this.course.split(",")
+
         let data={
-          'type':this.type,'title':this.title,'description':this.description,'course':this.course,
+          'type':this.type,'title':this.title,'description':this.description,'course':c[0],
           'topic':this.topic,'book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
         }
         // if(!this.selected.includes('term')) delete data.termFinal
@@ -460,8 +474,9 @@ export default {
       courseChanged(){
         // console.log(this.course)
         this.topic=null
-        this.loadTopics(this.course)
-        this.loadBooks(this.course)
+        let data=this.course.split(",")
+        this.loadTopics(data[0])
+        this.loadBooks(data[0])
       }
     },
     computed:{
@@ -502,7 +517,14 @@ export default {
           return this.getBooks
         }
         return []
-      }
+      },
+      getCourseData(){
+        let data=[]
+        this.getCourses.forEach(course => {
+          data.push(course.courseId+","+course.name)
+        });
+        return data
+      },
     },
     validations:{
       title:{
@@ -531,6 +553,9 @@ export default {
         required
       },
       course:{
+        required
+      },
+      description:{
         required
       }
 
