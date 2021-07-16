@@ -8,6 +8,7 @@ import others from "./others/drawerControl";
 import post from "../store/post";
 import admin from '../store/admin';
 import search from "../store/search";
+import question_bank from "../store/question_bank";
 
 Vue.use(Vuex)
 
@@ -26,7 +27,8 @@ let store = new Vuex.Store({
     privileged,
     post,
     admin,
-    search
+    search,
+    question_bank,
   }
 })
 

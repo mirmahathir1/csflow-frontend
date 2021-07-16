@@ -48,7 +48,7 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-        path:  '/postdetails/:postID',
+        path:  '/post/details/:postID',
         name: 'PostDetails',
         component:()=>import('../views/post/PostDetails.vue'),
         meta: { requiresAuth: true }
@@ -215,6 +215,14 @@ const routes = [
         path: '/archive/project/search/:topic',
         name: 'ProjectsSearchResult',
         component: () => import('../views/archive/ProjectsSearchResult'),
+        meta: { requiresAuth: true }
+    },
+
+    ////////////////// question bank module /////////////////////
+    {
+        path: '/question-bank',
+        name: 'QuestionBank',
+        component: () => import('../views/questionBank/QuestionBank'),
         meta: { requiresAuth: true }
     },
 
