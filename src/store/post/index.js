@@ -413,6 +413,21 @@ const actions={
             })
         })
     },
+
+    async doAcceptAnswer({commit},data){
+        return new Promise((resolve,reject)=>{
+            csflowAPI.post('/answer/'+data.id+'/accept')
+            .then(response=>{
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+            .finally(()=>{
+                
+            })
+        })
+    },
 };
 
 export  default{

@@ -1,9 +1,9 @@
 <template>
-  <div class="mx-2 mt-4">
+  <div class="mx-2 mt-4" v-if="!isDeleted">
     <v-card class="mt-2 ml-2" dense rounded="lg" v-if="!editClicked">
         <v-row class="">
             <v-col cols="9" class="text-justify my-auto mx-5">
-                {{text}}
+                {{textData}}
             </v-col>
             <v-col align-self="start" class="my-3 mx-2">
                 <v-card dense rounded="lg" elevation="2" color="#1F7087">
@@ -179,6 +179,8 @@ export default {
             editClicked:false,
             editCommentClicked:false,
             newComment:null,
+            isEdited:false,
+            isDeleted:false
         }
     },
     methods:{
@@ -197,7 +199,7 @@ export default {
         },
         async doEdit(){
             this.editClicked=true
-            this.newComment=this.text
+            if(!this.isEdited) this.newComment=this.text
         },
         async doDelete(){
             this.deleteClicked=true
@@ -205,6 +207,8 @@ export default {
             try{
                 let response=await this.delete(data)
                 this.deleteClicked=false
+                this.dialog=false
+                this.isDeleted=true
                 // "await something" if you want to add anything
             }catch(e){
 
@@ -229,8 +233,8 @@ export default {
             try{
                 let response=await this.editComment(data)
                 this.editCommentClicked=false
-                await this.loadPost(this.$route.params.postID)
-                await this.loadPostAnswer(this.$route.params.postID)
+                this.editClicked=false
+                this.isEdited=true
             }catch(e){
 
             }
@@ -240,6 +244,12 @@ export default {
         ...mapGetters('auth',['getID']),
         isOwner(){
             return this.getID==this.id
+        },
+        textData(){
+            if(this.isEdited){
+                return this.newComment
+            }
+            return this.text
         },
         reported(){
             let condition;

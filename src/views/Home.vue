@@ -12,7 +12,7 @@
           :post="post"
           :postID="parseInt(getRelevantPost[idx].ID)"
           :voteStatus="parseInt(getRelevantPost[idx].voteStatus)"
-          @click.native="$router.push('/postdetails/'+getRelevantPost[idx].ID)"
+          @click.native="$router.push('/post/details/'+getRelevantPost[idx].ID)"
         >
         </post-box>
       </v-row>
@@ -66,7 +66,7 @@
                 :text="post.title"
                 :votes="post.upvoteCount-post.downvoteCount"
                 class="mx-auto"
-                @click.native="$router.push('/postdetails/'+getTopPost[idx].ID)"
+                @click.native="$router.push('/post/details/'+getTopPost[idx].ID)"
               ></post-card>
             </v-col>
           </v-row>
@@ -136,7 +136,7 @@ export default {
         }
       },
       postaPage(){
-        
+
       },
       relevantPostData(){
         let postData=[]

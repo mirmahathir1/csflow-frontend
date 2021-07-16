@@ -3,9 +3,13 @@
       <v-row class="px-3">
           <v-col class="py-2 my-auto" cols="2" md="1" style="background-color:#f0f0f0">
               <v-row align="center" class="mt-1">
-                <v-icon class="mx-auto text-center" large color="green darken-2" @click="upvote">
-                    mdi-triangle
-                </v-icon>
+                <v-btn class="mx-auto text-center" :text="status==1" :plain="status!=1" 
+                       icon @click="upvote" :loading="upvoteLoading"
+                >
+                  <v-icon large color="green darken-2">
+                      mdi-triangle
+                  </v-icon>
+                </v-btn>
               </v-row>
               <v-row align="center">
                   <span class="mx-auto text-center">
@@ -13,9 +17,13 @@
                   </span>
               </v-row>
               <v-row align="center" class="mb-1">
-                <v-icon class="mx-auto text-center" large color="red darken-2" @click="downvote">
-                    mdi-triangle mdi-rotate-180
-                </v-icon>
+                <v-btn class="mx-auto text-center" :text="status==-1" :plain="status!=-1" 
+                       icon @click="downvote" :loading="downvoteLoading"
+                >
+                  <v-icon large color="red darken-2" >
+                      mdi-triangle mdi-rotate-180
+                  </v-icon>
+                </v-btn>
               </v-row>
           </v-col>
           <v-col cols="6">
@@ -44,7 +52,8 @@
                         background-color="red lighten-2"
                         color="primary"
                         :value=value
-                        :readonly=!isOwner
+                        :readonly="!(this.getPost.owner.ID==this.id)"
+                        @input="acceptAnswer"
                       ></v-rating>
                   </v-col>
               </v-row>
@@ -122,23 +131,28 @@ export default {
     data(){
         return{
             status:null,
-            count:null
+            count:null,
+            upvoteLoading:false,
+            downvoteLoading:false,
         }
     },
     methods:{
-        ...mapActions('post',['upvotePost','downvotePost','deleteUpvotePost','deleteDownvotePost']),
+        ...mapActions('post',['upvotePost','downvotePost','deleteUpvotePost','deleteDownvotePost',
+                              'doAcceptAnswer']),
+        
         async upvote(){
+          this.upvoteLoading=true
           try{
             if(this.status==0){
               let response=await this.upvotePost({'id':this.answerId,'type':'answer'})
               this.status=1
               this.count=this.count+1
             }
-            else if(this.voteStatus==1){
+            else if(this.status==1){
               let response=await this.deleteUpvotePost({'id':this.answerId,'type':'answer'})
               this.status=0
               this.count=this.count-1
-            }else if(this.voteStatus==-1){
+            }else if(this.status==-1){
               this.deleteDownvotePost({'id':this.answerId,'type':'answer'})
               let response=await this.upvotePost({'id':this.answerId,'type':'answer'})
               this.status=1
@@ -147,8 +161,11 @@ export default {
           }catch(e){
 
           }
+          this.upvoteLoading=false
       },
+      
       async downvote(){
+        this.downvoteLoading=true
           try{
             if(this.status==0){
               let response=await this.downvotePost({'id':this.answerId,'type':'answer'})
@@ -167,7 +184,20 @@ export default {
           }catch(e){
             
           }
+          this.downvoteLoading=false
+      },
+      
+      async acceptAnswer(){
+        console.log('here')
+        try{
+          let response= await this.doAcceptAnswer({'id':this.answerId})
+        }catch(e){
+
+        }
       }
+    },
+    computed:{
+      ...mapGetters('post',['getPost']),
     },
     mounted(){
       this.status=this.voteStatus

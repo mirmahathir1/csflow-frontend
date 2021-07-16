@@ -103,43 +103,7 @@
 
 
       <div v-if="getIsSignedIn">
-        <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-badge
-                :content="messages"
-                :value="messages"
-                color=""
-                overlap
-                class="ml-2"
-
-            >
-              <v-btn
-                  class="mx-2"
-                  fab
-                  dark
-                  small
-                  color="primary"
-                  v-bind="attrs"
-                  v-on="on"
-              >
-                <v-icon>
-                  mdi-bell
-                </v-icon>
-              </v-btn>
-            </v-badge>
-          </template>
-          <v-list v-for="(item,idx) in notifications" :key="idx">
-            <v-list-item :href="item.link" style="text-decoration:none">
-              <v-list-item-title>{{item.text}}</v-list-item-title>
-            </v-list-item>
-            <!-- <v-list-item @click="signOut">
-              <v-list-item-title>Log out</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="signOutAll">
-              <v-list-item-title>Log out from all devices</v-list-item-title>
-            </v-list-item> -->
-          </v-list>
-        </v-menu>
+        <Notification></Notification>
         <v-menu left bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on" :loading="getLogoutLoaderFlag">
@@ -553,7 +517,7 @@
 <script>
 import {mapGetters, mapActions} from "vuex";
 import Button from '../components/Button'
-
+import Notification from "./Notification";
 export default {
   name: "Header",
   computed: {
@@ -613,7 +577,8 @@ export default {
 
   },
   components: {
-    Button
+    Button,
+    Notification
   },
   watch: {},
   data() {
@@ -621,21 +586,6 @@ export default {
       dialog: false,
       inPrivilegedDash: false,
       searchText: null,
-      messages: 99,
-      notifications:[
-        {
-          text:'Ashraful commented on your post',
-          link:'https://csflow-buet.web.app/#/postdetails/6'
-        },
-        {
-          text:'Mahathir answered your question',
-          link:'https://csflow-buet.web.app/#/postdetails/6'
-        },
-        {
-          text:'Navid upvoted your post',
-          link:'https://csflow-buet.web.app/#/postdetails/6'
-        },
-      ],
       items: [
         {
           title: 'Relevant',

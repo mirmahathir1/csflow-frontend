@@ -2,7 +2,7 @@
     <v-card rounded="lg">
         <v-card-text  v-if="!editClicked">
             <p class="mx-3 text--darken-2 black--text">
-                {{text}}
+                {{textData}}
             </p>
             <div v-if="files.length!=0">
                 <v-list-item-content v-for="(imgSrc,idx) in files" :key="idx">
@@ -174,7 +174,9 @@ export default {
             followClicked:false,
             deleteClicked:false,
             newAnswer:null,
-            dialog:false
+            dialog:false,
+            isDeleted:false,
+            isEdited:false
         }
     },
     props:{
@@ -221,6 +223,12 @@ export default {
             condition=this.isFollowing
             if(this.followClicked) condition=!condition;
             return condition;
+        },
+        textData(){
+            if(this.isEdited && this.contentType.toLowerCase()==='answer'){
+                return this.newAnswer
+            }
+            else return this.text
         }
     },
     methods:{
@@ -254,6 +262,7 @@ export default {
             let data={'type':this.contentType,'id':this.contentId}
             try{
                 let response=await this.delete(data)
+                this.$emit('deleted',true)
                 // "await something" if you want to add anything
             }catch(e){
 
@@ -266,7 +275,7 @@ export default {
                 this.$router.push('/post/edit/'+this.contentId)
             }else{
                 this.editClicked=true
-                this.newAnswer=this.text
+                if(!this.isEdited) this.newAnswer=this.text
             }
         },
         async undoReport(){
@@ -296,9 +305,10 @@ export default {
             try{
                 let response=await this.editAnswer(data)
                 this.editClicked=false
+                this.isEdited=true
+                
                 // this.text=this.newAnswer
-                await this.loadPost(this.$route.params.postID)
-                await this.loadPostAnswer(this.$route.params.postID)
+                
             }catch(e){
 
             }finally{

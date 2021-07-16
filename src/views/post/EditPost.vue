@@ -370,7 +370,7 @@ export default {
           this.clicked=false
           this.errorMessage=''
           this.anyError=false
-          this.$router.push('/postdetails/'+this.$route.params.postID)
+          this.$router.push('/post/details/'+this.$route.params.postID)
         })
         .catch(e=>{
           this.anyError=true
