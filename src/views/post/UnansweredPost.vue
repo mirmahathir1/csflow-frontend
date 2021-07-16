@@ -12,7 +12,7 @@
             :post="post"
             :postID="parseInt(getUnansweredPost[idx].ID)"
             :voteStatus="parseInt(getUnansweredPost[idx].voteStatus)"
-            @click.native="$router.push('/postdetails/'+getUnansweredPost[idx].ID)"
+            @click.native="$router.push('/post/details/'+getUnansweredPost[idx].ID)"
             >
             </post-box>
         </v-col>

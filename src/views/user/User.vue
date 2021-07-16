@@ -124,7 +124,7 @@
                                     </v-col>
                                 </v-list-item>
 
-                                <v-list-item class="mt-n7" dense>   
+                                <v-list-item class="mt-n7" dense>
                                     <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Total Discussion
@@ -137,7 +137,7 @@
                                     </v-col>
                                 </v-list-item>
 
-                                <v-list-item class="mt-n7" dense>   
+                                <v-list-item class="mt-n7" dense>
                                     <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Total Question
@@ -150,7 +150,7 @@
                                     </v-col>
                                 </v-list-item>
 
-                                <v-list-item class="mt-n7" dense>   
+                                <v-list-item class="mt-n7" dense>
                                     <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Total Answers
@@ -163,7 +163,7 @@
                                     </v-col>
                                 </v-list-item>
 
-                                <v-list-item class="mt-n7" dense>   
+                                <v-list-item class="mt-n7" dense>
                                     <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Upvotes
@@ -176,7 +176,7 @@
                                     </v-col>
                                 </v-list-item>
 
-                                <v-list-item class="mt-n7" dense>   
+                                <v-list-item class="mt-n7" dense>
                                     <v-col cols="9" md="4">
                                         <v-list-item-icon>
                                             Downvotes
@@ -193,7 +193,7 @@
                     </v-card>
                 </v-container> -->
         </v-card>
-        
+
         <v-card
             height="60px"
             class="mt-8"
@@ -217,7 +217,7 @@
                         :votes="post.upvoteCount-post.downvoteCount"
                         :small="$isMobile()?true:false"
                         class="mx-auto"
-                        @click.native="$router.push('/postdetails/'+getUserPost[idx].ID)"
+                        @click.native="$router.push('/post/details/'+getUserPost[idx].ID)"
                     ></post-card>
                 </v-col>
             </v-row>
@@ -299,7 +299,7 @@ export default {
     components:{
         PaddedContainer,
         PostCard,
-        DetailsLoader   
+        DetailsLoader
     },
     watch: {
         '$route'(to, from) {
@@ -307,7 +307,7 @@ export default {
             this.getProfile(this.id);
             if(this.id=='me' || this.id==this.getID) this.loadUserPost('me');
             else this.loadUserPost(this.id);
-            
+
         }
     }
 

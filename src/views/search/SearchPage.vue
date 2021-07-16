@@ -10,7 +10,7 @@
             <v-col cols="12">
             <post-box
                 :post=postBoxData[idx]
-                @click.native="$router.push('/postdetails/'+getSearchResults[idx].ID)"
+                @click.native="$router.push('/post/details/'+getSearchResults[idx].ID)"
             >
             </post-box>
             </v-col>
@@ -86,7 +86,7 @@ export default {
                         'karma':this.getSearchResults[idx].owner.Karma
                     }
                 }
-                
+
             }
             return postData
         }
