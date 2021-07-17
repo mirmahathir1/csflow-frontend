@@ -403,7 +403,7 @@ export default {
     },
     methods: {
       ...mapActions('post',['requestTag','loadCourses','loadBooks','loadTopics','submitPost','submitResources']),
-      
+
       removeTag(index) {
         this.tags.splice(index, 1);
 
@@ -418,11 +418,11 @@ export default {
       async submit(){
         this.clicked=true
 
-        
+
         if(this.files.length>0){
           let formData=new FormData();
           formData.append('files',this.files);
-          await this.submitResources(this.files)
+          await this.submitResources(formData)
           .then(response=>{
             console.log(response)
           })
@@ -449,7 +449,7 @@ export default {
           this.clicked=false
           this.errorMessage=''
           this.anyError=false
-          
+
         })
         .catch(e=>{
           this.anyError=true
