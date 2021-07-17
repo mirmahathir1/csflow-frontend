@@ -415,12 +415,14 @@ export default {
         this.tags.push({tag: this.newTag});
         this.newTag = '';
       },
-      submit(){
+      async submit(){
         this.clicked=true
 
         
         if(this.files.length>0){
-          this.submitResources(this.files)
+          let formData=new FormData();
+          formData.append('files',this.files);
+          await this.submitResources(this.files)
           .then(response=>{
             console.log(response)
           })
