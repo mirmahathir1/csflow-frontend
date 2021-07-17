@@ -2,37 +2,37 @@
   <div>
     <PaddedContainerWithoutLeft v-if="!isDeleted">
         <PageHeader>{{type}} Details</PageHeader>
-        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')">
+        <v-card rounded="lg" class="mt-6" v-if="getPost!==null">
             <div class="pt-4 pb-4">
                 <PostBox
                     :post="postBoxData"
-                    :postID="parseInt(this.$route.params.postID)"
-                    :voteStatus="parseInt(this.getPost.voteStatus)"
+                    :postID="parseInt($route.params.postID)"
+                    :voteStatus="parseInt(getPost.voteStatus)"
                 ></PostBox>
             </div>
             <div class="pb-4">
                 <div class="mt-2 mx-3">
                     <Details
-                        :text="this.getPost.description"
-                        :files="this.getPost.files"
-                        :isOwner="this.getPost.owner.ID==this.getID"
+                        :text="getPost.description"
+                        :files="getPost.files"
+                        :isOwner="getPost.owner.ID==getID"
                         :contentType="'post'"
-                        :contentId="parseInt(this.$route.params.postID)"
-                        :isReorted="this.getPost.isReported"
-                        :isFollowing="this.getPost.isFollowing"
+                        :contentId="parseInt($route.params.postID)"
+                        :isReorted="getPost.isReported"
+                        :isFollowing="getPost.isFollowing"
                         @deleted="isDeleted=true"
                     ></Details>
                 </div>
                 <CommentSection
                     :comments="commentData"
-                    :contentId="parseInt(this.$route.params.postID)"
+                    :contentId="parseInt($route.params.postID)"
                     :contentType="'post'"
                 ></CommentSection>
             </div>
         </v-card>
         <DetailsLoader v-else></DetailsLoader>
         <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
-        <div v-if="!getLoaderFlag('postAnswerLoader')">
+        <div v-if="getPostAnswer!==null">
             <div v-if="isQuestion">
                 <PageHeader class="pt-5">Answers</PageHeader>
                 <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
@@ -43,7 +43,7 @@
             </div>
         </div>
         <DetailsLoader v-else></DetailsLoader>
-        <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
+        <div class="mt-4" v-if="getPostAnswer!==null">
             <v-btn
                 class="ma-2"
                 color="info"
@@ -127,6 +127,8 @@ export default {
             // else return this.getPost.type
         },
         isQuestion(){
+            if(this.getPost===null)
+                return false;
             return 'Question'==this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1)
         },
         postBoxData(){
@@ -250,12 +252,12 @@ export default {
             }
         }
     },
-    async created(){
+    async mounted(){
         await this.loadPost(this.$route.params.postID)
         await this.loadPostAnswer(this.$route.params.postID)
-        while(this.getPost==null || this.getPostAnswer==null){
-            
-        }
+        // while(this.getPost==null || this.getPostAnswer==null){
+        //
+        // }
     }
 }
 </script>

@@ -430,7 +430,6 @@ const actions={
     },
 
     async submitResources({commit},data){
-        console.log("data sent from submitResources: ",data);
         return new Promise((resolve,reject)=>{
             csflowAPI.post('/resources',data)
             .then(response=>{
