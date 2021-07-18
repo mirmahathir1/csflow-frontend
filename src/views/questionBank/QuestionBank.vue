@@ -1,6 +1,21 @@
 <template>
   <padded-container>
     <page-header>Question Bank</page-header>
+
+    <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'">
+      <v-card class="mt-8 mb-4 pb-4 rounded-lg mx-auto" max-width="250">
+        <v-card-text class="text-center text-body-2">Create New Question</v-card-text>
+        <div class="mx-6">
+          <hr class="my-divider">
+        </div>
+        <v-card-actions class="mx-2">
+          <v-btn block color="primary" small @click.stop="$router.push('/question-bank/create')">
+            Create Question
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+
     <QBForm
         v-if="!getLoaderFlag('topics')"
         :topics="topics"
@@ -9,7 +24,7 @@
     ></QBForm>
     <regular-loader v-else></regular-loader>
 
-    <template v-if="!getLoaderFlag('questions')">
+    <template v-if="!getLoaderFlag('questions') && questions.length > 0">
       <page-header class="mt-10 mb-4">Relevant Questions</page-header>
       <v-row
           v-for="question in questionsCurrentPage"
@@ -167,7 +182,9 @@ export default {
     },
     questions() {
       if (this.getQuestions) {
-        return this.getQuestions.filter(e => e['type'] === 'Question');
+        return this.getQuestions.filter(e => e['type'].toLowerCase() === 'question').sort((a, b) => {
+          return (b['UpvoteCount'] - b['DownvoteCount']) - (a['UpvoteCount'] - a['DownvoteCount']);
+        });
       }
 
       return [];
@@ -211,6 +228,9 @@ export default {
       this.page = 1;
       this.loadQuestions();
     },
+    onCreateClicked() {
+      console.log('clicked');
+    }
   },
   mounted() {
     this.loadTopics();

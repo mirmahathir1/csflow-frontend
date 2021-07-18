@@ -13,6 +13,9 @@ const state = {
     thesisDeleteMessage: null,
     thesisTags: null,
     thesesSearchResult: null,
+    isThesisOwnerRemoveError: false,
+    thesisOwnerRemoveMessage: null,
+    removing: null, // who is being removed
 
     projectCourses: null,
     projects: null,
@@ -23,6 +26,8 @@ const state = {
     projectDeleteMessage: null,
     projectTags: null,
     projectsSearchResult: null,
+    isProjectOwnerRemoveError: false,
+    projectOwnerRemoveMessage: null,
 
     loaderFlags: {
         'batches': true,
@@ -33,6 +38,7 @@ const state = {
         'thesisDeletion': false,
         'thesisTags': true,
         'thesesSearch': true,
+        'thesisOwnerRemoval': false,
         'projectCourses': true,
         'projects': true,
         'projectDetails': true,
@@ -40,6 +46,7 @@ const state = {
         'projectDeletion': false,
         'projectTags': true,
         'projectsSearch': true,
+        'projectOwnerRemoval': false,
     },
 };
 
@@ -81,6 +88,12 @@ const getters = {
     getThesesSearchResult: state => {
         return state.thesesSearchResult;
     },
+    getThesisOwnerRemoveError: state => {
+        return state.isThesisOwnerRemoveError;
+    },
+    getThesisOwnerRemoveMessage: state => {
+        return state.thesisOwnerRemoveMessage;
+    },
     getProjectCourses: state => {
         return state.projectCourses;
     },
@@ -107,6 +120,15 @@ const getters = {
     },
     getProjectsSearchResult: state => {
         return state.projectsSearchResult;
+    },
+    getProjectOwnerRemoveError: state => {
+        return state.isProjectOwnerRemoveError;
+    },
+    getProjectOwnerRemoveMessage: state => {
+        return state.projectOwnerRemoveMessage;
+    },
+    getRemoving: state => {
+        return state.removing;
     },
 };
 
@@ -151,6 +173,14 @@ const mutations = {
     setThesesSearchResult(state, payload) {
         state.thesesSearchResult = payload;
     },
+    setThesisOwnerRemoveMessage(state, payload) {
+        state.isThesisOwnerRemoveError = true;
+        state.thesisOwnerRemoveMessage = payload;
+    },
+    unsetThesisOwnerRemoveMessage(state) {
+        state.isThesisOwnerRemoveError = false;
+        state.thesisOwnerRemoveMessage = null;
+    },
     setProjectCourses(state, payload) {
         state.projectCourses = payload;
     },
@@ -181,6 +211,17 @@ const mutations = {
     },
     setProjectsSearchResult(state, payload) {
         state.projectsSearchResult = payload;
+    },
+    setProjectOwnerRemoveMessage(state, payload) {
+        state.isProjectOwnerRemoveError = true;
+        state.projectOwnerRemoveMessage = payload;
+    },
+    unsetProjectOwnerRemoveMessage(state) {
+        state.isProjectOwnerRemoveError = false;
+        state.projectOwnerRemoveMessage = null;
+    },
+    setRemoving(state, payload) {
+        state.removing = payload;
     },
 };
 
@@ -361,6 +402,30 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'thesesSearch');
             });
+    },
+    removeThesisRequest({commit, state}, {thesisID, userID, idx}) {
+        commit('setRemoving', userID);
+        commit('setLoaderFlag', 'thesisOwnerRemoval');
+        commit('unsetThesisOwnerRemoveMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/thesis/' + thesisID + '/remove/' + userID)
+                .then(response => {
+                    // remove user from requested array
+                    if (state.thesisDetails && state.thesisDetails.id === thesisID) {
+                        state.thesisDetails.payload['requested_owners'].splice(idx, 1);
+                    }
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setThesisOwnerRemoveMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisOwnerRemoval');
+                    commit('setRemoving', null);
+                });
+        });
     },
     loadProjectCourses({commit}, batch) {
         commit('setProjectCourses', null);
