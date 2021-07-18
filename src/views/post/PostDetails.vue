@@ -2,30 +2,30 @@
   <div>
     <PaddedContainerWithoutLeft v-if="!isDeleted">
         <PageHeader>{{type}} Details</PageHeader>
-        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')">
+        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')||!loading">
             <div class="pt-4 pb-4">
                 <PostBox
                     :post="postBoxData"
-                    :postID="parseInt(this.$route.params.postID)"
-                    :voteStatus="parseInt(this.getPost.voteStatus)"
+                    :postID="parseInt($route.params.postID)"
+                    :voteStatus="parseInt(getPost.voteStatus)"
                 ></PostBox>
             </div>
             <div class="pb-4">
                 <div class="mt-2 mx-3">
                     <Details
-                        :text="this.getPost.description"
-                        :files="this.getPost.files"
-                        :isOwner="this.getPost.owner.ID==this.getID"
+                        :text="getPost.description"
+                        :files="getPost.files"
+                        :isOwner="getPost.owner.ID==getID"
                         :contentType="'post'"
-                        :contentId="parseInt(this.$route.params.postID)"
-                        :isReorted="this.getPost.isReported"
-                        :isFollowing="this.getPost.isFollowing"
+                        :contentId="parseInt($route.params.postID)"
+                        :isReorted="getPost.isReported"
+                        :isFollowing="getPost.isFollowing"
                         @deleted="isDeleted=true"
                     ></Details>
                 </div>
                 <CommentSection
                     :comments="commentData"
-                    :contentId="parseInt(this.$route.params.postID)"
+                    :contentId="parseInt($route.params.postID)"
                     :contentType="'post'"
                 ></CommentSection>
             </div>
@@ -44,7 +44,15 @@
         </div>
         <DetailsLoader v-else></DetailsLoader>
         <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
-            <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion">
+            <v-btn
+                class="ma-2"
+                color="info"
+                @click="showReplyBox=true"
+                v-if="isQuestion && !showReplyBox"
+            >
+                Write Reply
+            </v-btn>
+            <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="isQuestion && showReplyBox">
                 <v-row class="pb-8">Write your reply:</v-row>
                 <v-textarea outlined v-model="newAnswer"></v-textarea>
                 <v-row>
@@ -56,6 +64,13 @@
                         @click="doAnswer()"
                     >
                         Submit
+                    </v-btn>
+                    <v-btn
+                        color="error"
+                        class="ml-2"
+                        @click="showReplyBox=false"
+                    >
+                        Cancel
                     </v-btn>
                 </v-row>
             </v-card>
@@ -82,7 +97,9 @@ export default {
         return{
             newAnswer:null,
             answerClicked:false,
-            isDeleted:false
+            isDeleted:false,
+            showReplyBox:false,
+            loading:true,
         };
     },
     components:{
@@ -111,14 +128,20 @@ export default {
             // else return this.getPost.type
         },
         isQuestion(){
+            if(this.getPost===null)
+                return false;
             return 'Question'==this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1)
         },
         postBoxData(){
+
+            if(this.getPost===null)
+                return [];
+
             let postData={
                 'title':this.getPost.title,
                 'date':this.convertToDate(this.getPost.createdAt),
                 'type':this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1),
-                'accenptedAnswer':this.getPost.accenptedAnswer==null?0:this.getPost.accenptedAnswer,
+                'totalAnswer':this.getPost.answerCount==null?0:this.getPost.answerCount,
                 'vote':this.getPost.UpvoteCount-this.getPost.DownvoteCount,
                 'tags':this.getTags(),
                 'owner':{
@@ -170,14 +193,15 @@ export default {
                     'imgSrc':answer.owner.ProfilePic,
                     'date':this.convertToDate(answer.createdAt),
                     'totalComments':answer.comments.length,
-                    'value':answer.answerId==this.getPost.accenptedAnswer?1:0,
+                    'value':answer.answerId==this.getPost.acceptedAnswer?1:0,
                     'isOwner':parseInt(answer.owner.ID) ==this.getID?true:false,
                     'description':answer.Description,
                     'files':answer.files,
                     'answerId':answer.answerId,
                     'comments':comments,
                     'isReported':answer.isReported,
-                    'isFollowing':answer.isFollowing
+                    'isFollowing':answer.isFollowing,
+                    'canBeAccepted':this.getPost.acceptedAnswer==null?true:false
                 })
             })
             return answers
@@ -234,12 +258,13 @@ export default {
             }
         }
     },
-    async created(){
+    async mounted(){
         await this.loadPost(this.$route.params.postID)
         await this.loadPostAnswer(this.$route.params.postID)
-        while(this.getPost==null || this.getPostAnswer==null){
-            
-        }
+        this.loading=false
+        // while(this.getPost==null || this.getPostAnswer==null){
+        //
+        // }
     }
 }
 </script>

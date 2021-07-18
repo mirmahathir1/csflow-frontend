@@ -41,7 +41,7 @@
               >Post Type:</v-card-text> -->
               <v-select 
                 v-model="course" 
-                :items="getCourses" 
+                :items="getCourseData" 
                 label="Select course" 
                 outlined 
                 dense
@@ -220,14 +220,19 @@ export default {
     ...mapActions('post',['searchPost','loadCourses','loadTopics','loadBooks']),
       search(){
           this.clicked=true
+
           let l;
+          
           l=this.selected.includes('term')?this.term.split(','):[null,null]
           if(l[0]!=null) l[0]=parseInt(l[0])
           if(l[1]!=null) l[1]=parseInt(l[1])
+
+          let c=this.course.split(",")
+
           let data={
             'payload':{
               'text':this.text,
-              'courseId':this.course,
+              'courseId':c[0],
               'book':this.book,
               'topic':this.topic,
               'level':l[0],
@@ -252,14 +257,13 @@ export default {
       },
       courseChanged(){
         // console.log(this.course)
-        this.loadTopics(this.course)
-        this.loadBooks(this.course)
+        let data=this.course.split(",")
+        this.loadTopics(data[0])
+        this.loadBooks(data[0])
       }
   },
   validations:{
-    text:{
-      required
-    }
+    
   },
   computed:{
     ...mapGetters('post',['getCourses','getTopics','getBooks','getLoaderFlag']),
@@ -274,6 +278,13 @@ export default {
         return this.getBooks
       }
       return []
+    },
+    getCourseData(){
+      let data=[]
+      this.getCourses.forEach(course => {
+        data.push(course.courseId+","+course.name)
+      });
+      return data
     }
   },
   mounted(){

@@ -13,6 +13,7 @@
             :isOwner=answers.isOwner
             :voteStatus=answers.voteStatus
             :answerId=answers.answerId
+            :canBeAccepted=answers.canBeAccepted
           ></AnswerTop>
       </div>
       <div class="pt-4">
@@ -67,7 +68,8 @@ export default {
               'answerId':-1,
               'comments':[],
               'isReported':false,
-              'isFollowing':false
+              'isFollowing':false,
+              'canBeAccepted':true
             }
           }
         }

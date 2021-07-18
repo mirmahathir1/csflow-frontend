@@ -12,7 +12,15 @@
         </Comment>
       </div>
       <div class="mx-2 mt-4">
-        <v-card rounded="lg" class="pa-8 ml-2 mb-4">
+        <v-btn
+            class="ma-2"
+            color="success"
+            @click="showReplyBox=true"
+            v-if="!showReplyBox"
+        >
+        Make Comment
+        </v-btn>
+        <v-card rounded="lg" class="pa-8 ml-2 mb-4" v-if="showReplyBox">
             <v-row class="pb-8">Write your comment:</v-row>
             <v-textarea outlined v-model="newComment"></v-textarea>
             <v-row>
@@ -24,6 +32,14 @@
                     :disabled="newComment==null||clicked"
                 >
                     Submit
+                </v-btn>
+                <v-btn
+                    color="error"
+                    class="ml-2"
+                    :disabled="clicked"
+                    @click="showReplyBox=false"
+                >
+                    Cancel
                 </v-btn>
             </v-row>
         </v-card>
@@ -67,7 +83,8 @@ export default {
             clicked:false,
             newComment:null,
             isCommentAdded:false,
-            allComments:[]
+            allComments:[],
+            showReplyBox:false
             // comments:[
             //     {'name':'Abser','id':1605026,'date':'1 May,2020 11.43AM','text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?'},
             //     {'name':'Abser','id':1605026,'date':'1 May,2020 11.43AM','text':'What is your name?'},

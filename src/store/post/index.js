@@ -365,7 +365,7 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
@@ -381,7 +381,7 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
@@ -395,7 +395,7 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
@@ -409,7 +409,7 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
@@ -424,10 +424,25 @@ const actions={
                 reject(e)
             })
             .finally(()=>{
-                
+
             })
         })
     },
+
+    async submitResources({commit},data){
+        return new Promise((resolve,reject)=>{
+            csflowAPI.post('/resources',data)
+            .then(response=>{
+                resolve(response)
+            })
+            .catch(e=>{
+                reject(e)
+            })
+            .finally(()=>{
+
+            })
+        })
+    }
 };
 
 export  default{

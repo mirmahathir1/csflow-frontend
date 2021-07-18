@@ -1,8 +1,4 @@
 <template>
-    <!-- <v-col
-        cols="12"
-        sm="8"
-    > -->
     <div :style="$isMobile()?'':'margin-left:130px'">
     <PaddedContainer>
         <v-card
@@ -85,7 +81,7 @@
             </v-form>
         </v-sheet>
         </v-row>
-        <v-card
+        <!-- <v-card
             :height="$isMobile()?'100px':'100px'"
             class="mb-4"
         >
@@ -96,8 +92,7 @@
                 </v-card-subtitle>
                 <v-spacer></v-spacer>
             </v-row>
-        </v-card>
-    <!-- </v-col> -->
+        </v-card> -->
     </PaddedContainer>
     </div>
 </template>
