@@ -67,21 +67,21 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <v-app-tooltip-btn class="d-inline-block">
+                        <!-- <v-app-tooltip-btn class="d-inline-block"> -->
                           <v-file-input
                             multiple
                             v-model="files"
                             small-chips
                           ></v-file-input>
-                        </v-app-tooltip-btn>
-                        <v-app-tooltip-btn class="d-inline-block">
+                        <!-- </v-app-tooltip-btn> -->
+                        <!-- <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
                             hide-input
                             v-model="files"
                             prepend-icon="mdi-camera"
                           ></v-file-input>
-                        </v-app-tooltip-btn>
+                        </v-app-tooltip-btn> -->
                       </div>
                       <v-divider></v-divider>
                       <v-textarea
@@ -417,14 +417,17 @@ export default {
       },
       async submit(){
         this.clicked=true
-
+        let links=[]
 
         if(this.files.length>0){
           let formData=new FormData();
-          formData.append('files',this.files);
+          this.files.forEach(file => {
+            formData.append('files',file);
+          });
+          
           await this.submitResources(formData)
           .then(response=>{
-            console.log(response)
+            links=response.data.payload
           })
         }
 
@@ -441,7 +444,8 @@ export default {
 
         let data={
           'type':this.type,'title':this.title,'description':this.description,'course':c[0],
-          'topic':this.topic,'book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
+          'topic':this.topic,'book':this.book,'termFinal':{'level': 3, 'term': 2},
+          'customTag':tags, 'resources':links,
         }
         // if(!this.selected.includes('term')) delete data.termFinal
         this.submitPost(data)
@@ -449,7 +453,7 @@ export default {
           this.clicked=false
           this.errorMessage=''
           this.anyError=false
-
+          this.$router.push('/post/details/'+response.data.payload.postId)
         })
         .catch(e=>{
           this.anyError=true

@@ -5,11 +5,41 @@
                 {{textData}}
             </p>
             <div v-if="files.length!=0">
-                <v-list-item-content v-for="(imgSrc,idx) in files" :key="idx">
+                <!-- <v-list-item-content v-for="(imgSrc,idx) in files" :key="idx">
                     <v-img
-                        :src="imgSrc"
+                        :src="imgSrc.link"
                     ></v-img>
-                </v-list-item-content>
+                </v-list-item-content> -->
+                <v-row>
+                    <v-col
+                        v-for="(imgSrc,idx) in files"
+                        :key="idx"
+                        class="d-flex child-flex"
+                        :cols="$isMobile()?6:4"
+                    >
+                        
+                        <v-img
+                            :src="imgSrc.link"
+                            :lazy-src="imgSrc.link"
+                            aspect-ratio="1"
+                            class="grey lighten-2"
+                        >
+                            <template v-slot:placeholder>
+                                <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                                >
+                                    <v-progress-circular
+                                    indeterminate
+                                    color="grey lighten-5"
+                                    ></v-progress-circular>
+                                </v-row>
+                            </template>
+                        </v-img>
+                        
+                    </v-col>
+                </v-row>
             </div>
         </v-card-text>
         <div v-else>

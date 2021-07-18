@@ -48,8 +48,10 @@
                   tile
                   size="50"
                   color="grey"
-                  v-if="post.owner.profilePic!=''"
-                ><img :src="post.owner.profilePic" alt=""></v-list-item-avatar>
+                  v-if="post.owner.profilePic!=null&&post.owner.profilePic.length>5"
+                >
+                  <img :src="post.owner.profilePic" alt="">
+                </v-list-item-avatar>
                 <v-list-item-avatar
                   v-else
                 >
@@ -77,7 +79,7 @@
         class="ma-2"
         color="primary"
       >
-        {{post.acceptedAnswer}} Answers
+        {{post.totalAnswer}} Answers
       </v-chip>
       <v-chip
         class="ma-2"
@@ -124,7 +126,7 @@ export default {
             'title':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
             'date':'21 August 2020,2.20AM',
             'type':'Question',
-            'acceptedAnswer':9,
+            'totalAnswer':9,
             'vote':5678,
             'tags':['CSE 300','AI','Networking'],
             'owner':{'name':"Abser uddin",'studentId':1605026,'profilePic':'','karma':67}

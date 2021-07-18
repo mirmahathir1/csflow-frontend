@@ -220,14 +220,19 @@ export default {
     ...mapActions('post',['searchPost','loadCourses','loadTopics','loadBooks']),
       search(){
           this.clicked=true
+
           let l;
+          
           l=this.selected.includes('term')?this.term.split(','):[null,null]
           if(l[0]!=null) l[0]=parseInt(l[0])
           if(l[1]!=null) l[1]=parseInt(l[1])
+
+          let c=this.course.split(",")
+
           let data={
             'payload':{
               'text':this.text,
-              'courseId':this.course,
+              'courseId':c[0],
               'book':this.book,
               'topic':this.topic,
               'level':l[0],

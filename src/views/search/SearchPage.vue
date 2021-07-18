@@ -77,7 +77,7 @@ export default {
                     'date':this.convertToDate(this.getSearchResults[idx].createdAt),
                     'type':this.getSearchResults[idx].type,
                     'accenptedAnswer':this.getSearchResults[idx].accenptedAnswer==null?0:this.getSearchResults[idx].accenptedAnswer,
-                    'vote':this.getSearchResults[idx].vote==null?0:this.getSearchResults[idx].vote,
+                    'vote':this.getSearchResults[idx].UpvoteCount-this.getSearchResults[idx].DownvoteCount,
                     'tags':this.getTags(idx),
                     'owner':{
                         'name':this.getSearchResults[idx].owner.Name,

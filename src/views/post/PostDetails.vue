@@ -2,7 +2,7 @@
   <div>
     <PaddedContainerWithoutLeft v-if="!isDeleted">
         <PageHeader>{{type}} Details</PageHeader>
-        <v-card rounded="lg" class="mt-6" v-if="getPost!==null">
+        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')||!loading">
             <div class="pt-4 pb-4">
                 <PostBox
                     :post="postBoxData"
@@ -32,7 +32,7 @@
         </v-card>
         <DetailsLoader v-else></DetailsLoader>
         <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
-        <div v-if="getPostAnswer!==null">
+        <div v-if="!getLoaderFlag('postAnswerLoader')">
             <div v-if="isQuestion">
                 <PageHeader class="pt-5">Answers</PageHeader>
                 <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
@@ -43,7 +43,7 @@
             </div>
         </div>
         <DetailsLoader v-else></DetailsLoader>
-        <div class="mt-4" v-if="getPostAnswer!==null">
+        <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
             <v-btn
                 class="ma-2"
                 color="info"
@@ -99,6 +99,7 @@ export default {
             answerClicked:false,
             isDeleted:false,
             showReplyBox:false,
+            loading:true,
         };
     },
     components:{
@@ -132,11 +133,15 @@ export default {
             return 'Question'==this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1)
         },
         postBoxData(){
+
+            if(this.getPost===null)
+                return [];
+
             let postData={
                 'title':this.getPost.title,
                 'date':this.convertToDate(this.getPost.createdAt),
                 'type':this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1),
-                'accenptedAnswer':this.getPost.accenptedAnswer==null?0:this.getPost.accenptedAnswer,
+                'totalAnswer':this.getPost.answerCount==null?0:this.getPost.answerCount,
                 'vote':this.getPost.UpvoteCount-this.getPost.DownvoteCount,
                 'tags':this.getTags(),
                 'owner':{
@@ -188,14 +193,15 @@ export default {
                     'imgSrc':answer.owner.ProfilePic,
                     'date':this.convertToDate(answer.createdAt),
                     'totalComments':answer.comments.length,
-                    'value':answer.answerId==this.getPost.accenptedAnswer?1:0,
+                    'value':answer.answerId==this.getPost.acceptedAnswer?1:0,
                     'isOwner':parseInt(answer.owner.ID) ==this.getID?true:false,
                     'description':answer.Description,
                     'files':answer.files,
                     'answerId':answer.answerId,
                     'comments':comments,
                     'isReported':answer.isReported,
-                    'isFollowing':answer.isFollowing
+                    'isFollowing':answer.isFollowing,
+                    'canBeAccepted':this.getPost.acceptedAnswer==null?true:false
                 })
             })
             return answers
@@ -255,6 +261,7 @@ export default {
     async mounted(){
         await this.loadPost(this.$route.params.postID)
         await this.loadPostAnswer(this.$route.params.postID)
+        this.loading=false
         // while(this.getPost==null || this.getPostAnswer==null){
         //
         // }

@@ -52,7 +52,7 @@
                         background-color="red lighten-2"
                         color="primary"
                         :value=value
-                        :readonly="!(this.getPost.owner.ID==this.getID)"
+                        :readonly="!(this.getPost.owner.ID==this.getID)||!canBeAccepted"
                         @input="acceptAnswer"
                       ></v-rating>
                   </v-col>
@@ -123,6 +123,10 @@ export default {
         answerId:{
             type:Number,
             default:-1
+        },
+        canBeAccepted:{
+          type:Boolean,
+          default:true
         },
     },
     components:{
