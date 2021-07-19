@@ -129,7 +129,7 @@
         </v-col>
       </v-row>
     </template>
-    <error-card class="mt-10" v-if="!questions || questions.length === 0">No Results Found</error-card>
+    <error-card class="mt-10" v-if="submitted && (!questions || questions.length === 0)">No Results Found</error-card>
   </padded-container>
 </template>
 
@@ -223,9 +223,16 @@ export default {
       this.showFull[postID] = true;
     },
     fetchQuestions() {
-      this.submitted = true;
+      this.submitted = false;
       this.page = 1;
-      this.loadQuestions();
+      this.loadQuestions()
+        .then(response => {})
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submitted = true;
+        })
     },
     onCreateClicked() {
       console.log('clicked');

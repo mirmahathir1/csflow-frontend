@@ -86,16 +86,19 @@ const actions = {
     loadQuestions({commit, state}, payload) {
         commit('setLoaderFlag', 'questions');
         commit('setQuestions', null);
-        csflowAPI.get('/search', {'params': state.searchParams})
-            .then(response => {
-                commit('setQuestions', response.data.payload);
-            })
-            .catch(e => {
-                console.log(e.response);
-            })
-            .finally(() => {
-                commit('unsetLoaderFlag', 'questions');
-            });
+        return new Promise((resolve, reject) => {
+            csflowAPI.get('/search', {'params': state.searchParams})
+                .then(response => {
+                    commit('setQuestions', response.data.payload);
+                    resolve(response);
+                })
+                .catch(e => {
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'questions');
+                });
+        });
     },
     setSearchParams({commit}, payload) {
         commit('setSearchParams', payload);
