@@ -115,8 +115,6 @@
         </v-col>
       </v-row>
 
-      <error-card v-if="!questions || questions.length === 0">No Results Found</error-card>
-
       <!--        Pagination-->
       <v-row>
         <v-col cols="12" class="px-0">
@@ -131,6 +129,7 @@
         </v-col>
       </v-row>
     </template>
+    <error-card class="mt-10" v-if="!questions || questions.length === 0">No Results Found</error-card>
   </padded-container>
 </template>
 
