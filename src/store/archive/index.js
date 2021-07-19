@@ -16,6 +16,8 @@ const state = {
     isThesisOwnerRemoveError: false,
     thesisOwnerRemoveMessage: null,
     removing: null, // who is being removed
+    isThesisOwnerResponseError: false,
+    thesisOwnerResponseMessage: null,
 
     projectCourses: null,
     projects: null,
@@ -28,6 +30,8 @@ const state = {
     projectsSearchResult: null,
     isProjectOwnerRemoveError: false,
     projectOwnerRemoveMessage: null,
+    isProjectOwnerResponseError: false,
+    projectOwnerResponseMessage: null,
 
     loaderFlags: {
         'batches': true,
@@ -39,6 +43,7 @@ const state = {
         'thesisTags': true,
         'thesesSearch': true,
         'thesisOwnerRemoval': false,
+        'thesisOwnerResponse': false,
         'projectCourses': true,
         'projects': true,
         'projectDetails': true,
@@ -47,6 +52,7 @@ const state = {
         'projectTags': true,
         'projectsSearch': true,
         'projectOwnerRemoval': false,
+        'projectOwnerResponse': false,
     },
 };
 
@@ -94,6 +100,12 @@ const getters = {
     getThesisOwnerRemoveMessage: state => {
         return state.thesisOwnerRemoveMessage;
     },
+    getThesisOwnerResponseError: state => {
+        return state.isThesisOwnerResponseError;
+    },
+    getThesisOwnerResponseMessage: state => {
+        return state.thesisOwnerResponseMessage;
+    },
     getProjectCourses: state => {
         return state.projectCourses;
     },
@@ -126,6 +138,12 @@ const getters = {
     },
     getProjectOwnerRemoveMessage: state => {
         return state.projectOwnerRemoveMessage;
+    },
+    getProjectOwnerResponseError: state => {
+        return state.isProjectOwnerResponseError;
+    },
+    getProjectOwnerResponseMessage: state => {
+        return state.projectOwnerResponseMessage;
     },
     getRemoving: state => {
         return state.removing;
@@ -181,6 +199,14 @@ const mutations = {
         state.isThesisOwnerRemoveError = false;
         state.thesisOwnerRemoveMessage = null;
     },
+    setThesisOwnerResponseMessage(state, payload) {
+        state.isThesisOwnerResponseError = true;
+        state.thesisOwnerResponseMessage = payload;
+    },
+    unsetThesisOwnerResponseMessage(state) {
+        state.isThesisOwnerResponseError = false;
+        state.thesisOwnerResponseMessage = null;
+    },
     setProjectCourses(state, payload) {
         state.projectCourses = payload;
     },
@@ -219,6 +245,14 @@ const mutations = {
     unsetProjectOwnerRemoveMessage(state) {
         state.isProjectOwnerRemoveError = false;
         state.projectOwnerRemoveMessage = null;
+    },
+    setProjectOwnerResponseMessage(state, payload) {
+        state.isProjectOwnerResponseError = true;
+        state.projectOwnerResponseMessage = payload;
+    },
+    unsetProjectOwnerResponseMessage(state) {
+        state.isProjectOwnerResponseError = false;
+        state.projectOwnerResponseMessage = null;
     },
     setRemoving(state, payload) {
         state.removing = payload;
@@ -424,6 +458,26 @@ const actions = {
                 .finally(() => {
                     commit('unsetLoaderFlag', 'thesisOwnerRemoval');
                     commit('setRemoving', null);
+                });
+        });
+    },
+    respondToThesisRequest({commit, state}, {thesisID, accept}) {
+        commit('setLoaderFlag', 'thesisOwnerResponse');
+        commit('unsetThesisOwnerResponseMessage');
+
+        return new Promise((resolve, reject) => {
+            let apiCall = accept ? csflowAPI.patch : csflowAPI.delete;
+
+            apiCall('/archive/thesis/' + thesisID + (accept ? '/accept' : '/reject'))
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setThesisOwnerResponseMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisOwnerResponse');
                 });
         });
     },

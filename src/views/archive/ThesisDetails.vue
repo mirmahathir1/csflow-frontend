@@ -22,24 +22,39 @@
     <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isRequested">
       <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
         <v-card-text class="text-center text-body-2">Accept request to be an owner of this thesis?</v-card-text>
-        <v-card-actions class="mx-2">
           <v-card-actions class="mx-auto">
             <v-btn
                 color="green darken-1 white--text"
+                class="ml-auto"
                 small
-                @click=""
+                @click="respondToRequest(true)"
+                :disabled="getLoaderFlag('thesisOwnerResponse')"
+                :loading="getLoaderFlag('thesisOwnerResponse') && acceptResponse"
             >
               <v-icon small>mdi-check</v-icon>
             </v-btn>
             <v-btn
                 color="red darken-1 white--text"
+                class="mr-auto"
                 small
-                @click=""
+                @click="respondToRequest(false)"
+                :disabled="getLoaderFlag('thesisOwnerResponse')"
+                :loading="getLoaderFlag('thesisOwnerResponse') && !acceptResponse"
             >
               <v-icon small>mdi-close</v-icon>
             </v-btn>
           </v-card-actions>
-        </v-card-actions>
+          <v-card-actions>
+            <v-alert
+                type="error"
+                outlined
+                class="mx-auto"
+                dense
+                v-if="submittedOwnerResponse && getThesisOwnerResponseError"
+            >
+              {{ getThesisOwnerResponseMessage }}
+            </v-alert>
+          </v-card-actions>
       </v-card>
     </template>
 
@@ -134,6 +149,16 @@
                   @removed="removeRequest(requested['UserID'], idx)"
               ></user-card-requested>
             </v-col>
+            <v-col cols="4" offset="4">
+              <v-alert
+                  type="error"
+                  outlined
+                  dense
+                  v-if="submittedOwnerRemove && getThesisOwnerRemoveError"
+              >
+                {{ getThesisOwnerRemoveMessage }}
+              </v-alert>
+            </v-col>
           </template>
         </v-row>
       </v-container>
@@ -227,10 +252,14 @@ export default {
       id: this.$route.params.id,
       dialog: false,
       adminDeleteDialog: false,
+      submittedOwnerRemove: false,
+      submittedOwnerResponse: false,
+      acceptResponse: false,
     }
   },
   computed: {
-    ...mapGetters('archive', ['getThesisDetails', 'getLoaderFlag']),
+    ...mapGetters('archive', ['getThesisDetails', 'getLoaderFlag', 'getThesisOwnerRemoveError',
+                              'getThesisOwnerRemoveMessage', 'getThesisOwnerResponseError', 'getThesisOwnerResponseMessage']),
     ...mapGetters('user', ['getUserLoaderFlag', 'getLoadedUser']),
     ...mapGetters('auth', ['getIsAdmin']),
     ...mapGetters('admin', ['getThesisDeleteError', 'getThesisDeleteMessage']),
@@ -282,7 +311,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesisDetails', 'deleteThesis', 'removeThesisRequest']),
+    ...mapActions('archive', ['loadThesisDetails', 'deleteThesis', 'removeThesisRequest', 'respondToThesisRequest']),
     ...mapActions('user', ['getProfile']),
     ...mapActions('admin', ['deleteThesisAdmin']),
     onEditClicked() {
@@ -317,10 +346,26 @@ export default {
     removeRequest(userID, idx) {
       this.removeThesisRequest({thesisID: this.id, userID: userID, idx: idx})
         .then(response => {
-          // this.loadThesisDetails({id: this.id, force: true})
-          //     .catch(e => console.log(e.response));
         })
-        .catch(e => console.log(e.response));
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submittedOwnerRemove = true;
+        });
+    },
+    respondToRequest(accept) {
+      this.acceptResponse = accept;
+      this.respondToThesisRequest({thesisID: this.id, accept: accept})
+        .then(response => {
+          this.loadThesisDetails({id: this.id, force: true});
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submittedOwnerResponse = true;
+        });
     }
   },
   watch: {
