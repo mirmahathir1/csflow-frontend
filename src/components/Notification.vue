@@ -57,6 +57,12 @@ export default {
       try{
         let response = await csflowAPI.get('/notification');
         this.notifications = response.data.payload
+          this.notifications.sort((a,b)=>{
+              if(a.date < b.date){
+                  return 1;
+              }
+              return -1;
+          })
       }catch (e) {
 
       }finally {
