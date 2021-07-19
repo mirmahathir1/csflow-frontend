@@ -34,8 +34,8 @@
                       text
                       icon
                       @click.stop="$emit('removed')"
-                      :disabled="getLoaderFlag('thesisOwnerRemoval')"
-                      :loading="getLoaderFlag('thesisOwnerRemoval') && getRemoving === ID"
+                      :disabled="getLoaderFlag(type + 'OwnerRemoval')"
+                      :loading="getLoaderFlag(type + 'OwnerRemoval') && getRemoving === ID"
                   >
                     <v-icon
                         color="red lighten-1"
@@ -91,7 +91,11 @@ export default {
     small: {
       type: Boolean,
       default: false,
-    }
+    },
+    type: {
+      type: String,
+      default: 'thesis',
+    },
   },
   computed: {
     ...mapGetters('archive', ['getLoaderFlag', 'getRemoving']),

@@ -638,6 +638,50 @@ const actions = {
                 commit('unsetLoaderFlag', 'projectsSearch');
             });
     },
+    removeProjectRequest({commit, state}, {projectID, userID, idx}) {
+        commit('setRemoving', userID);
+        commit('setLoaderFlag', 'projectOwnerRemoval');
+        commit('unsetProjectOwnerRemoveMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/project/' + projectID + '/remove/' + userID)
+                .then(response => {
+                    // remove user from requested array
+                    if (state.projectDetails && state.projectDetails.id === projectID) {
+                        state.projectDetails.payload['requested_owners'].splice(idx, 1);
+                    }
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectOwnerRemoveMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectOwnerRemoval');
+                    commit('setRemoving', null);
+                });
+        });
+    },
+    respondToProjectRequest({commit, state}, {projectID, accept}) {
+        commit('setLoaderFlag', 'projectOwnerResponse');
+        commit('unsetProjectOwnerResponseMessage');
+
+        return new Promise((resolve, reject) => {
+            let apiCall = accept ? csflowAPI.patch : csflowAPI.delete;
+
+            apiCall('/archive/project/' + projectID + (accept ? '/accept' : '/reject'))
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectOwnerResponseMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectOwnerResponse');
+                });
+        });
+    },
 };
 
 export default {
