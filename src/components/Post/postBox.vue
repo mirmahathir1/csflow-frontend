@@ -85,7 +85,7 @@
         class="ma-2"
         color="primary"
       >
-        {{post.type}} Thread
+        {{post.type.charAt(0).toUpperCase()+post.type.slice(1)}} Thread
       </v-chip>
       <br>
       <!-- <v-card rounded class=""> -->

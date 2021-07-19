@@ -39,12 +39,12 @@
                     :error="$v.password.$error"
                     :error-messages="$v.password.$error?'Please input a password':null"
                 ></v-text-field>
-                <v-checkbox
+                <!-- <v-checkbox
                     v-model="checkbox"
                     label="Remember me"
                     required
                     disabled
-                ></v-checkbox>
+                ></v-checkbox> -->
 
                 <v-row class="justify-content-center">
                     <v-btn

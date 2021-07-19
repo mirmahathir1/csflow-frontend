@@ -168,8 +168,21 @@
     <DetailsLoader v-else></DetailsLoader>
     <template v-slot:right>
         <PageHeader>
-            Popular Searches
+            Quick Searches
         </PageHeader>
+        <v-row v-if="!getLoaderFlag('courseLoader')" class="pt-2">
+          <v-col cols="6" md="12" class="py-0" v-for="(topic,idx) in getCourseData" :key="idx">
+            <v-chip
+                v-model="quickCourse"
+                color="blue lighten-4"
+                class="mx-1 my-2 text-wrap text-body-2"
+                :large="topic.length > 25"
+                @click="quickSearch"
+            >
+              {{ topic }}
+            </v-chip>
+          </v-col>
+        </v-row>
     </template>
   </PaddedContainer>
 </template>
@@ -214,6 +227,7 @@ export default {
         clicked:false,
         anyError:false,
         errorMessage:'',
+        quickCourse:null,
       }
   },
   methods:{
@@ -255,6 +269,35 @@ export default {
             this.clicked=false
           })
       },
+      quickSearch(){
+
+          let c=this.quickCourse.split(",")
+
+          let data={
+            'payload':{
+              'text':null,
+              'courseId':c[0],
+              'book':null,
+              'topic':null,
+              'level':null,
+              'term':null
+            },
+            'params':{
+              'skip':0,
+              'limit':10
+            }
+          }
+          this.searchPost(data)
+          .then(response=>{
+            this.$router.push('/search')
+          })
+          .catch(e=>{
+            
+          })
+          .finally(()=>{
+            
+          })
+      },
       courseChanged(){
         // console.log(this.course)
         let data=this.course.split(",")
@@ -263,7 +306,9 @@ export default {
       }
   },
   validations:{
-    
+    course:{
+      required
+    }
   },
   computed:{
     ...mapGetters('post',['getCourses','getTopics','getBooks','getLoaderFlag']),
@@ -281,6 +326,12 @@ export default {
     },
     getCourseData(){
       let data=[]
+
+      // let ret = [];
+      // if (this.getCourses) {
+      //   ret = this.getCourses.sort((a, b) => (Number(a['courseId'].split(" ").slice(2))<(Number(b['courseId'].split(" ").slice(2)) ? 1 : -1)));
+      //   ret = [...ret];
+      // }
       this.getCourses.forEach(course => {
         data.push(course.courseId+","+course.name)
       });
