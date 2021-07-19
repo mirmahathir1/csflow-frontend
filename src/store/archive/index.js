@@ -58,7 +58,7 @@ const state = {
 
 const getters = {
     getBatches: state => {
-        return state.batches;
+        return state.batches.filter(batch => batch['ID'] !== 0);
     },
     getResources: state => batch => {
         if (state.resources && batch in state.resources) {
