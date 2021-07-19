@@ -115,6 +115,9 @@ export default {
                 this.userIndex = details['owners'].indexOf(owner);
               }
             });
+            details['requested_owners'].forEach(req => {
+              this.owners.push({id: req['UserID'].toString()});
+            });
 
             this.tags = [];
             details['tags'].forEach(tag => {

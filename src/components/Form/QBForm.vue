@@ -55,15 +55,15 @@
           >Search</v-btn>
         </v-card-actions>
 
-        <v-row class="justify-center" v-if="submitted && false">
-          <v-alert
-              type="error"
-              outlined
-              dense
-          >
-            Error hoise
-          </v-alert>
-        </v-row>
+<!--        <v-row class="justify-center" v-if="submitted && false">-->
+<!--          <v-alert-->
+<!--              type="error"-->
+<!--              outlined-->
+<!--              dense-->
+<!--          >-->
+<!--            Error hoise-->
+<!--          </v-alert>-->
+<!--        </v-row>-->
       </v-form>
     </v-container>
   </v-card>
@@ -108,14 +108,14 @@ export default {
       }
 
       !this.$v.searchText.required && errors.push('Search text is required');
-      return errors
+      return errors;
     }
   },
   methods: {
     ...mapActions('question_bank', ['setSearchParams']),
     submit() {
       const payload = {
-        "text": this.searchText,
+        "text": this.$replaceFirstQuote(this.searchText),
         "courseId": this.topicToCourse.topic,
         "topic": null,
         "book": null,

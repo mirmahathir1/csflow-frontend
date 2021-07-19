@@ -225,6 +225,12 @@ const routes = [
         component: () => import('../views/questionBank/QuestionBank'),
         meta: { requiresAuth: true }
     },
+    {
+        path: '/question-bank/create',
+        name: 'QuestionCreation',
+        component: () => import('../views/questionBank/QuestionCreation'),
+        meta: { requiresAuth: true }
+    },
 
     ////////////////// privileged module /////////////////////
     {

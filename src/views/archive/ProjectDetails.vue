@@ -7,7 +7,7 @@
 
     <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="getIsAdmin">
       <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
-        <v-card-text class="text-center text-body-2">Delete Thesis</v-card-text>
+        <v-card-text class="text-center text-body-2">Delete Project</v-card-text>
         <div class="mx-6">
           <hr class="my-divider">
         </div>
@@ -15,6 +15,45 @@
           <v-btn block color="red darken-1 white--text" small @click="adminDeleteDialog = true">
             Delete
           </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+
+    <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isRequested">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
+        <v-card-text class="text-center text-body-2">Accept request to be an owner of this project?</v-card-text>
+        <v-card-actions class="mx-auto">
+          <v-btn
+              color="green darken-1 white--text"
+              class="ml-auto"
+              small
+              @click="respondToRequest(true)"
+              :disabled="getLoaderFlag('projectOwnerResponse')"
+              :loading="getLoaderFlag('projectOwnerResponse') && acceptResponse"
+          >
+            <v-icon small>mdi-check</v-icon>
+          </v-btn>
+          <v-btn
+              color="red darken-1 white--text"
+              class="mr-auto"
+              small
+              @click="respondToRequest(false)"
+              :disabled="getLoaderFlag('projectOwnerResponse')"
+              :loading="getLoaderFlag('projectOwnerResponse') && !acceptResponse"
+          >
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
+        </v-card-actions>
+        <v-card-actions>
+          <v-alert
+              type="error"
+              outlined
+              class="mx-auto"
+              dense
+              v-if="submittedOwnerResponse && getProjectOwnerResponseError"
+          >
+            {{ getProjectOwnerResponseMessage }}
+          </v-alert>
         </v-card-actions>
       </v-card>
     </template>
@@ -101,6 +140,32 @@
                 @click.native="$router.push('/user/' + owner['ID'])"
             ></user-card>
           </v-col>
+          <template v-if="isOwner">
+            <v-col
+                :cols="$isMobile() ? 12 : 6"
+                :md="$isMobile() ? 12 : 4"
+                v-for="(requested, idx) in details['requested_owners']"
+                :key="requested['UserID']"
+            >
+              <user-card-requested
+                  :ID="requested['UserID']"
+                  type="project"
+                  class="mt-5"
+                  @click.native="$router.push('/user/' + requested['UserID'])"
+                  @removed="removeRequest(requested['UserID'], idx)"
+              ></user-card-requested>
+            </v-col>
+            <v-col cols="4" offset="4">
+              <v-alert
+                  type="error"
+                  outlined
+                  dense
+                  v-if="submittedOwnerRemove && getProjectOwnerRemoveError"
+              >
+                {{ getProjectOwnerRemoveMessage }}
+              </v-alert>
+            </v-col>
+          </template>
         </v-row>
       </v-container>
 
@@ -180,22 +245,27 @@ import PaddedContainer from "@/components/PaddedContainer";
 import IconButton from "@/components/IconButton";
 import ErrorCard from "@/components/ErrorCard";
 import UserCard from "@/components/Card/UserCard";
+import UserCardRequested from "@/components/Card/UserCardRequested";
 
 export default {
   name: "ProjectDetails",
   title() {
     return 'Project Details';
   },
-  components: {UserCard, ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
+  components: {UserCard, ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader, UserCardRequested},
   data() {
     return {
       id: this.$route.params.id,
       dialog: false,
       adminDeleteDialog: false,
+      submittedOwnerRemove: false,
+      submittedOwnerResponse: false,
+      acceptResponse: false,
     }
   },
   computed: {
-    ...mapGetters('archive', ['getProjectDetails', 'getLoaderFlag']),
+    ...mapGetters('archive', ['getProjectDetails', 'getLoaderFlag', 'getProjectOwnerRemoveError', 'getProjectOwnerRemoveMessage',
+                              'getProjectOwnerResponseError', 'getProjectOwnerResponseMessage']),
     ...mapGetters('user', ['getUserLoaderFlag', 'getLoadedUser']),
     ...mapGetters('auth', ['getIsAdmin']),
     ...mapGetters('admin', ['getProjectDeleteError', 'getProjectDeleteMessage']),
@@ -226,10 +296,17 @@ export default {
       }
 
       return '/archive/project/search/' + this.$route.params.searchText;
+    },
+    isRequested() {
+      if (this.getLoadedUser && this.getProjectDetails) {
+        return this.details['requested_owners'].filter(req => req['UserID'] === this.getLoadedUser['id']).length > 0;
+      }
+
+      return false;
     }
   },
   methods: {
-    ...mapActions('archive', ['loadProjectDetails', 'deleteProject']),
+    ...mapActions('archive', ['loadProjectDetails', 'deleteProject', 'removeProjectRequest', 'respondToProjectRequest']),
     ...mapActions('user', ['getProfile']),
     ...mapActions('admin', ['deleteProjectAdmin']),
     onEditClicked() {
@@ -258,6 +335,31 @@ export default {
           })
           .finally(() => {
 
+          });
+    },
+    removeRequest(userID, idx) {
+      this.submittedOwnerRemove = false;
+      this.removeProjectRequest({projectID: this.id, userID: userID, idx: idx})
+          .then(response => {
+          })
+          .catch(e => {
+            console.log(e.response);
+          })
+          .finally(() => {
+            this.submittedOwnerRemove = true;
+          });
+    },
+    respondToRequest(accept) {
+      this.acceptResponse = accept;
+      this.respondToProjectRequest({projectID: this.id, accept: accept})
+          .then(response => {
+            this.loadProjectDetails({id: this.id, force: true});
+          })
+          .catch(e => {
+            console.log(e.response);
+          })
+          .finally(() => {
+            this.submittedOwnerResponse = true;
           });
     }
   },

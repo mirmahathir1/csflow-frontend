@@ -19,6 +19,45 @@
       </v-card>
     </template>
 
+    <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isRequested">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
+        <v-card-text class="text-center text-body-2">Accept request to be an owner of this thesis?</v-card-text>
+          <v-card-actions class="mx-auto">
+            <v-btn
+                color="green darken-1 white--text"
+                class="ml-auto"
+                small
+                @click="respondToRequest(true)"
+                :disabled="getLoaderFlag('thesisOwnerResponse')"
+                :loading="getLoaderFlag('thesisOwnerResponse') && acceptResponse"
+            >
+              <v-icon small>mdi-check</v-icon>
+            </v-btn>
+            <v-btn
+                color="red darken-1 white--text"
+                class="mr-auto"
+                small
+                @click="respondToRequest(false)"
+                :disabled="getLoaderFlag('thesisOwnerResponse')"
+                :loading="getLoaderFlag('thesisOwnerResponse') && !acceptResponse"
+            >
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </v-card-actions>
+          <v-card-actions>
+            <v-alert
+                type="error"
+                outlined
+                class="mx-auto"
+                dense
+                v-if="submittedOwnerResponse && getThesisOwnerResponseError"
+            >
+              {{ getThesisOwnerResponseMessage }}
+            </v-alert>
+          </v-card-actions>
+      </v-card>
+    </template>
+
 <!--    Delete Dialog-->
     <v-dialog
         v-model="adminDeleteDialog"
@@ -96,6 +135,31 @@
                 @click.native="$router.push('/user/' + owner['ID'])"
             ></user-card>
           </v-col>
+          <template v-if="isOwner">
+            <v-col
+                :cols="$isMobile() ? 12 : 6"
+                :md="$isMobile() ? 12 : 4"
+                v-for="(requested, idx) in details['requested_owners']"
+                :key="requested['UserID']"
+            >
+              <user-card-requested
+                  :ID="requested['UserID']"
+                  class="mt-5"
+                  @click.native="$router.push('/user/' + requested['UserID'])"
+                  @removed="removeRequest(requested['UserID'], idx)"
+              ></user-card-requested>
+            </v-col>
+            <v-col cols="4" offset="4">
+              <v-alert
+                  type="error"
+                  outlined
+                  dense
+                  v-if="submittedOwnerRemove && getThesisOwnerRemoveError"
+              >
+                {{ getThesisOwnerRemoveMessage }}
+              </v-alert>
+            </v-col>
+          </template>
         </v-row>
       </v-container>
 
@@ -175,22 +239,27 @@ import PaddedContainer from "@/components/PaddedContainer";
 import IconButton from "@/components/IconButton";
 import ErrorCard from "@/components/ErrorCard";
 import UserCard from "@/components/Card/UserCard";
+import UserCardRequested from "@/components/Card/UserCardRequested";
 
 export default {
   name: "ThesisDetails",
   title() {
     return 'Thesis Details';
   },
-  components: {UserCard, ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader},
+  components: {UserCard, ErrorCard, IconButton, PaddedContainer, DetailsLoader, PageHeader, UserCardRequested},
   data() {
     return {
       id: this.$route.params.id,
       dialog: false,
       adminDeleteDialog: false,
+      submittedOwnerRemove: false,
+      submittedOwnerResponse: false,
+      acceptResponse: false,
     }
   },
   computed: {
-    ...mapGetters('archive', ['getThesisDetails', 'getLoaderFlag']),
+    ...mapGetters('archive', ['getThesisDetails', 'getLoaderFlag', 'getThesisOwnerRemoveError',
+                              'getThesisOwnerRemoveMessage', 'getThesisOwnerResponseError', 'getThesisOwnerResponseMessage']),
     ...mapGetters('user', ['getUserLoaderFlag', 'getLoadedUser']),
     ...mapGetters('auth', ['getIsAdmin']),
     ...mapGetters('admin', ['getThesisDeleteError', 'getThesisDeleteMessage']),
@@ -232,10 +301,17 @@ export default {
       }
 
       return '/archive/thesis/search/' + this.$route.params.searchText;
+    },
+    isRequested() {
+      if (this.getLoadedUser && this.getThesisDetails) {
+        return this.details['requested_owners'].filter(req => req['UserID'] === this.getLoadedUser['id']).length > 0;
+      }
+
+      return false;
     }
   },
   methods: {
-    ...mapActions('archive', ['loadThesisDetails', 'deleteThesis']),
+    ...mapActions('archive', ['loadThesisDetails', 'deleteThesis', 'removeThesisRequest', 'respondToThesisRequest']),
     ...mapActions('user', ['getProfile']),
     ...mapActions('admin', ['deleteThesisAdmin']),
     onEditClicked() {
@@ -265,6 +341,30 @@ export default {
         })
         .finally(() => {
 
+        });
+    },
+    removeRequest(userID, idx) {
+      this.removeThesisRequest({thesisID: this.id, userID: userID, idx: idx})
+        .then(response => {
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submittedOwnerRemove = true;
+        });
+    },
+    respondToRequest(accept) {
+      this.acceptResponse = accept;
+      this.respondToThesisRequest({thesisID: this.id, accept: accept})
+        .then(response => {
+          this.loadThesisDetails({id: this.id, force: true});
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+        .finally(() => {
+          this.submittedOwnerResponse = true;
         });
     }
   },

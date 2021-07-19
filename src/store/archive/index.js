@@ -13,6 +13,11 @@ const state = {
     thesisDeleteMessage: null,
     thesisTags: null,
     thesesSearchResult: null,
+    isThesisOwnerRemoveError: false,
+    thesisOwnerRemoveMessage: null,
+    removing: null, // who is being removed
+    isThesisOwnerResponseError: false,
+    thesisOwnerResponseMessage: null,
 
     projectCourses: null,
     projects: null,
@@ -23,6 +28,10 @@ const state = {
     projectDeleteMessage: null,
     projectTags: null,
     projectsSearchResult: null,
+    isProjectOwnerRemoveError: false,
+    projectOwnerRemoveMessage: null,
+    isProjectOwnerResponseError: false,
+    projectOwnerResponseMessage: null,
 
     loaderFlags: {
         'batches': true,
@@ -33,6 +42,8 @@ const state = {
         'thesisDeletion': false,
         'thesisTags': true,
         'thesesSearch': true,
+        'thesisOwnerRemoval': false,
+        'thesisOwnerResponse': false,
         'projectCourses': true,
         'projects': true,
         'projectDetails': true,
@@ -40,12 +51,14 @@ const state = {
         'projectDeletion': false,
         'projectTags': true,
         'projectsSearch': true,
+        'projectOwnerRemoval': false,
+        'projectOwnerResponse': false,
     },
 };
 
 const getters = {
     getBatches: state => {
-        return state.batches;
+        return state.batches.filter(batch => batch['ID'] !== 0);
     },
     getResources: state => batch => {
         if (state.resources && batch in state.resources) {
@@ -81,6 +94,18 @@ const getters = {
     getThesesSearchResult: state => {
         return state.thesesSearchResult;
     },
+    getThesisOwnerRemoveError: state => {
+        return state.isThesisOwnerRemoveError;
+    },
+    getThesisOwnerRemoveMessage: state => {
+        return state.thesisOwnerRemoveMessage;
+    },
+    getThesisOwnerResponseError: state => {
+        return state.isThesisOwnerResponseError;
+    },
+    getThesisOwnerResponseMessage: state => {
+        return state.thesisOwnerResponseMessage;
+    },
     getProjectCourses: state => {
         return state.projectCourses;
     },
@@ -107,6 +132,21 @@ const getters = {
     },
     getProjectsSearchResult: state => {
         return state.projectsSearchResult;
+    },
+    getProjectOwnerRemoveError: state => {
+        return state.isProjectOwnerRemoveError;
+    },
+    getProjectOwnerRemoveMessage: state => {
+        return state.projectOwnerRemoveMessage;
+    },
+    getProjectOwnerResponseError: state => {
+        return state.isProjectOwnerResponseError;
+    },
+    getProjectOwnerResponseMessage: state => {
+        return state.projectOwnerResponseMessage;
+    },
+    getRemoving: state => {
+        return state.removing;
     },
 };
 
@@ -151,6 +191,22 @@ const mutations = {
     setThesesSearchResult(state, payload) {
         state.thesesSearchResult = payload;
     },
+    setThesisOwnerRemoveMessage(state, payload) {
+        state.isThesisOwnerRemoveError = true;
+        state.thesisOwnerRemoveMessage = payload;
+    },
+    unsetThesisOwnerRemoveMessage(state) {
+        state.isThesisOwnerRemoveError = false;
+        state.thesisOwnerRemoveMessage = null;
+    },
+    setThesisOwnerResponseMessage(state, payload) {
+        state.isThesisOwnerResponseError = true;
+        state.thesisOwnerResponseMessage = payload;
+    },
+    unsetThesisOwnerResponseMessage(state) {
+        state.isThesisOwnerResponseError = false;
+        state.thesisOwnerResponseMessage = null;
+    },
     setProjectCourses(state, payload) {
         state.projectCourses = payload;
     },
@@ -181,6 +237,25 @@ const mutations = {
     },
     setProjectsSearchResult(state, payload) {
         state.projectsSearchResult = payload;
+    },
+    setProjectOwnerRemoveMessage(state, payload) {
+        state.isProjectOwnerRemoveError = true;
+        state.projectOwnerRemoveMessage = payload;
+    },
+    unsetProjectOwnerRemoveMessage(state) {
+        state.isProjectOwnerRemoveError = false;
+        state.projectOwnerRemoveMessage = null;
+    },
+    setProjectOwnerResponseMessage(state, payload) {
+        state.isProjectOwnerResponseError = true;
+        state.projectOwnerResponseMessage = payload;
+    },
+    unsetProjectOwnerResponseMessage(state) {
+        state.isProjectOwnerResponseError = false;
+        state.projectOwnerResponseMessage = null;
+    },
+    setRemoving(state, payload) {
+        state.removing = payload;
     },
 };
 
@@ -362,6 +437,50 @@ const actions = {
                 commit('unsetLoaderFlag', 'thesesSearch');
             });
     },
+    removeThesisRequest({commit, state}, {thesisID, userID, idx}) {
+        commit('setRemoving', userID);
+        commit('setLoaderFlag', 'thesisOwnerRemoval');
+        commit('unsetThesisOwnerRemoveMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/thesis/' + thesisID + '/remove/' + userID)
+                .then(response => {
+                    // remove user from requested array
+                    if (state.thesisDetails && state.thesisDetails.id === thesisID) {
+                        state.thesisDetails.payload['requested_owners'].splice(idx, 1);
+                    }
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setThesisOwnerRemoveMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisOwnerRemoval');
+                    commit('setRemoving', null);
+                });
+        });
+    },
+    respondToThesisRequest({commit, state}, {thesisID, accept}) {
+        commit('setLoaderFlag', 'thesisOwnerResponse');
+        commit('unsetThesisOwnerResponseMessage');
+
+        return new Promise((resolve, reject) => {
+            let apiCall = accept ? csflowAPI.patch : csflowAPI.delete;
+
+            apiCall('/archive/thesis/' + thesisID + (accept ? '/accept' : '/reject'))
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setThesisOwnerResponseMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'thesisOwnerResponse');
+                });
+        });
+    },
     loadProjectCourses({commit}, batch) {
         commit('setProjectCourses', null);
         commit('setLoaderFlag', 'projectCourses');
@@ -518,6 +637,50 @@ const actions = {
             .finally(() => {
                 commit('unsetLoaderFlag', 'projectsSearch');
             });
+    },
+    removeProjectRequest({commit, state}, {projectID, userID, idx}) {
+        commit('setRemoving', userID);
+        commit('setLoaderFlag', 'projectOwnerRemoval');
+        commit('unsetProjectOwnerRemoveMessage');
+
+        return new Promise((resolve, reject) => {
+            csflowAPI.delete('/archive/project/' + projectID + '/remove/' + userID)
+                .then(response => {
+                    // remove user from requested array
+                    if (state.projectDetails && state.projectDetails.id === projectID) {
+                        state.projectDetails.payload['requested_owners'].splice(idx, 1);
+                    }
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectOwnerRemoveMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectOwnerRemoval');
+                    commit('setRemoving', null);
+                });
+        });
+    },
+    respondToProjectRequest({commit, state}, {projectID, accept}) {
+        commit('setLoaderFlag', 'projectOwnerResponse');
+        commit('unsetProjectOwnerResponseMessage');
+
+        return new Promise((resolve, reject) => {
+            let apiCall = accept ? csflowAPI.patch : csflowAPI.delete;
+
+            apiCall('/archive/project/' + projectID + (accept ? '/accept' : '/reject'))
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(e => {
+                    commit('setProjectOwnerResponseMessage', e.response.data.message);
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'projectOwnerResponse');
+                });
+        });
     },
 };
 
