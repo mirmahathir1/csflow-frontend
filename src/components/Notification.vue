@@ -30,7 +30,7 @@
 
     <v-list v-else  style="height: 300px; overflow-y: scroll">
       <v-list-item v-for="(item,idx) in notifications" :key="idx" @click="$router.push(item.link)" style="text-decoration:none">
-        <p>{{ item.text }}</p>
+        <p>{{ item.text }}<br> <span class="font-weight-thin">{{new Date(item.date).toLocaleString()}}</span></p>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -57,6 +57,12 @@ export default {
       try{
         let response = await csflowAPI.get('/notification');
         this.notifications = response.data.payload
+          this.notifications.sort((a,b)=>{
+              if(a.date < b.date){
+                  return 1;
+              }
+              return -1;
+          })
       }catch (e) {
 
       }finally {
