@@ -30,7 +30,7 @@
 
     <v-list v-else  style="height: 300px; overflow-y: scroll">
       <v-list-item v-for="(item,idx) in notifications" :key="idx" @click="$router.push(item.link)" style="text-decoration:none">
-        <p>{{ item.text }}</p>
+        <p>{{ item.text }}<br> <span class="font-weight-thin">{{new Date(item.date).toLocaleString()}}</span></p>
       </v-list-item>
     </v-list>
   </v-menu>
