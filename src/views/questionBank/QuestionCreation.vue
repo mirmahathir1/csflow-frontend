@@ -271,7 +271,7 @@ export default {
 
       this.createQuestion(question)
         .then(response => {
-          this.$router.push('/question-bank');
+          this.$router.push('/post/details/' + response.data.payload['postId']);
         })
         .catch(e => {
           console.log(e.response);
