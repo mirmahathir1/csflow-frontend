@@ -319,7 +319,7 @@
               <v-row>
                   Related Course
                   <v-select
-                      :items="getCourses"
+                      :items="getCourseData"
                       label="Select course"
                       outlined
                       dense
@@ -464,7 +464,8 @@ export default {
         })
       },
       requestNewTag(){
-        this.requestTag({'name':this.newTagText,'type':this.newTagType,'course':this.newTagCourse})
+        let c=this.newTagCourse.split(",")
+        this.requestTag({'name':this.newTagText,'type':this.newTagType,'course':c[0]})
           .then(response=>{
               this.newTagText=null
               this.newTagType=null
