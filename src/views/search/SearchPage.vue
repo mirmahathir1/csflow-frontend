@@ -95,10 +95,12 @@ export default {
         getTags(idx){
             let tags=[]
             if(this.getSearchResults[idx].course!=null) tags.push(this.getSearchResults[idx].course)
-            if(this.getSearchResults[idx].topic!=null) tags.push(this.getSearchResults[idx].topic)
-            if(this.getSearchResults[idx].book!=null) tags.push(this.getSearchResults[idx].book)
+            if(this.getSearchResults[idx].topic!=null&&this.getSearchResults[idx].topic.length>0) 
+                tags.push(this.getSearchResults[idx].topic)
+            if(this.getSearchResults[idx].book!=null&&this.getSearchResults[idx].book.length>0)
+                tags.push(this.getSearchResults[idx].book)
             this.getSearchResults[idx].customTag.forEach(tag => {
-                tags.push(tag)
+                if(tags.length!==0) tags.push(tag)
             });
             return tags
         },
