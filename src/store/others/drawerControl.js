@@ -8,8 +8,8 @@ const getters = {
     getDrawer: state => {
         return state.drawer;
     },
-    getMainDash(state, getters) {
-      return !getters.getPrivilegedDash && !getters.getAdminDash;
+    getMainDash(state, getters, rootState, rootGetters) {
+      return !getters.getPrivilegedDash && !getters.getAdminDash && rootGetters['auth/getIsStudent'];
     },
     getPrivilegedDash(state, getters, rootState, rootGetters) {
         return rootGetters['auth/getIsCR'] && state.privilegedDash;
@@ -17,6 +17,9 @@ const getters = {
     getAdminDash(state, getters, rootState, rootGetters) {
         return rootGetters['auth/getIsAdmin'] && state.adminDash;
     },
+    getGuestDash(state, getters, rootState, rootGetters) {
+        return !getters.getPrivilegedDash && !getters.getAdminDash;
+    }
 };
 const mutations = {
     setDrawer(state) {

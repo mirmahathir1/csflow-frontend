@@ -177,6 +177,26 @@
           </v-list-item>
         </template>
 
+<!--        Guest Dash-->
+        <template v-if="getGuestDash">
+          <template v-for="(item, index) in guestItems">
+            <v-list-item
+                :to="item.link"
+                :key="item.title"
+                style="text-decoration:none"
+                v-if="!item.guestOnly || getIsGuest"
+            >
+              <v-list-item-icon>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </template>
+
         <!--              Privileged Dash-->
         <template v-if="getPrivilegedDash">
           <v-list-item class="text-center">
@@ -370,6 +390,26 @@
           </v-list-item>
         </template>
 
+        <!--        Guest Dash-->
+        <template v-if="getGuestDash">
+          <template v-for="(item, index) in guestItems">
+            <v-list-item
+                :to="item.link"
+                :key="item.title"
+                style="text-decoration:none"
+                v-if="!item.guestOnly || getIsGuest"
+            >
+              <v-list-item-icon>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </template>
+
         <!--              Privileged Dash-->
         <template v-if="getPrivilegedDash">
           <v-list-item class="text-center">
@@ -521,8 +561,8 @@ import Notification from "./Notification";
 export default {
   name: "Header",
   computed: {
-    ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn", "getIsCR", "getIsAdmin"]),
-    ...mapGetters('others', ['getDrawer', 'getPrivilegedDash', 'getMainDash', 'getAdminDash']),
+    ...mapGetters("auth", ["getLogoutLoaderFlag", "getIsSignedIn", "getIsCR", "getIsAdmin", "getIsGuest"]),
+    ...mapGetters('others', ['getDrawer', 'getPrivilegedDash', 'getMainDash', 'getAdminDash', 'getGuestDash']),
     drawer: {
       get: function () {
         return this.getDrawer
@@ -622,10 +662,31 @@ export default {
           icon: 'mdi-file-code',
           link: '/archive/project'
         },
+      ],
+      guestItems: [
         {
           title: 'Question Bank',
           icon: 'mdi-head-question',
-          link: '/question-bank'
+          link: '/question-bank/',
+          guestOnly: false,
+        },
+        {
+          title: 'Relevant Questions',
+          icon: 'mdi-newspaper-variant-multiple',
+          link: '/search/relevant',
+          guestOnly: true,
+        },
+        {
+          title: 'Unanswered',
+          icon: 'mdi-help',
+          link: '/post/unanswered',
+          guestOnly: true,
+        },
+        {
+          title: 'Create Question',
+          icon: 'mdi-plus-thick',
+          link: '/question-bank/create',
+          guestOnly: true,
         },
       ],
       privilegedItems: [
@@ -692,33 +753,6 @@ export default {
           icon: 'mdi-account',
           link: '/admin/user'
         },
-        // {
-        //   title: 'Guest Manager',
-        //   icon: 'mdi-account-outline',
-        //   link: '/privileged/guest'
-        // },
-        // {
-        //   title: 'SQL Interface',
-        //   icon: 'mdi-database-search',
-        //   link: '/privileged/sqlInterface'
-        // },
-        // {
-        //   title: 'Archive Manager',
-        //   icon: 'mdi-share-variant',
-        //   hasChildren: true,
-        //   children: [
-        //     {
-        //       title: 'Theses',
-        //       icon: 'mdi-school',
-        //       link: '/admin/archive/thesis',
-        //     },
-        //     {
-        //       title: 'Projects',
-        //       icon: 'mdi-file-code',
-        //       link: '/admin/archive/project',
-        //     },
-        //   ],
-        // },
         {
           title: 'Course Manager',
           icon: 'mdi-teach',

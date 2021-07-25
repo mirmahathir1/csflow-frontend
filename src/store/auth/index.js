@@ -72,6 +72,12 @@ const getters = {
     getIsAdmin: state => {
         return state.me['isAdmin'];
     },
+    getIsGuest: state => {
+        return state.me['id'].toString().length > 7;
+    },
+    getIsStudent: state => {
+        return state.me['id'].toString().length === 7;
+    },
 };
 const mutations = {
     setToken(state,payload) {
