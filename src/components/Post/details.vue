@@ -70,7 +70,7 @@
                         elevation="2"
                         rounded
                         class=""
-                        v-if="!isOwner&&!reported"
+                        v-if="!isOwner&&!reported&&!getIsGuest"
                         color="warning"
                         @click="doReport()"
                     >
@@ -80,7 +80,7 @@
                         elevation="2"
                         rounded
                         class=""
-                        v-if="!isOwner&&reported"
+                        v-if="!isOwner&&reported&&!getIsGuest"
                         @click="undoReport()"
                         color="error"
                     >
@@ -90,7 +90,7 @@
                         elevation="2"
                         rounded
                         class="ml-2"
-                        v-if="!isOwner&&!followed"
+                        v-if="!isOwner&&!followed&&!getIsGuest"
                         color="primary"
                         @click="doFollow()"
                     >
@@ -100,7 +100,7 @@
                         elevation="2"
                         rounded
                         class="ml-2"
-                        v-if="!isOwner&&followed"
+                        v-if="!isOwner&&followed&&!getIsGuest"
                         color="primary"
                         @click="undoFollow()"
                     >
@@ -240,6 +240,7 @@ export default {
         }
     },
     computed:{
+        ...mapGetters('auth',['getIsGuest']),
         reported(){
             let condition;
             if(this.isOwner) return false
@@ -262,6 +263,7 @@ export default {
         }
     },
     methods:{
+        
         ...mapActions('post',['report','follow','delete','cancelReport','cancelFollow','editAnswer']),
         async doReport(){
             this.reportClicked=!this.reportClicked

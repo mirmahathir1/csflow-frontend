@@ -40,15 +40,17 @@ export default {
           let tags=[]
           if(post.course!=null) tags.push(post.course)
           if(post.topic!=null && post.topic.length>0) tags.push(post.topic)
-          if(post.book!=null && post.book.length>0) tags.push(post.book)
+          if(post.book!=null && post.book.length>0 && post.book!="null") tags.push(post.book)
           post.customTag.forEach(tag => {
               tags.push(tag)
           });
+          
           postData.push({
             'title':post.title,
             'date':this.convertToDate(post.createdAt),
             'type':post.type.charAt(0).toUpperCase()+post.type.slice(1),
-            'accenptedAnswer':post.accenptedAnswer==null?0:post.accenptedAnswer,
+            'acceptedAnswer':post.acceptedAnswer==null?0:post.acceptedAnswer,
+            'totalAnswer':post.answerCount,
             'vote':post.vote==null?0:post.vote,
             'tags':tags,
             'owner':{

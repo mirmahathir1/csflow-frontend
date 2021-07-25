@@ -436,15 +436,22 @@ export default {
             tags.push(tag.tag);
         })
 
-        let l=this.selected.includes('term')?this.term.split(','):[0,0]
-        if(l[0]!=null) l[0]=parseInt(l[0])
-        if(l[1]!=null) l[1]=parseInt(l[1])
+        let tf;
+        if(this.selected.includes('term')){
+          let l=this.term.split(',');
+          tf={'level':parseInt(l[0]),'term':parseInt(l[1])}
+        }else{
+          tf=null
+        }
+        // let l=this.selected.includes('term')?this.term.split(','):[0,0]
+        // if(l[0]!=null) l[0]=parseInt(l[0])
+        // if(l[1]!=null) l[1]=parseInt(l[1])
 
         let c=this.course.split(",")
 
         let data={
           'type':this.type,'title':this.title,'description':this.description,'course':c[0],
-          'topic':this.topic,'book':this.book,'termFinal':{'level': 3, 'term': 2},
+          'topic':this.topic,'book':this.book,'termFinal':tf,
           'customTag':tags, 'resources':links,
         }
         // if(!this.selected.includes('term')) delete data.termFinal

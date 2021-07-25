@@ -40,7 +40,7 @@
             :cols="small ? '12' : '7'"
         
         >
-          <v-list-item-action-text>
+          <v-list-item-action-text v-if="ID<10000000">
             Student ID: {{ ID }}
           </v-list-item-action-text>
         </v-col>
@@ -48,7 +48,7 @@
             :cols="small ? '12' : '5'"
             class="mt-n6"
         >
-          <v-list-item-action-text>
+          <v-list-item-action-text v-if="ID<10000000 && !isNaN(signedKarma)">
             Karma: {{ signedKarma }}
           </v-list-item-action-text>
         </v-col>
@@ -91,7 +91,9 @@ export default {
       if (this.karma  > 0) {
         return '+' + this.karma;
       }
-
+      if (this.karma.length==0) {
+        return '+' + 0;
+      }
       return this.karma;
     },
     avatarSize() {

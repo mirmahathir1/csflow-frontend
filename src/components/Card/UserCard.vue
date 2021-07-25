@@ -46,7 +46,7 @@
             class="pb-1"
             :class="{'pt-1': small}"
         >
-          <v-list-item-action-text>
+          <v-list-item-action-text v-if="ID<10000000">
             {{ ID.toString().length === 7 ? 'Student' : '' }} ID: {{ ID }}
           </v-list-item-action-text>
         </v-col>
@@ -55,7 +55,7 @@
             class="pb-1"
             :class="{'pt-0': small}"
         >
-          <v-list-item-action-text>
+          <v-list-item-action-text v-if="ID<10000000">
             Karma: {{ signedKarma }}
           </v-list-item-action-text>
         </v-col>
@@ -105,6 +105,10 @@ export default {
 
       if (this.karma  > 0) {
         return '+' + this.karma;
+      }
+
+      if (this.karma.length==0) {
+        return '+' + 0;
       }
 
       return this.karma;

@@ -38,7 +38,7 @@
                         rounded
                         class="ml-auto"
                         @click="doReport()"
-                        v-if="!isOwner&&!reported"
+                        v-if="!isOwner&&!reported&&!getIsGuest"
                     >
                         Report
                     </v-btn>
@@ -47,7 +47,7 @@
                         rounded
                         class="ml-auto"
                         @click="undoReport()"
-                        v-if="!isOwner&&reported"
+                        v-if="!isOwner&&reported&&!getIsGuest"
                     >
                         Reported
                     </v-btn>
@@ -241,7 +241,7 @@ export default {
         }
     },
     computed:{
-        ...mapGetters('auth',['getID']),
+        ...mapGetters('auth',['getID','getIsGuest']),
         isOwner(){
             return this.getID==this.id
         },

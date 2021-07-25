@@ -18,7 +18,7 @@
                         :isOwner="getPost.owner.ID==getID"
                         :contentType="'post'"
                         :contentId="parseInt($route.params.postID)"
-                        :isReorted="getPost.isReported"
+                        :isReported="getPost.isReported"
                         :isFollowing="getPost.isFollowing"
                         @deleted="isDeleted=true"
                     ></Details>
@@ -224,7 +224,7 @@ export default {
             if(this.getPost.course!=null) tags.push(this.getPost.course)
             if(this.getPost.topic!=null && this.getPost.topic.length>0)
                 tags.push(this.getPost.topic)
-            if(this.getPost.book!=null && this.getPost.book.length>0)
+            if(this.getPost.book!=null && this.getPost.book.length>0 && this.getPost.book!="null")
                 tags.push(this.getPost.book)
             this.getPost.customTag.forEach(tag => {
                 tags.push(tag)
