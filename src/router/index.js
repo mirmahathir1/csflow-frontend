@@ -33,13 +33,13 @@ const routes = [
         path: '/search/advanced',
         name: 'AdvancedSearch',
         component: () => import('../views/search/AdvancedSearch.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/search',
         name: 'Search',
         component: () => import('../views/search/SearchPage.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path:'/post/unanswered',
@@ -117,7 +117,7 @@ const routes = [
         path:'/post/create',
         name:'CreatePost',
         component: () => import('../views/post/CreatePost'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
 
     ////////////////// archive module /////////////////////
@@ -125,97 +125,97 @@ const routes = [
         path: '/archive',
         name: 'Archive',
         component: () => import('../views/archive/Archive'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/resource',
         name: 'Resources',
         component: () => import('../views/archive/Resources'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/resource/:batch',
         name: 'ResourcesBatch',
         component: () => import('../views/archive/ResourcesBatch'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/thesis',
         name: 'Theses',
         component: () => import('../views/archive/Theses'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/thesis/batch/:batch',
         name: 'ThesesBatch',
         component: () => import('../views/archive/ThesesBatch'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/thesis/new',
         name: 'ThesisCreation',
         component: () => import('../views/archive/ThesisCreation'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/thesis/:id/edit',
         name: 'ThesisUpdate',
         component: () => import('../views/archive/ThesisUpdate'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/thesis/:id',
         name: 'ThesisDetails',
         component: () => import('../views/archive/ThesisDetails'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/thesis/search/:topic',
         name: 'ThesesSearchResult',
         component: () => import('../views/archive/ThesesSearchResult'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project',
         name: 'Projects',
         component: () => import('../views/archive/Projects'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project/batch/:batch',
         name: 'ProjectsBatch',
         component: () => import('../views/archive/ProjectsBatch'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project/batch/:batch/:course',
         name: 'ProjectsCourse',
         component: () => import('../views/archive/ProjectsCourse'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project/new',
         name: 'ProjectCreation',
         component: () => import('../views/archive/ProjectCreation'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project/:id/edit',
         name: 'ProjectUpdate',
         component: () => import('../views/archive/ProjectUpdate'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project/:id',
         name: 'ProjectDetails',
         component: () => import('../views/archive/ProjectDetails'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
     {
         path: '/archive/project/search/:topic',
         name: 'ProjectsSearchResult',
         component: () => import('../views/archive/ProjectsSearchResult'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresStudentship: true }
     },
 
     ////////////////// question bank module /////////////////////
@@ -324,14 +324,24 @@ router.beforeEach(async (to, from, next) => {
             if (!store.getters['auth/getIsSignedIn']) {
                 next('/auth/signIn');
             } else {
+                // check if studentship is needed
+                if (to.matched.some(record => record.meta.requiresStudentship)) {
+                    if (!store.getters['auth/getIsStudent']) {
+                        next('/search/relevant');
+                    } else {
+                        next();
+                    }
+                }
                 // check if privilege is needed
-                if (to.matched.some(record => record.meta.requiresPrivilege)) {
+                else if (to.matched.some(record => record.meta.requiresPrivilege)) {
                     if (!store.getters['auth/getIsCR']) {
                         next('/home');
                     } else {
                         next();
                     }
-                } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+                }
+                // check if admin privilege is needed
+                else if (to.matched.some(record => record.meta.requiresAdmin)) {
                     if (!store.getters['auth/getIsAdmin']) {
                         next('/home');
                     } else {
