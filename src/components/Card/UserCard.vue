@@ -13,7 +13,7 @@
             tile
             :size="avatarSize"
             color="grey"
-            v-if="image.length>5 && image!=null"
+            v-if="image && image.length>5"
         >
           <img :src="image" alt="">
         </v-list-item-avatar>
@@ -47,7 +47,7 @@
             :class="{'pt-1': small}"
         >
           <v-list-item-action-text>
-            Student ID: {{ ID }}
+            {{ ID.toString().length === 7 ? 'Student' : '' }} ID: {{ ID }}
           </v-list-item-action-text>
         </v-col>
         <v-col
@@ -99,6 +99,10 @@ export default {
   },
   computed: {
     signedKarma() {
+      if (isNaN(this.karma)) {
+        return 0;
+      }
+
       if (this.karma  > 0) {
         return '+' + this.karma;
       }
