@@ -47,14 +47,14 @@
                 ></v-checkbox> -->
 
                 <v-row class="justify-content-center">
-                    <v-btn
+                    <!-- <v-btn
                         color="primary"
                         class="ma-2"
                         @click="$router.push('/auth/signUp')"
                         rounded
                     >
                         Sign Up
-                    </v-btn>
+                    </v-btn> -->
                     
                     <v-btn
                         color="primary"

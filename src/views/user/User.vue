@@ -56,7 +56,7 @@
                 </v-col>
             </v-row>
             <v-col cols="11">
-                <v-row>
+                <v-row  v-if="!getIsGuest">
                     <v-card-title class="mx-auto mt-n6">
                         {{this.getLoadedUserForProfile.id}}
                     </v-card-title>
@@ -250,7 +250,7 @@ export default {
     },
     computed:{
         ...mapGetters('user',['getLoadedUserForProfile','getIsUserLoaderError','getUserLoaderFlag','getUserLoaderMessage']),
-        ...mapGetters('auth',['getID']),
+        ...mapGetters('auth',['getID','getIsGuest']),
         ...mapGetters('search',['getUserPost']),
         userPostData(){
             let postData=[]

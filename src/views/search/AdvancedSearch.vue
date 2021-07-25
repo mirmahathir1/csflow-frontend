@@ -173,11 +173,10 @@
         <v-row v-if="!getLoaderFlag('courseLoader')" class="pt-2">
           <v-col cols="6" md="12" class="py-0" v-for="(topic,idx) in getCourseData" :key="idx">
             <v-chip
-                v-model="quickCourse"
                 color="blue lighten-4"
                 class="mx-1 my-2 text-wrap text-body-2"
                 :large="topic.length > 25"
-                @click="quickSearch"
+                @click="quickSearch(idx)"
             >
               {{ topic }}
             </v-chip>
@@ -206,7 +205,7 @@ export default {
   data(){
       return{
         text:null,
-        // courses:['CSE 313','CSE 314'],
+        courses:[],
         // topics:['Markov model','HMM'],
         topic:null,
         course:null,
@@ -227,7 +226,6 @@ export default {
         clicked:false,
         anyError:false,
         errorMessage:'',
-        quickCourse:null,
       }
   },
   methods:{
@@ -269,10 +267,10 @@ export default {
             this.clicked=false
           })
       },
-      quickSearch(){
+      quickSearch(idx){
 
-          let c=this.quickCourse.split(",")
-
+          let c=this.courses[idx].split(",")
+          
           let data={
             'payload':{
               'text':null,
@@ -333,7 +331,8 @@ export default {
       //   ret = [...ret];
       // }
       this.getCourses.forEach(course => {
-        data.push(course.courseId+","+course.name)
+        data.push(course.name)
+        this.courses.push(course.courseId+","+course.name)
       });
       return data
     }
