@@ -2,7 +2,7 @@
   <div>
     <PaddedContainerWithoutLeft v-if="!isDeleted">
         <PageHeader>{{type}} Details</PageHeader>
-        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')||!loading">
+        <v-card rounded="lg" class="mt-6" v-if="!getLoaderFlag('postLoader')&&!loading">
             <div class="pt-4 pb-4">
                 <PostBox
                     :post="postBoxData"
@@ -32,7 +32,7 @@
         </v-card>
         <DetailsLoader v-else></DetailsLoader>
         <!-- <PageHeader class="pt-5">Answers</PageHeader> -->
-        <div v-if="!getLoaderFlag('postAnswerLoader')">
+        <div v-if="!getLoaderFlag('postAnswerLoader')&&!loading">
             <div v-if="isQuestion">
                 <PageHeader class="pt-5">Answers</PageHeader>
                 <v-card rounded="lg" class="mt-6" v-for="(answer,idx) in answerData" :key="idx">
@@ -43,7 +43,7 @@
             </div>
         </div>
         <DetailsLoader v-else></DetailsLoader>
-        <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')">
+        <div class="mt-4" v-if="!getLoaderFlag('postAnswerLoader')&&!loading">
             <v-btn
                 class="ma-2"
                 color="info"
@@ -90,7 +90,7 @@ import DetailsLoader from "../../components/DetailsLoader"
 import CommentSection from "../../components/Post/commentSection"
 export default {
     title(){
-        return this.type+" Details"
+        return "Post Details"
     },
     name:'PostDetails',
     data(){
@@ -121,7 +121,8 @@ export default {
         ...mapGetters('post',['getLoaderFlag','getMessage','getError','getPost','getPostAnswer']),
         ...mapGetters('auth',['getID']),
         type(){
-            return 'Question'
+            if(this.getPost==null) return 'Question'
+            else return this.getPost.type.charAt(0).toUpperCase()+this.getPost.type.slice(1)
             // if(this.getLoaderFlag('postLoader')){
             //     return 'Question'
             // }
@@ -148,7 +149,7 @@ export default {
                     'name':this.getPost.owner.Name,
                     'studentId':this.getPost.owner.ID,
                     'profilePic':this.getPost.owner.ProfilePic,
-                    'karma':this.getPost.owner.Karma
+                    'karma':this.getPost.owner.Karma==""?0:this.getPost.owner.Karma
                 }
             }
             return postData

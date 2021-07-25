@@ -214,7 +214,7 @@
                 <v-col cols="12">
                     <post-card
                         :text="post.title"
-                        :votes="post.upvoteCount-post.downvoteCount"
+                        :votes="post.UpvoteCount-post.DownvoteCount"
                         :small="$isMobile()?true:false"
                         class="mx-auto"
                         @click.native="$router.push('/post/details/'+getUserPost[idx].ID)"

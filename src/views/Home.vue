@@ -24,7 +24,7 @@
           <v-row align="center">Top Contributors</v-row>
           <hr>
           <v-row
-            v-for="(user,idx) in getTopUser" :key="idx"
+            v-for="(user,idx) in users" :key="idx"
             class="my-2"
           >
             <user-card
@@ -58,15 +58,15 @@
           <v-row align="center">Popular Posts</v-row>
           <hr>
           <v-row
-            v-for="(post,idx) in getTopPost" :key="idx"
+            v-for="(post,idx) in posts" :key="idx"
             class="my-3"
           >
             <v-col cols="12">
               <post-card
                 :text="post.title"
-                :votes="post.upvoteCount-post.downvoteCount"
+                :votes="post.UpvoteCount-post.DownvoteCount"
                 class="mx-auto"
-                @click.native="$router.push('/post/details/'+getTopPost[idx].ID)"
+                @click.native="$router.push('/post/details/'+post.ID)"
               ></post-card>
             </v-col>
           </v-row>
@@ -121,22 +121,32 @@ export default {
       ...mapGetters('search',['getTopPost','getUnansweredPost','getTopUser','getRelevantPost']),
       users() {
         let ret = [];
-        if (this.getUsers) {
-          ret = this.getUsers.sort((a, b) => Number(a['karma']) < Number(b['karma']) ? 1 : -1);
+        if (this.getTopUser) {
+          ret = this.getTopUser.sort((a, b) => (Number(a['upvoteCount'])-Number(a['downvoteCount']))< 
+                        (Number(b['upvoteCount'])-Number(b['downvoteCount'])) ? 1 : -1);
           ret = [...ret];
         }
         return ret;
       },
       usersPage() {
-        return this.users.slice((this.page-1)*this.pageSize, this.page*this.pageSize);
+        return this.getTopUser.slice((this.page-1)*this.pageSize, this.page*this.pageSize);
       },
       pages() {
         if (this.getUsers) {
-          return Math.ceil(this.users.length/this.pageSize);
+          return Math.ceil(this.getTopUser.length/this.pageSize);
         }
       },
       postaPage(){
 
+      },
+      posts() {
+        let ret = [];
+        if (this.getTopPost) {
+          ret = this.getTopPost.sort((a, b) => (Number(a['UpvoteCount'])-Number(a['DownvoteCount']))< 
+                        (Number(b['UpvoteCount'])-Number(b['DownvoteCount'])) ? 1 : -1);
+          ret = [...ret];
+        }
+        return ret;
       },
       relevantPostData(){
         let postData=[]
