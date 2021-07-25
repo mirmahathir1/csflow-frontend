@@ -48,21 +48,41 @@
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
+<!--        <v-row>-->
+<!--          <v-spacer></v-spacer>-->
+<!--          <v-col cols="12" md="3" v-if="!$isMobile()">-->
+<!--            <v-card-text class="text-left text&#45;&#45;black text-body-1 pt-3 pl-7">Course:</v-card-text>-->
+<!--          </v-col>-->
+<!--          <v-col cols="12" md="5">-->
+<!--            <v-card-text v-if="$isMobile()" class="text-left text&#45;&#45;black text-body-1 pb-3 pl-4">Course:</v-card-text>-->
+<!--            <v-text-field-->
+<!--                outlined-->
+<!--                class="rounded-lg"-->
+<!--                dense-->
+<!--                v-model="course"-->
+<!--                :error-messages="courseErrors"-->
+<!--                @blur="$v.course.$touch()"-->
+<!--            ></v-text-field>-->
+<!--          </v-col>-->
+<!--          <v-spacer></v-spacer>-->
+<!--        </v-row>-->
         <v-row>
           <v-spacer></v-spacer>
           <v-col cols="12" md="3" v-if="!$isMobile()">
-            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Course:</v-card-text>
+            <v-card-text class="text-left text--black text-body-1 pt-3 pl-7">Course Select:</v-card-text>
           </v-col>
           <v-col cols="12" md="5">
             <v-card-text v-if="$isMobile()" class="text-left text--black text-body-1 pb-3 pl-4">Course:</v-card-text>
-            <v-text-field
+            <v-select
                 outlined
-                class="rounded-lg"
                 dense
+                clearable
+                class="rounded-lg"
                 v-model="course"
+                :items="courses"
                 :error-messages="courseErrors"
                 @blur="$v.course.$touch()"
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -302,6 +322,10 @@ export default {
       type: Number,
       required,
     },
+    propCourses: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -316,6 +340,7 @@ export default {
       newTag: '',
       userIndex: this.prevUserIndex,
       submitted: false,
+      courseMap: {},
     };
   },
   validations: {
@@ -378,6 +403,23 @@ export default {
   computed: {
     ...mapGetters('archive', ['getLoaderFlag', 'getProjectSubmitError', 'getProjectSubmitMessage']),
     ...mapGetters('user', ['getLoadedUser']),
+    courses() {
+      let ret = [];
+      this.courseMap = {};
+
+      this.propCourses.forEach(course => {
+        if ((this.getLoadedUser['level']*10+this.getLoadedUser['term']) >= (course['Level']*10+course['Term'])) {
+          ret.push(course['courseId'] + ' (' + course['name'] + ')');
+          this.courseMap[course['courseId'] + ' (' + course['name'] + ')'] = course['courseId'];
+        }
+      });
+
+      ret.sort((a, b) => {
+        return this.courseMap[a] < this.courseMap[b] ? -1 : 1;
+      })
+
+      return ret;
+    },
     titleErrors() {
       const errors = [];
       if (!this.$v.title.$dirty) {
@@ -497,7 +539,7 @@ export default {
       payload.description = this.$replaceFirstQuote(this.description);
       payload.youtube = this.youtubeLink;
       payload.github = this.gitLink;
-      payload.course = this.$replaceFirstQuote(this.course);
+      payload.course = this.courseMap[this.course];
 
       payload.owners = [];
       this.owners.forEach(element => {
@@ -512,7 +554,7 @@ export default {
       if (this.type === 'create') {
         this.createProject(payload)
             .then(response => {
-              this.$router.push('/archive/project/batch/' + this.batchID + '/' + this.course.replace(' ', '-'));
+              this.$router.push('/archive/project/batch/' + this.batchID + '/' + payload.course.replace(' ', '-'));
             })
             .catch(e => {
               console.log(e.response);

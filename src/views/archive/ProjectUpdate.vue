@@ -16,6 +16,7 @@
         :prevUserIndex="userIndex"
         :batchID="batchID"
         :projectID="projectID"
+        :propCourses="getTopics"
     ></project-form>
     <error-card v-else-if="loadForm && error" class="mt-5">
       No project found
@@ -59,6 +60,7 @@ export default {
   computed: {
     ...mapGetters('archive', ['getLoaderFlag', 'getProjectDetails', 'getProjectTags']),
     ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
+    ...mapGetters('question_bank', ['getTopics']),
     batchID() {
       if (this.getLoadedUser) {
         return this.getLoadedUser['batchID'];
@@ -89,6 +91,18 @@ export default {
   methods: {
     ...mapActions('archive', ['loadProjectDetails', 'loadProjectTags']),
     ...mapActions('user', ['getProfile']),
+    ...mapActions('question_bank', ['loadTopics']),
+    getCourse(courseId) {
+      console.log('looking for ' + courseId);
+      for (let i=0; i<this.getTopics.length; i++) {
+        let course = this.getTopics[i];
+        if (course['courseId'] === courseId) {
+          return course['courseId'] + ' (' + course['name'] + ')';
+        }
+      }
+
+      return '';
+    },
     async updateProps() {
       this.loadForm = false;
       this.error = false;
@@ -97,13 +111,16 @@ export default {
 
       await this.getProfile('me');
       await this.loadProjectTags(false);
+      await this.loadTopics();
       this.loadProjectDetails({id: this.projectID, force: false})
           .then(response => {
             const details = this.getProjectDetails.payload;
 
             this.title = details['title'];
             this.description = details['description'];
-            this.course = details['course_no'];
+            // this.course = details['course_no'];
+            this.course = this.getCourse(details['course_no']);
+            console.log(this.course);
             this.youtubeLink = details['youtube'];
             this.gitLink = details['github'];
 

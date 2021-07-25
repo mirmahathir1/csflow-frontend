@@ -14,6 +14,7 @@
         :prevUserIndex="userIndex"
         :batchID="batchID"
         :tagAutocompleteItems="topics"
+        :propCourses="getTopics"
     ></project-form>
     <details-loader v-else></details-loader>
   </padded-container>
@@ -46,6 +47,7 @@ export default {
   computed: {
     ...mapGetters('archive', ['getProjectTags']),
     ...mapGetters('user', ['getLoadedUser', 'getUserLoaderFlag']),
+    ...mapGetters('question_bank', ['getTopics']),
     batchID() {
       if (this.getLoadedUser) {
         return this.getLoadedUser['batchID'];
@@ -69,11 +71,14 @@ export default {
   methods: {
     ...mapActions('archive', ['loadProjectTags']),
     ...mapActions('user', ['getProfile']),
+    ...mapActions('question_bank', ['loadTopics']),
   },
   components: {DetailsLoader, PageHeader, PaddedContainer, ProjectForm},
   async mounted() {
     await this.getProfile('me');
     await this.loadProjectTags(false);
+    await this.loadTopics();
+
     this.owners.push({id: this.getLoadedUser['id'].toString()});
 
     this.loadForm = true;
