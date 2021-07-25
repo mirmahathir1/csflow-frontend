@@ -72,16 +72,19 @@ const actions = {
 
         commit('setLoaderFlag', 'topics');
         commit('setTopics', null);
-        csflowAPI.get('/tag')
-            .then(response => {
-                commit('setTopics', response.data.payload);
-            })
-            .catch(e => {
-                console.log(e.response);
-            })
-            .finally(() => {
-                commit('unsetLoaderFlag', 'topics');
-            });
+        return new Promise((resolve, reject) => {
+            csflowAPI.get('/tag')
+                .then(response => {
+                    commit('setTopics', response.data.payload);
+                    resolve(response);
+                })
+                .catch(e => {
+                    reject(e);
+                })
+                .finally(() => {
+                    commit('unsetLoaderFlag', 'topics');
+                });
+        });
     },
     loadQuestions({commit, state}, payload) {
         commit('setLoaderFlag', 'questions');

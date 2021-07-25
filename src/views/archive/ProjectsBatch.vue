@@ -3,6 +3,20 @@
     <page-header :back-button="true" back-route="/archive/project/">Projects Explorer</page-header>
     <page-subheader v-if="courses">Batch {{ batch }} Projects</page-subheader>
 
+    <template :slot="$vuetify.breakpoint.mdAndUp ? 'right' : 'default'" v-if="isMyBatch">
+      <v-card class="mt-8 pb-4 rounded-lg mx-auto" max-width="250">
+        <v-card-text class="text-center text-body-2">Create New Project</v-card-text>
+        <div class="mx-6">
+          <hr class="my-divider">
+        </div>
+        <v-card-actions class="mx-2">
+          <v-btn block color="primary" small @click="createProject">
+            Create
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+
     <v-container class="my-5" v-if="!getLoaderFlag('projectCourses')">
       <v-row>
         <v-col
@@ -56,6 +70,7 @@ export default {
   },
   computed: {
     ...mapGetters('archive', ['getLoaderFlag', 'getProjectCourses']),
+    ...mapGetters('user', ['getLoadedUser']),
     courses() {
       if (this.getProjectCourses) {
         let courses = this.getProjectCourses.payload;
@@ -66,9 +81,21 @@ export default {
 
       return null;
     },
+    isMyBatch() {
+      if (this.getLoadedUser) {
+        if (this.getLoadedUser['batchID'] === Number(this.batch)) {
+          return true;
+        }
+      }
+
+      return false;
+    },
   },
   methods: {
     ...mapActions('archive', ['loadProjectCourses']),
+    createProject() {
+      this.$router.push('/archive/project/new');
+    }
   },
   watch: {
     '$route'(to, from) {
