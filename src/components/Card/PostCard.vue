@@ -11,16 +11,16 @@
         <v-row class="mx-1 my-auto">
             <v-col :cols="small?'3':'3'" :md="small?'3':'1'" class="my-1" >
                 <p style="background-color:#f0f0f0">
-                    <v-row class="mx-auto text-center" >
-                        <v-icon class="mx-auto text-center" large color="green darken-2">
+                    <v-row class="" >
+                        <v-icon class="" large color="green darken-2">
                             mdi-triangle
                         </v-icon>
                     </v-row>
                     <v-row class="mx-auto text-center">
                         <span class="mx-auto text-center">{{votes}}</span>
                     </v-row>
-                    <v-row class="mx-auto text-center">
-                        <v-icon class="mx-auto text-center" large color="red darken-2">
+                    <v-row class="">
+                        <v-icon class="" large color="red darken-2">
                             mdi-triangle mdi-rotate-180
                         </v-icon>
                     </v-row>

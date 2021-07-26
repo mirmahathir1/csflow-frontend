@@ -49,8 +49,8 @@ export default {
             this.getUnansweredPost.forEach(post => {
                 let tags=[]
                 if(post.course!=null) tags.push(post.course)
-                if(post.topic!=null) tags.push(post.topic)
-                if(post.book!=null) tags.push(post.book)
+                if(post.topic!=null && post.topic.length>0) tags.push(post.topic)
+                if(post.book!=null && post.book.length>0 && post.book!="null") tags.push(post.book)
                 post.customTag.forEach(tag => {
                     tags.push(tag)
                 });
