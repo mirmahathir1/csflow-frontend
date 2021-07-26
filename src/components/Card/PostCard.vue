@@ -17,7 +17,7 @@
                         </v-icon>
                     </v-row>
                     <v-row class="mx-auto text-center">
-                        <span class="mx-auto text-center">{{votes}}</span>
+                        <span>{{votes}}</span>
                     </v-row>
                     <v-row class="">
                         <v-icon class="" large color="red darken-2">

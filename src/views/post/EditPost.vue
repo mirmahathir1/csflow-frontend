@@ -7,7 +7,7 @@
           color="white"
           elevation="2"
           class="rounded-lg px-5 pt-8 pb-4 mt-6"
-          v-if="!getLoaderFlag('bookLoader')"
+          v-if="!getLoaderFlag('postLoader')"
         >
           <v-container>
             <v-form ref="form">
@@ -66,14 +66,14 @@
                   <v-col cols="12">
                     <v-sheet outlined rounded>
                       <div class="text-start pa-2">
-                        <!-- <v-app-tooltip-btn class="d-inline-block">
+                        <!-- <v-app-tooltip-btn class="d-inline-block"> -->
                           <v-file-input
                             multiple
-
+                            v-model="files"
                             small-chips
                           ></v-file-input>
-                        </v-app-tooltip-btn>
-                        <v-app-tooltip-btn class="d-inline-block">
+                        <!-- </v-app-tooltip-btn> -->
+                        <!-- <v-app-tooltip-btn class="d-inline-block">
                           <v-file-input
                             multiple
                             hide-input
@@ -105,7 +105,7 @@
                       <v-select
                       v-if="getCourses"
                         v-model="course"
-                        :items="getCourses"
+                        :items="getCourseData"
                         label="Select course"
                         outlined
                         dense
@@ -318,6 +318,8 @@ export default {
         anyError:false,
         clicked:false,
         selected:[],
+        files:[],
+        resources:[],
         years:[{text:'L-1/T-1',value:'1,1'},
                {text:'L-1/T-2',value:'1,2'},
                {text:'L-2/T-1',value:'2,1'},
@@ -353,15 +355,28 @@ export default {
             tags.push(tag.tag);
         })
 
-        let l=this.selected.includes('term')?this.term.split(','):[0,0]
-        if(l[0]!=null) l[0]=parseInt(l[0])
-        if(l[1]!=null) l[1]=parseInt(l[1])
+        let tf;
+        if(this.selected.includes('term')){
+          let l=this.term.split(',');
+          tf={'level':parseInt(l[0]),'term':parseInt(l[1])}
+        }else{
+          tf=null
+        }
 
+        let c=this.course.split(",")
+
+        if(this.book=="null") this.book=null;
+
+        // let links=[]
+
+        // this.resources.foreach((resource)=>{
+        //   links.push()
+        // })
         let data={
           'id':this.$route.params.postID,
           'description':{
-            'type':this.type,'title':this.title,'description':this.description,'course':this.course,
-            'topic':this.topic,'book':this.book,'termFinal':{level: 3, term: 2},'customTag':tags, 'resources':[],
+            'type':this.type,'title':this.title,'description':this.description,'course':c[0],
+            'topic':this.topic,'book':this.book,'termFinal':{'level':4,'term':1},'customTag':tags, 'resources':this.resources,
           }
         }
 
@@ -394,8 +409,10 @@ export default {
       },
       courseChanged(){
         // console.log(this.course)
-        this.loadTopics(this.course)
-        this.loadBooks(this.course)
+        this.topic=null
+        let data=this.course.split(",")
+        this.loadTopics(data[0])
+        this.loadBooks(data[0])
       }
     },
     computed:{
@@ -436,7 +453,14 @@ export default {
           return this.getBooks
         }
         return []
-      }
+      },
+      getCourseData(){
+        let data=[]
+        this.getCourses.forEach(course => {
+          data.push(course.courseId+","+course.name)
+        });
+        return data
+      },
     },
     validations:{
       title:{
@@ -471,7 +495,8 @@ export default {
     this.type=this.getPost.type
     this.topic=this.getPost.topic
     this.book=this.getPost.book
-    if(this.book!=null) this.selected.push('book')
+    this.resources=this.getPost.files
+    if(this.book!=null && this.book!="null") this.selected.push('book')
     await this.loadCourses()
     await this.loadTopics(this.course)
     await this.loadBooks(this.course)
