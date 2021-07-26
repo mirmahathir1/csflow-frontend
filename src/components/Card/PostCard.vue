@@ -3,8 +3,8 @@
     <v-card
         class="rounded-lg"
         color="blue lighten-5"
-        
-        
+
+
         :elevation="hover ? 3 : 2"
         :class="{ 'my-hover': hover }"
     >
@@ -17,7 +17,7 @@
                         </v-icon>
                     </v-row>
                     <v-row class="mx-auto text-center">
-                        <span class="mx-auto text-center">{{votes}}</span>
+                        <span>{{votes}}</span>
                     </v-row>
                     <v-row class="">
                         <v-icon class="" large color="red darken-2">
@@ -61,5 +61,4 @@ export default {
 <style>
 
 </style>
-    
-    
+
