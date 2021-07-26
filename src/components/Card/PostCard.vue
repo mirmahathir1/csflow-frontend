@@ -3,8 +3,8 @@
     <v-card
         class="rounded-lg"
         color="blue lighten-5"
-        
-        
+
+
         :elevation="hover ? 3 : 2"
         :class="{ 'my-hover': hover }"
     >
@@ -61,5 +61,4 @@ export default {
 <style>
 
 </style>
-    
-    
+
