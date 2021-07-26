@@ -27,10 +27,10 @@
               </v-row>
             </p>
         </v-col>
-        <v-col cols="5" md="8" class="text-justify my-auto">
+        <v-col cols="5" md="7" class="text-justify my-auto">
             {{post.title}}
         </v-col>
-        <v-col cols="5" md="3" class="">
+        <v-col cols="5" md="4" class="">
             <v-card rounded>
               <v-list-item three-line>
                 <v-list-item-content>

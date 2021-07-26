@@ -58,7 +58,7 @@ export default {
                     'title':post.title,
                     'date':this.convertToDate(post.createdAt),
                     'type':post.type.charAt(0).toUpperCase()+post.type.slice(1),
-                    'accenptedAnswer':post.accenptedAnswer==null?0:post.accenptedAnswer,
+                    'totalAnswer':post.answerCount==null?0:post.answerCount,
                     'vote':post.vote==null?0:post.vote,
                     'tags':tags,
                     'owner':{

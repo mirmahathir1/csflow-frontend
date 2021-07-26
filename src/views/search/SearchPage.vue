@@ -35,35 +35,6 @@ export default {
     },
     data(){
         return{
-            posts:[
-            {
-                'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
-                'date':'21 August 2020,2.20AM',
-                'type':'Question',
-                'totalAnswer':9,
-                'votes':5678,
-                'tags':['CSE 300','AI','Networking'],
-                'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
-            },
-            {
-                'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
-                'date':'21 August 2020,2.20AM',
-                'type':'Question',
-                'totalAnswer':9,
-                'votes':5678,
-                'tags':['CSE 300','AI','Networking'],
-                'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
-            },
-            {
-                'text':'What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?What is your name?',
-                'date':'21 August 2020,2.20AM',
-                'type':'Question',
-                'totalAnswer':9,
-                'votes':5678,
-                'tags':['CSE 300','AI','Networking'],
-                'user':{'name':"Abser uddin",'karma':67,'image':"",'ID':1605026}
-            },
-          ],
           i:0
         };
     },
@@ -76,7 +47,7 @@ export default {
                     'title':this.getSearchResults[idx].title,
                     'date':this.convertToDate(this.getSearchResults[idx].createdAt),
                     'type':this.getSearchResults[idx].type,
-                    'accenptedAnswer':this.getSearchResults[idx].accenptedAnswer==null?0:this.getSearchResults[idx].accenptedAnswer,
+                    'totalAnswer':this.getSearchResults[idx].answerCount==null?0:this.getSearchResults[idx].answerCount,
                     'vote':this.getSearchResults[idx].UpvoteCount-this.getSearchResults[idx].DownvoteCount,
                     'tags':this.getTags(idx),
                     'owner':{
@@ -94,10 +65,11 @@ export default {
     methods:{
         getTags(idx){
             let tags=[]
+            let book=this.getSearchResults[idx].book;
             if(this.getSearchResults[idx].course!=null) tags.push(this.getSearchResults[idx].course)
             if(this.getSearchResults[idx].topic!=null&&this.getSearchResults[idx].topic.length>0) 
                 tags.push(this.getSearchResults[idx].topic)
-            if(this.getSearchResults[idx].book!=null&&this.getSearchResults[idx].book.length>0)
+            if(book!=null&&book.length>0&&book!="null")
                 tags.push(this.getSearchResults[idx].book)
             this.getSearchResults[idx].customTag.forEach(tag => {
                 if(tags.length!==0) tags.push(tag)
