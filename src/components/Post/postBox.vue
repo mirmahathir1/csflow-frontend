@@ -37,11 +37,11 @@
                   <v-list-item-title class="mb-1" text-truncate>
                     {{post.owner.name}}
                   </v-list-item-title>
-                  <v-list-item-subtitle v-if="!post.owner.studentId<10000000">
+                  <v-list-item-subtitle v-if="post.owner.studentId<10000000">
                     ID:{{post.owner.studentId}}
                   </v-list-item-subtitle>
                   <v-list-item-subtitle :class="post.owner.karma>=0?'text-success':'text-danger'"
-                    v-if="!post.owner.studentId<10000000"
+                    v-if="post.owner.studentId<10000000"
                   >
                     Karma: {{post.owner.karma.length==0?0:post.owner.karma}}
                   </v-list-item-subtitle>

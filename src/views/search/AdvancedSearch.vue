@@ -178,7 +178,7 @@
                 :large="topic.length > 25"
                 @click="quickSearch(idx)"
             >
-              {{ topic }}
+              {{ topic.split(",")[1] }}
             </v-chip>
           </v-col>
         </v-row>
@@ -331,7 +331,7 @@ export default {
       //   ret = [...ret];
       // }
       this.getCourses.forEach(course => {
-        data.push(course.name)
+        data.push(course.courseId+","+course.name)
         this.courses.push(course.courseId+","+course.name)
       });
       return data

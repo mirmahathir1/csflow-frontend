@@ -256,6 +256,7 @@ export default {
                 console.log(this.getPostAnswer.length)
                 this.answerClicked=false;
                 this.newAnswer=null
+                this.showReplyBox=false
             }catch(e){
 
             }

@@ -119,6 +119,7 @@ export default {
                     'isReported':false
                 })
                 
+                this.showReplyBox=false
             }catch(e){
 
             }finally{
